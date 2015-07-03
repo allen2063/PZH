@@ -50,13 +50,10 @@
     self.navigationItem.leftBarButtonItem = back;
 
     /* setup the media player instance, give it a delegate and something to draw into */
-    //_mediaplayer = [[VLCMediaPlayer alloc] init];
     _mediaplayer.delegate = self;
     _mediaplayer.drawable = self.movieView;
 
     /* create a media object and give it to the player */
-    
-    
    // _mediaplayer.media = [VLCMedia mediaWithURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
 }
 
