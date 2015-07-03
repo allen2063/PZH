@@ -2,23 +2,41 @@
 //  AppDelegate.m
 //  PZH
 //
-//  Created by ZengYifei on 15/7/1.
-//  Copyright (c) 2015年 IOS-developer. All rights reserved.
+//  Created by ZengYifei on 15/6/30.
+//  Copyright (c) 2015年 IOS-develop. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "MainViewController.h"
 
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
-
+@synthesize videoPlayer;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
+    self.conAPI = [[ConnectionAPI alloc]init];
+    self.videoPlayer = [[VDLViewController alloc] init];
+    UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:mainViewController];
+    self.window.rootViewController = navCon;
+    [self.window makeKeyAndVisible];
     return YES;
 }
+
+- (void)playStreamFromURL:(NSURL *)url
+{
+    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.videoPlayer];
+    navCon.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self.window.rootViewController presentViewController:navCon animated:YES completion:nil];
+    
+    [self.videoPlayer playMediaFromURL:url];
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
