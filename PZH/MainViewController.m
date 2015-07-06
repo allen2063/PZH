@@ -16,10 +16,7 @@
 @synthesize testBtn,intoPZHBtn;
 @synthesize appDelegate,webView,intoPZH;
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,12 +30,19 @@
         //self.view.frame = CGRectMake(0, 64, self.view.bounds.size.width, self.view.bounds.size.height);
         self.webView=[[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         self.webView.delegate=self;
+        self.webView.scalesPageToFit =YES;
+        //self.webView.backgroundColor = [UIColor yellowColor];
         [self.view addSubview:self.webView];
         self.appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.intoPZH = [[IntoPZHViewController alloc]init];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResult:) name:@"GetMenuContentResult" object:nil];
     }
     return  self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -65,7 +69,6 @@
 -(void)MenuContentResult:(NSNotification *)note{
     NSString *htmlString = [[note userInfo] objectForKey:@"1"];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
-    
 }
 
 -(void)testNetWork:(UIButton *)btn{

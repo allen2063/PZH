@@ -30,7 +30,7 @@
     
 }
 
--(void)jumpPage:(UIButton *)btn{
+-(void)jumpPage:(UIButton *)btn{    
     AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
     

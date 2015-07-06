@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		562821621B4A47B10044B4A9 /* DetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562821611B4A47B10044B4A9 /* DetailWebViewController.m */; };
 		562EEF6B1B45166C006ADF6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562EEF6A1B45166C006ADF6D /* Security.framework */; };
 		562EEF6D1B45167B006ADF6D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562EEF6C1B45167B006ADF6D /* MediaPlayer.framework */; };
 		562EEF6F1B45168A006ADF6D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562EEF6E1B45168A006ADF6D /* CoreGraphics.framework */; };
@@ -47,6 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		562821601B4A47B10044B4A9 /* DetailWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailWebViewController.h; sourceTree = "<group>"; };
+		562821611B4A47B10044B4A9 /* DetailWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailWebViewController.m; sourceTree = "<group>"; };
 		562EEF6A1B45166C006ADF6D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		562EEF6C1B45167B006ADF6D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		562EEF6E1B45168A006ADF6D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -121,6 +124,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5628215F1B4A477A0044B4A9 /* IntoPZH */ = {
+			isa = PBXGroup;
+			children = (
+				564B564C1B43E823003A4A14 /* IntoPZHViewController.h */,
+				564B564D1B43E823003A4A14 /* IntoPZHViewController.m */,
+				564B56501B43E823003A4A14 /* PicForPZHViewController.h */,
+				564B56511B43E823003A4A14 /* PicForPZHViewController.m */,
+				564B56521B43E823003A4A14 /* VideoForPZHViewController.h */,
+				564B56531B43E823003A4A14 /* VideoForPZHViewController.m */,
+				564B56541B43E823003A4A14 /* VideoPlayerViewController.h */,
+				564B56551B43E823003A4A14 /* VideoPlayerViewController.m */,
+			);
+			name = IntoPZH;
+			sourceTree = "<group>";
+		};
 		564B56161B43E78F003A4A14 = {
 			isa = PBXGroup;
 			children = (
@@ -145,21 +163,11 @@
 			children = (
 				564B56481B43E823003A4A14 /* AppDelegate.h */,
 				564B56491B43E823003A4A14 /* AppDelegate.m */,
-				564B564A1B43E823003A4A14 /* ConnectionAPI.h */,
-				564B564B1B43E823003A4A14 /* ConnectionAPI.m */,
-				564B564C1B43E823003A4A14 /* IntoPZHViewController.h */,
-				564B564D1B43E823003A4A14 /* IntoPZHViewController.m */,
 				564B564E1B43E823003A4A14 /* MainViewController.h */,
 				564B564F1B43E823003A4A14 /* MainViewController.m */,
-				564B56501B43E823003A4A14 /* PicForPZHViewController.h */,
-				564B56511B43E823003A4A14 /* PicForPZHViewController.m */,
-				564B56521B43E823003A4A14 /* VideoForPZHViewController.h */,
-				564B56531B43E823003A4A14 /* VideoForPZHViewController.m */,
-				564B56541B43E823003A4A14 /* VideoPlayerViewController.h */,
-				564B56551B43E823003A4A14 /* VideoPlayerViewController.m */,
-				5645C5571B4669AB0037C505 /* VDLViewController.h */,
-				5645C5581B4669AB0037C505 /* VDLViewController.m */,
-				5645C5591B4669AB0037C505 /* VDLViewController.xib */,
+				562821601B4A47B10044B4A9 /* DetailWebViewController.h */,
+				562821611B4A47B10044B4A9 /* DetailWebViewController.m */,
+				5628215F1B4A477A0044B4A9 /* IntoPZH */,
 				564B562F1B43E78F003A4A14 /* Images.xcassets */,
 				564B56221B43E78F003A4A14 /* Supporting Files */,
 			);
@@ -169,6 +177,11 @@
 		564B56221B43E78F003A4A14 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5645C5571B4669AB0037C505 /* VDLViewController.h */,
+				5645C5581B4669AB0037C505 /* VDLViewController.m */,
+				5645C5591B4669AB0037C505 /* VDLViewController.xib */,
+				564B564A1B43E823003A4A14 /* ConnectionAPI.h */,
+				564B564B1B43E823003A4A14 /* ConnectionAPI.m */,
 				564B56231B43E78F003A4A14 /* Info.plist */,
 				564B56241B43E78F003A4A14 /* main.m */,
 			);
@@ -318,6 +331,7 @@
 				564B565C1B43E823003A4A14 /* VideoPlayerViewController.m in Sources */,
 				564B56581B43E823003A4A14 /* IntoPZHViewController.m in Sources */,
 				564B56251B43E78F003A4A14 /* main.m in Sources */,
+				562821621B4A47B10044B4A9 /* DetailWebViewController.m in Sources */,
 				564B56591B43E823003A4A14 /* MainViewController.m in Sources */,
 				564B565A1B43E823003A4A14 /* PicForPZHViewController.m in Sources */,
 				564B56571B43E823003A4A14 /* ConnectionAPI.m in Sources */,

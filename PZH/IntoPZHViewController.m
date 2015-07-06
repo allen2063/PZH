@@ -55,13 +55,13 @@
 
     switch (btn.tag) {
         case 1:
-            //[self.navigationController pushViewController:picForPZH animated:YES];
-            [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
+            [self.navigationController pushViewController:picForPZH animated:YES];
+            //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
             
                         break;
         case 2:
-            //[self.navigationController pushViewController:videoForPZH animated:YES];
-            [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
+            [self.navigationController pushViewController:videoForPZH animated:YES];
+            //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
             break;
         default:
             break;

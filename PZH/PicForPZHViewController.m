@@ -7,7 +7,7 @@
 //
 
 #import "PicForPZHViewController.h"
-
+#import "DetailWebViewController.h"
 @interface PicForPZHViewController ()
 
 @end
@@ -20,7 +20,11 @@
         self.title = @"图看攀枝花";
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
-        
+        UIButton * testBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        testBtn.frame = CGRectMake(100,100,70,40);
+        [testBtn setTitle:@"test autoLayout!" forState:UIControlStateNormal];
+        [testBtn addTarget:self action:@selector(jumpPage) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:testBtn];
     }
     return self;
 }
@@ -29,6 +33,18 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+
+-(void)jumpPage{
+    NSMutableArray * arr = [[NSMutableArray alloc]initWithObjects:@"1",@"2",@"3",@"4",nil];
+    DetailWebViewController * testWeb = [[DetailWebViewController alloc]initWithNibName:nil bundle:nil WithURL:nil andSegArray:arr];
+    //[testWeb.segArray addObjectsFromArray:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",@"4", nil]];
+    [self.navigationController pushViewController:testWeb animated:YES];
+    //    VideoPlayerViewController * videoPlayer = [[VideoPlayerViewController alloc]init];
+    //    UINavigationController *presNavigation = [[UINavigationController alloc] initWithRootViewController: videoPlayer];
+    //    [self.navigationController presentViewController:presNavigation animated:YES completion:nil];
+    //    //[self.navigationController pushViewController:videoPlayer animated:YES];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
