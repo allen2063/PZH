@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "IntoPZHViewController.h"
-@interface MainViewController : UIViewController<UIWebViewDelegate>
+#import "AdScrollView.h"
+#import "AdDataModel.h"
+@interface MainViewController : UIViewController<UIWebViewDelegate>{
+    UIScrollView * scr;
+}
 @property (strong,nonatomic)UIButton * testBtn;
 @property (strong,nonatomic)UIButton * intoPZHBtn;
 @property (strong,nonatomic)AppDelegate * appDelegate;

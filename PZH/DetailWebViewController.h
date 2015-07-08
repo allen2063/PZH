@@ -8,13 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
-
 @interface DetailWebViewController : UIViewController<UIWebViewDelegate>
 @property (strong,nonatomic)UIWebView * webView;
 @property (strong,nonatomic)UISegmentedControl * seg;
 @property (strong,nonatomic)NSMutableArray * segArray;
 @property (strong,nonatomic)AppDelegate * appDelegate;
-@property (strong,nonatomic)UIActivityIndicatorView * activityView;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArray;
 
 @end

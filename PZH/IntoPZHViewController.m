@@ -10,12 +10,14 @@
 #import "PicForPZHViewController.h"
 #import "VideoForPZHViewController.h"
 #import "AppDelegate.h"
+#import "DetailWebViewController.h"
+#import "SXZWMainViewController.h"
 @interface IntoPZHViewController ()
 
 @end
 
 @implementation IntoPZHViewController
-@synthesize videoForPZHBtn,picForPZHBtn;
+@synthesize videoForPZHBtn,picForPZHBtn,cityOverview,economyOverview,naturalOverview;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -23,6 +25,37 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         
+        //市情概况
+        self.cityOverview = [[NSMutableArray alloc]initWithObjects:@"市情概况", nil];
+        UIButton * cityBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        cityBtn.backgroundColor = [UIColor lightGrayColor];
+        cityBtn.frame = CGRectMake(40,100,120,60);
+        [cityBtn setTitle:@"市情概况" forState:UIControlStateNormal];
+        [cityBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        cityBtn.tag = 3;
+        [self.view addSubview:cityBtn];
+        
+        //自然概况
+        self.naturalOverview = [[NSMutableArray alloc]initWithObjects:@"地理位置",@"行政区划",@"自然资源",@"自然概貌",@"建制人口",@"历史沿革", nil];
+        UIButton * naturalBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        naturalBtn.backgroundColor = [UIColor lightGrayColor];
+        naturalBtn.frame = CGRectMake(40,200,120,60);
+        [naturalBtn setTitle:@"自然概况" forState:UIControlStateNormal];
+        [naturalBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        naturalBtn.tag = 4;
+        [self.view addSubview:naturalBtn];
+        
+        //国民经济
+        self.economyOverview = [[NSMutableArray alloc]initWithObjects:@"经济综述",@"农业",@"收入与消费",@"房地产业",@"工业",@"金融保险业",@"运输邮电",@"建筑业",@"固定资产投资",@"财政税收", nil];
+        UIButton * economyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        economyBtn.backgroundColor = [UIColor lightGrayColor];
+        economyBtn.frame = CGRectMake(40,300,120,60);
+        [economyBtn setTitle:@"国民经济" forState:UIControlStateNormal];
+        [economyBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        economyBtn.tag = 5;
+        [self.view addSubview:economyBtn];
+        
+        //图看攀枝花
         self.picForPZHBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.picForPZHBtn.backgroundColor = [UIColor lightGrayColor];
         self.picForPZHBtn.frame = CGRectMake(40,400,120,60);
@@ -30,6 +63,7 @@
         [self.picForPZHBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
         self.picForPZHBtn.tag = 1;
         
+        //视频攀枝花
         self.videoForPZHBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.videoForPZHBtn.backgroundColor = [UIColor lightGrayColor];
         self.videoForPZHBtn.frame = CGRectMake(180,400,120,60);
@@ -39,6 +73,8 @@
         
         [self.view addSubview:self.picForPZHBtn];
         [self.view addSubview:self.videoForPZHBtn];
+        
+        
     }
     return self;
 }
@@ -51,17 +87,30 @@
 -(void)jumpPage:(UIButton *)btn{
     PicForPZHViewController * picForPZH = [[PicForPZHViewController alloc]init];
     VideoForPZHViewController * videoForPZH = [[VideoForPZHViewController alloc]init];
-    AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-
+    //AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    DetailWebViewController * detailViewController = [DetailWebViewController alloc];
+    SXZWMainViewController * mainVc = [[SXZWMainViewController alloc] init];
     switch (btn.tag) {
         case 1:
             [self.navigationController pushViewController:picForPZH animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
-            
-                        break;
+            break;
         case 2:
             [self.navigationController pushViewController:videoForPZH animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
+            break;
+        case 3:
+            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.cityOverview];
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            break;
+        case 4:
+            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            break;
+        case 5:
+            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyOverview];
+            [self.navigationController pushViewController:detailViewController animated:YES];
+//            [self.navigationController pushViewController:mainVc animated:YES];
             break;
         default:
             break;

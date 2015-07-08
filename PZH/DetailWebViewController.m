@@ -7,49 +7,46 @@
 //
 
 #import "DetailWebViewController.h"
-
+#import "GMDCircleLoader.h"
 @interface DetailWebViewController ()
 
 @end
 
 @implementation DetailWebViewController
-@synthesize webView,seg,segArray,appDelegate,activityView;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArray
+@synthesize webView,seg,segArray,appDelegate;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArrays
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
-        self.segArray = [[NSMutableArray alloc]init];
-        [self.segArray addObjectsFromArray:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",@"4", nil]];
+        self.segArray = [[NSMutableArray alloc]initWithArray:segArrays];
+        //[self.segArray addObjectsFromArray:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",@"4", nil]];
         self.seg = [[UISegmentedControl alloc]initWithItems:self.segArray];
         self.seg.frame = CGRectZero;
         self.seg.translatesAutoresizingMaskIntoConstraints = NO;
+        self.seg.selectedSegmentIndex = 0;//设置默认选择项索引
         self.seg.segmentedControlStyle=UISegmentedControlStyleBar;
         [self.view addSubview:self.seg];
         
-        self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,100, self.view.frame.size.width, self.view.frame.size.height-150)];
+        self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,95, self.view.frame.size.width, self.view.frame.size.height-95)];
         //self.webView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.webView.backgroundColor = [UIColor yellowColor];
         self.webView.delegate=self;
         self.webView.scalesPageToFit =YES;
+        self.webView.scrollView.bounces = NO;
         [self.view addSubview:self.webView];
-        
-        self.activityView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        self.activityView.center = self.view.center;
-        [self.view addSubview:self.activityView];
         
         self.appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetMenuContentResult" object:nil];
         
-    }
+        }
     return self;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.title = [self.segArray objectAtIndex:0];
-    [self.activityView startAnimating];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
 
     NSLayoutConstraint *constraintTopForSeg = [
                                       NSLayoutConstraint
@@ -149,9 +146,8 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-    [self.activityView stopAnimating];
+    [GMDCircleLoader hideFromView:self.view animated:YES];
 }
-
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {

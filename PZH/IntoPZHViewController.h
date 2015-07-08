@@ -12,4 +12,7 @@
 }
 @property (strong,nonatomic)UIButton * picForPZHBtn;
 @property (strong,nonatomic)UIButton * videoForPZHBtn;
+@property (strong,nonatomic)NSMutableArray * cityOverview;
+@property (strong,nonatomic)NSMutableArray * naturalOverview;
+@property (strong,nonatomic)NSMutableArray * economyOverview;
 @end

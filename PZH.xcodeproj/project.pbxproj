@@ -35,6 +35,16 @@
 		564B565B1B43E823003A4A14 /* VideoForPZHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 564B56531B43E823003A4A14 /* VideoForPZHViewController.m */; };
 		564B565C1B43E823003A4A14 /* VideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 564B56551B43E823003A4A14 /* VideoPlayerViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		56858B751B43ED93007873FE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56858B741B43ED93007873FE /* AVFoundation.framework */; };
+		56BAB2231B4D093700E3CE50 /* AdScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56BAB21F1B4D093700E3CE50 /* AdScrollView.m */; };
+		56BAB2241B4D093700E3CE50 /* AdDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56BAB2211B4D093700E3CE50 /* AdDataModel.m */; };
+		56BAB2251B4D093700E3CE50 /* AdDataPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56BAB2221B4D093700E3CE50 /* AdDataPlist.plist */; };
+		56BAB2331B4D0C6900E3CE50 /* 幻灯片图1.png in Resources */ = {isa = PBXBuildFile; fileRef = 56BAB2301B4D0C6900E3CE50 /* 幻灯片图1.png */; };
+		56BAB2341B4D0C6900E3CE50 /* 幻灯片图2.png in Resources */ = {isa = PBXBuildFile; fileRef = 56BAB2311B4D0C6900E3CE50 /* 幻灯片图2.png */; };
+		56BAB2351B4D0C6900E3CE50 /* 幻灯片图3.png in Resources */ = {isa = PBXBuildFile; fileRef = 56BAB2321B4D0C6900E3CE50 /* 幻灯片图3.png */; };
+		56D68EA31B4B6DF800C1F60C /* GMDCircleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EA21B4B6DF800C1F60C /* GMDCircleLoader.m */; };
+		56D68EA81B4BA3EE00C1F60C /* HYSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EA51B4BA3EE00C1F60C /* HYSegmentedControl.m */; };
+		56D68EA91B4BA3EE00C1F60C /* SXZWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EA71B4BA3EE00C1F60C /* SXZWMainViewController.m */; };
+		56D68EAC1B4BC99D00C1F60C /* CustomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EAB1B4BC99D00C1F60C /* CustomScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +99,22 @@
 		564B56541B43E823003A4A14 /* VideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayerViewController.h; sourceTree = "<group>"; };
 		564B56551B43E823003A4A14 /* VideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerViewController.m; sourceTree = "<group>"; };
 		56858B741B43ED93007873FE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		56BAB21E1B4D093700E3CE50 /* AdScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdScrollView.h; sourceTree = "<group>"; };
+		56BAB21F1B4D093700E3CE50 /* AdScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdScrollView.m; sourceTree = "<group>"; };
+		56BAB2201B4D093700E3CE50 /* AdDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdDataModel.h; sourceTree = "<group>"; };
+		56BAB2211B4D093700E3CE50 /* AdDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdDataModel.m; sourceTree = "<group>"; };
+		56BAB2221B4D093700E3CE50 /* AdDataPlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AdDataPlist.plist; sourceTree = "<group>"; };
+		56BAB2301B4D0C6900E3CE50 /* 幻灯片图1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "幻灯片图1.png"; sourceTree = "<group>"; };
+		56BAB2311B4D0C6900E3CE50 /* 幻灯片图2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "幻灯片图2.png"; sourceTree = "<group>"; };
+		56BAB2321B4D0C6900E3CE50 /* 幻灯片图3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "幻灯片图3.png"; sourceTree = "<group>"; };
+		56D68EA11B4B6DF800C1F60C /* GMDCircleLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMDCircleLoader.h; sourceTree = "<group>"; };
+		56D68EA21B4B6DF800C1F60C /* GMDCircleLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMDCircleLoader.m; sourceTree = "<group>"; };
+		56D68EA41B4BA3EE00C1F60C /* HYSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYSegmentedControl.h; sourceTree = "<group>"; };
+		56D68EA51B4BA3EE00C1F60C /* HYSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYSegmentedControl.m; sourceTree = "<group>"; };
+		56D68EA61B4BA3EE00C1F60C /* SXZWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SXZWMainViewController.h; sourceTree = "<group>"; };
+		56D68EA71B4BA3EE00C1F60C /* SXZWMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SXZWMainViewController.m; sourceTree = "<group>"; };
+		56D68EAA1B4BC99D00C1F60C /* CustomScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomScrollView.h; sourceTree = "<group>"; };
+		56D68EAB1B4BC99D00C1F60C /* CustomScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,13 +203,20 @@
 		564B56221B43E78F003A4A14 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				5645C5571B4669AB0037C505 /* VDLViewController.h */,
-				5645C5581B4669AB0037C505 /* VDLViewController.m */,
-				5645C5591B4669AB0037C505 /* VDLViewController.xib */,
-				564B564A1B43E823003A4A14 /* ConnectionAPI.h */,
-				564B564B1B43E823003A4A14 /* ConnectionAPI.m */,
+				56BAB2261B4D094000E3CE50 /* ScrollVIew */,
+				56BAB2291B4D099300E3CE50 /* Resource */,
+				56BAB2271B4D095300E3CE50 /* Player */,
+				56BAB2281B4D096700E3CE50 /* NetWork */,
+				56D68EA11B4B6DF800C1F60C /* GMDCircleLoader.h */,
+				56D68EA21B4B6DF800C1F60C /* GMDCircleLoader.m */,
 				564B56231B43E78F003A4A14 /* Info.plist */,
+				56D68EAA1B4BC99D00C1F60C /* CustomScrollView.h */,
+				56D68EAB1B4BC99D00C1F60C /* CustomScrollView.m */,
 				564B56241B43E78F003A4A14 /* main.m */,
+				56D68EA41B4BA3EE00C1F60C /* HYSegmentedControl.h */,
+				56D68EA51B4BA3EE00C1F60C /* HYSegmentedControl.m */,
+				56D68EA61B4BA3EE00C1F60C /* SXZWMainViewController.h */,
+				56D68EA71B4BA3EE00C1F60C /* SXZWMainViewController.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -226,6 +259,47 @@
 			);
 			name = Frameworks;
 			path = PZHTests;
+			sourceTree = "<group>";
+		};
+		56BAB2261B4D094000E3CE50 /* ScrollVIew */ = {
+			isa = PBXGroup;
+			children = (
+				56BAB21E1B4D093700E3CE50 /* AdScrollView.h */,
+				56BAB21F1B4D093700E3CE50 /* AdScrollView.m */,
+				56BAB2201B4D093700E3CE50 /* AdDataModel.h */,
+				56BAB2211B4D093700E3CE50 /* AdDataModel.m */,
+				56BAB2221B4D093700E3CE50 /* AdDataPlist.plist */,
+			);
+			name = ScrollVIew;
+			sourceTree = "<group>";
+		};
+		56BAB2271B4D095300E3CE50 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				5645C5571B4669AB0037C505 /* VDLViewController.h */,
+				5645C5581B4669AB0037C505 /* VDLViewController.m */,
+				5645C5591B4669AB0037C505 /* VDLViewController.xib */,
+			);
+			name = Player;
+			sourceTree = "<group>";
+		};
+		56BAB2281B4D096700E3CE50 /* NetWork */ = {
+			isa = PBXGroup;
+			children = (
+				564B564A1B43E823003A4A14 /* ConnectionAPI.h */,
+				564B564B1B43E823003A4A14 /* ConnectionAPI.m */,
+			);
+			name = NetWork;
+			sourceTree = "<group>";
+		};
+		56BAB2291B4D099300E3CE50 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				56BAB2301B4D0C6900E3CE50 /* 幻灯片图1.png */,
+				56BAB2311B4D0C6900E3CE50 /* 幻灯片图2.png */,
+				56BAB2321B4D0C6900E3CE50 /* 幻灯片图3.png */,
+			);
+			name = Resource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,8 +382,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56BAB2331B4D0C6900E3CE50 /* 幻灯片图1.png in Resources */,
 				564B56301B43E78F003A4A14 /* Images.xcassets in Resources */,
+				56BAB2351B4D0C6900E3CE50 /* 幻灯片图3.png in Resources */,
+				56BAB2341B4D0C6900E3CE50 /* 幻灯片图2.png in Resources */,
 				5645C55B1B4669AB0037C505 /* VDLViewController.xib in Resources */,
+				56BAB2251B4D093700E3CE50 /* AdDataPlist.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,15 +406,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				564B56561B43E823003A4A14 /* AppDelegate.m in Sources */,
+				56D68EA81B4BA3EE00C1F60C /* HYSegmentedControl.m in Sources */,
 				564B565C1B43E823003A4A14 /* VideoPlayerViewController.m in Sources */,
 				564B56581B43E823003A4A14 /* IntoPZHViewController.m in Sources */,
 				564B56251B43E78F003A4A14 /* main.m in Sources */,
 				562821621B4A47B10044B4A9 /* DetailWebViewController.m in Sources */,
+				56BAB2231B4D093700E3CE50 /* AdScrollView.m in Sources */,
+				56D68EA31B4B6DF800C1F60C /* GMDCircleLoader.m in Sources */,
+				56BAB2241B4D093700E3CE50 /* AdDataModel.m in Sources */,
 				564B56591B43E823003A4A14 /* MainViewController.m in Sources */,
 				564B565A1B43E823003A4A14 /* PicForPZHViewController.m in Sources */,
 				564B56571B43E823003A4A14 /* ConnectionAPI.m in Sources */,
+				56D68EAC1B4BC99D00C1F60C /* CustomScrollView.m in Sources */,
 				564B565B1B43E823003A4A14 /* VideoForPZHViewController.m in Sources */,
 				5645C55A1B4669AB0037C505 /* VDLViewController.m in Sources */,
+				56D68EA91B4BA3EE00C1F60C /* SXZWMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

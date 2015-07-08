@@ -16,7 +16,9 @@
 @synthesize testBtn,intoPZHBtn;
 @synthesize appDelegate,webView,intoPZH;
 
-
+#define UISCREENHEIGHT  self.view.bounds.size.height
+#define UISCREENWIDTH  self.view.bounds.size.width
+#define isPhone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)?YES:NO
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,8 +33,9 @@
         self.webView=[[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         self.webView.delegate=self;
         self.webView.scalesPageToFit =YES;
+        self.webView.scrollView.bounces = NO;
         //self.webView.backgroundColor = [UIColor yellowColor];
-        [self.view addSubview:self.webView];
+        //[self.view addSubview:self.webView];
         self.appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.intoPZH = [[IntoPZHViewController alloc]init];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResult:) name:@"GetMenuContentResult" object:nil];
@@ -43,6 +46,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self createScrollView];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -53,7 +57,7 @@
     [self.testBtn addTarget:self action:@selector(testNetWork:) forControlEvents:UIControlEventTouchUpInside];
     self.testBtn.tag = 1;
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.testBtn];
-    self.navigationItem.leftBarButtonItem = leftButtonItem;
+    //self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     self.intoPZHBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.intoPZHBtn.frame = CGRectMake(0,0,75,40);
@@ -64,6 +68,25 @@
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     NSLog(@"web:%f view:%f",self.webView.frame.size.height,self.view.frame.size.height);
+}
+
+#pragma mark - 构建广告滚动视图
+- (void)createScrollView
+{
+    AdScrollView * scrollView = [[AdScrollView alloc]initWithFrame:CGRectMake(0, 64, UISCREENWIDTH, 360)];
+    AdDataModel * dataModel = [AdDataModel adDataModelWithImageNameAndAdTitleArray];
+    //如果滚动视图的父视图由导航控制器控制,必须要设置该属性(ps,猜测这是为了正常显示,导航控制器内部设置了UIEdgeInsetsMake(64, 0, 0, 0))
+    scrollView.contentInset = UIEdgeInsetsMake(-64, 0, 0, 0);
+    
+    NSLog(@"%@",dataModel.adTitleArray);
+    scrollView.imageNameArray = dataModel.imageNameArray;
+    scrollView.PageControlShowStyle = UIPageControlShowStyleRight;
+    scrollView.pageControl.pageIndicatorTintColor = [UIColor whiteColor];
+    
+    [scrollView setAdTitleArray:dataModel.adTitleArray withShowStyle:AdTitleShowStyleLeft];
+    
+    scrollView.pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
+    [self.view addSubview:scrollView];
 }
 
 -(void)MenuContentResult:(NSNotification *)note{
