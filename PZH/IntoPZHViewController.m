@@ -12,24 +12,44 @@
 #import "AppDelegate.h"
 #import "DetailWebViewController.h"
 #import "SXZWMainViewController.h"
-@interface IntoPZHViewController ()
+@interface IntoPZHViewController (){
+    AppDelegate * appDelegate;
+}
 
 @end
 
 @implementation IntoPZHViewController
-@synthesize videoForPZHBtn,picForPZHBtn,cityOverview,economyOverview,naturalOverview;
+@synthesize videoForPZHBtn,picForPZHBtn,cityOverview,economyOverview,naturalOverview,titleLabel;
+
+#define INTERVALX UISCREENWIDTH/18
+#define INTERVALY UISCREENHEIGHT/15
+#define MAINBTNWIDTH UISCREENWIDTH*2/5
+#define MAINBTNHEIGHT UISCREENWIDTH/5
+
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = @"走进攀枝花";
+        //self.title = @"走进攀枝花";
+        //appDelegate.title =@"走进攀枝花";
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
+        appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+        self.titleLabel.backgroundColor = [UIColor clearColor];
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+        self.titleLabel.textColor = [UIColor whiteColor];
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
+        self.navigationItem.titleView = self.titleLabel;
         
+        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.navigationItem.backBarButtonItem = item;
+
         //市情概况
         self.cityOverview = [[NSMutableArray alloc]initWithObjects:@"市情概况", nil];
         UIButton * cityBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         cityBtn.backgroundColor = [UIColor lightGrayColor];
-        cityBtn.frame = CGRectMake(40,100,120,60);
+        cityBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY,MAINBTNWIDTH,MAINBTNHEIGHT);
         [cityBtn setTitle:@"市情概况" forState:UIControlStateNormal];
         [cityBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
         cityBtn.tag = 3;
@@ -73,8 +93,6 @@
         
         [self.view addSubview:self.picForPZHBtn];
         [self.view addSubview:self.videoForPZHBtn];
-        
-        
     }
     return self;
 }
@@ -82,6 +100,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    //appDelegate.title = @"走进攀枝花";
+    self.titleLabel.text = appDelegate.title;
 }
 
 -(void)jumpPage:(UIButton *)btn{

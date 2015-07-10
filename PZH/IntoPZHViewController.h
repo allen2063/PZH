@@ -15,4 +15,5 @@
 @property (strong,nonatomic)NSMutableArray * cityOverview;
 @property (strong,nonatomic)NSMutableArray * naturalOverview;
 @property (strong,nonatomic)NSMutableArray * economyOverview;
+@property (strong,nonatomic)UILabel * titleLabel;
 @end

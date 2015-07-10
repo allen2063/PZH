@@ -12,12 +12,14 @@
 #import "AdScrollView.h"
 #import "AdDataModel.h"
 @interface MainViewController : UIViewController<UIWebViewDelegate>{
-    UIScrollView * scr;
 }
-@property (strong,nonatomic)UIButton * testBtn;
 @property (strong,nonatomic)UIButton * intoPZHBtn;
-@property (strong,nonatomic)AppDelegate * appDelegate;
-@property (strong,nonatomic)UIWebView * webView;
+@property (strong,nonatomic)UIButton * openGovernmentAffairsBtn;
+@property (strong,nonatomic)UIButton * onlineBusinessBtn;
+@property (strong,nonatomic)UIButton * publicServiceBtn;
+@property (strong,nonatomic)UIButton * mainNewsBtn;
+@property (strong,nonatomic)UILabel * titleLabel;
+@property (strong,nonatomic)AdScrollView * scrollView;
 
-@property (strong,nonatomic)IntoPZHViewController * intoPZH;
+@property (strong,nonatomic)IntoPZHViewController * intoPZHViewController;
 @end

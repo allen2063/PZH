@@ -14,16 +14,23 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer;
-
+@synthesize videoPlayer,title;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:242/255.0 green:67/255.0 blue:0/255.0 alpha:1]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];    //导航栏按钮颜色
+
+    self.title = [[NSString alloc]init];
+    //self.titleLabel.text = @"攀枝花公众信息网";
     MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
     self.conAPI = [[ConnectionAPI alloc]init];
     self.videoPlayer = [[VDLViewController alloc] init];
     UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.rootViewController = navCon;
+    //mainViewController.navigationItem.titleView = titleLabel;
     [self.window makeKeyAndVisible];
     return YES;
 }
