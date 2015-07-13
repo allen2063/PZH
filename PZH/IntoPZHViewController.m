@@ -122,7 +122,7 @@
         economyOverviewLabel1.textAlignment = NSTextAlignmentLeft;
         [economyBtn addSubview:economyOverviewLabel1];
         UILabel * economyOverviewLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,economyOverviewLabel1.frame.size.height, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        economyOverviewLabel2.text = @"房地产业   工业       金融保险业";
+        economyOverviewLabel2.text = @"房地产业   工业       ni金融保险业";
         economyOverviewLabel2.font = [UIFont systemFontOfSize:12];
         economyOverviewLabel2.textAlignment = NSTextAlignmentLeft;
         [economyBtn addSubview:economyOverviewLabel2];

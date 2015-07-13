@@ -176,9 +176,11 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
     [NSTimer scheduledTimerWithTimeInterval:0.4f target:self selector:@selector(scrollViewDidEndDecelerating:) userInfo:nil repeats:NO];
 }
 
-- (void)recountTheTime{
-    if (!_isTimeUp) {
+- (void)recountTheTimeIsPause:(BOOL)Action{
+    if (!Action) {
         [_moveTime setFireDate:[NSDate dateWithTimeIntervalSinceNow:chageImageTime]];
+    }else{
+        [_moveTime setFireDate:[NSDate distantFuture]];
     }
     _isTimeUp = NO;
 }

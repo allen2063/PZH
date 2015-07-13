@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, AdTitleShowStyle)
 @property (assign,nonatomic,readonly) AdTitleShowStyle  adTitleStyle;
 
 - (void)setAdTitleArray:(NSArray *)adTitleArray withShowStyle:(AdTitleShowStyle)adTitleStyle;
-- (void)recountTheTime;
+- (void)recountTheTimeIsPause:(BOOL)Action;
 @end
 
 

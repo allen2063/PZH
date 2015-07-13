@@ -197,12 +197,12 @@
     [super viewWillAppear:animated];
     appDelegate.title = @"攀枝花公众信息网";
     self.titleLabel.text = appDelegate.title;
-    [self.scrollView recountTheTime];   //避免页面跳转时scrollView错位
+    [self.scrollView recountTheTimeIsPause:NO];   //避免页面跳转时scrollView错位
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
-    [self.scrollView recountTheTime];   //避免页面跳转时scrollView错位
+    [self.scrollView recountTheTimeIsPause:YES];   //避免页面跳转时scrollView错位
 }
 
 -(void)jumpPage:(UIButton *)btn{
