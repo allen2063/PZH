@@ -105,12 +105,12 @@
         intoPZHLabel.font = [UIFont systemFontOfSize:14];
         intoPZHLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * intoPZHImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t1.png"]];
-        intoPZHImgVIew.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
-        intoPZHImgVIew.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
+        UIImageView * intoPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t1.png"]];
+        intoPZHImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        intoPZHImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
 
         [self.intoPZHBtn addSubview:intoPZHLabel];
-        [self.intoPZHBtn addSubview:intoPZHImgVIew];
+        [self.intoPZHBtn addSubview:intoPZHImgView];
         [self.view addSubview:self.intoPZHBtn];
         
         //政务公开
@@ -126,12 +126,12 @@
         openGovernmentAffairsLabel.font = [UIFont systemFontOfSize:14];
         openGovernmentAffairsLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * openGovernmentAffairsImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t2.png"]];
-        openGovernmentAffairsImgVIew.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
-        openGovernmentAffairsImgVIew.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
+        UIImageView * openGovernmentAffairsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t2.png"]];
+        openGovernmentAffairsImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        openGovernmentAffairsImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
         
         [self.openGovernmentAffairsBtn addSubview:openGovernmentAffairsLabel];
-        [self.openGovernmentAffairsBtn addSubview:openGovernmentAffairsImgVIew];
+        [self.openGovernmentAffairsBtn addSubview:openGovernmentAffairsImgView];
         [self.view addSubview:self.openGovernmentAffairsBtn];
         
         //网上办事
@@ -147,12 +147,12 @@
         onlineBusinessLabel.font = [UIFont systemFontOfSize:14];
         onlineBusinessLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * onlineBusinessImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t3.png"]];
-        onlineBusinessImgVIew.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
-        onlineBusinessImgVIew.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
+        UIImageView * onlineBusinessImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t3.png"]];
+        onlineBusinessImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        onlineBusinessImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
         
         [self.onlineBusinessBtn addSubview:onlineBusinessLabel];
-        [self.onlineBusinessBtn addSubview:onlineBusinessImgVIew];
+        [self.onlineBusinessBtn addSubview:onlineBusinessImgView];
         [self.view addSubview:self.onlineBusinessBtn];
         
         //公共服务
@@ -168,12 +168,12 @@
         publicServiceLabel.font = [UIFont systemFontOfSize:14];
         publicServiceLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * publicServiceImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t4.png"]];
-        publicServiceImgVIew.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
-        publicServiceImgVIew.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
+        UIImageView * publicServiceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t4.png"]];
+        publicServiceImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        publicServiceImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
         
         [self.publicServiceBtn addSubview:publicServiceLabel];
-        [self.publicServiceBtn addSubview:publicServiceImgVIew];
+        [self.publicServiceBtn addSubview:publicServiceImgView];
         [self.view addSubview:self.publicServiceBtn];
     }
     return  self;
