@@ -16,7 +16,9 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) ConnectionAPI * conAPI;
 @property (strong, nonatomic) VDLViewController * videoPlayer;
-@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString * title;
+@property(nonatomic) NSInteger touchedSegBtn;
+
 - (void)playStreamFromURL:(NSURL *)url;
 @end
 

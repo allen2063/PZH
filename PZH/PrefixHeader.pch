@@ -15,5 +15,8 @@
 #define UISCREENWIDTH  self.view.bounds.size.width
 #define isPhone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)?YES:NO
 #define NAVIGATIONHIGHT 64
+#define UIColorFromRGBValue(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define iOSVERSION [[[UIDevice currentDevice]systemVersion]floatValue]
+#define HYSegmentedControl_Height 40.0
 
 #endif

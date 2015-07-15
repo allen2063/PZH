@@ -11,7 +11,7 @@
 #import "CustomScrollView.h"
 @interface SXZWMainViewController ()//<HYSegmentedControlDelegate>
 @property (strong, nonatomic)UITextField *tf;
-@property (strong, nonatomic)CustomScrollView *segmentedControl;
+@property (strong, nonatomic)HYSegmentedControl *segmentedControl;
 @end
 
 @implementation SXZWMainViewController
@@ -69,7 +69,7 @@
 //
 - (void)createSegmentedControl
 {
-    self.segmentedControl = [[CustomScrollView alloc] initWithOriginY:0 Titles:@[@"上线时间", @"人气排行", @"为您推荐", @"猜您喜欢", @"最多评价", @"上线时间", @"人气排行", @"为您推荐", @"猜您喜欢", @"最多评价"] delegate:self] ;
+    self.segmentedControl = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:@[@"上线时间", @"人气排行", @"为您推荐", @"猜您喜欢", @"最多评价", @"上线时间", @"人气排行", @"为您推荐", @"猜您喜欢", @"最多评价"] delegate:self] ;
     self.segmentedControl.frame = CGRectMake(0, 0, self.view.frame.size.width, 30);
     self.segmentedControl.center = CGPointMake(self.view.frame.size.width/2, 164+15);
     [self.view addSubview:_segmentedControl];

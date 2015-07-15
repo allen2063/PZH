@@ -49,7 +49,8 @@
         //scr.userInteractionEnabled = YES;
         //scr.contentSize = CGSizeMake(80, 80);
         self.scr.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight;
-        self.scr.contentSize = CGSizeMake(HYSegmentedControl_Width*3, 70);
+        self.scr.contentSize = CGSizeMake(HYSegmentedControl_Width*3, 30);
+        self.scr.contentInset = UIEdgeInsetsMake(-NAVIGATIONHIGHT, 0, 0, 0);
         //scr.pagingEnabled = YES;
         self.scr.showsHorizontalScrollIndicator = NO;
         self.scr.showsVerticalScrollIndicator = NO;
@@ -68,12 +69,12 @@
 //        self.bounces = NO;
         
         UIButton * testBtns = [UIButton buttonWithType:UIButtonTypeCustom];//[[UITextView alloc]initWithFrame:CGRectMake(0, -64, 320*3, 130)] ;
-        testBtns.frame =CGRectMake(0, -64, 50, 30);
+        testBtns.frame =CGRectMake(0, 0, 50, 30);
         testBtns.backgroundColor = [UIColor blueColor];
         [testBtns setTitle:@"1111" forState:UIControlStateNormal] ;
         
         UIButton * testBtns1 = [UIButton buttonWithType:UIButtonTypeCustom];//[[UITextView alloc]initWithFrame:CGRectMake(0, -64, 320*3, 130)] ;
-        testBtns1.frame =CGRectMake(250, -64, 50, 30);
+        testBtns1.frame =CGRectMake(250, 0, 50, 30);
         testBtns1.backgroundColor = [UIColor blueColor];
         [testBtns1 setTitle:@"2222" forState:UIControlStateNormal] ;
         

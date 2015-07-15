@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PZH/IntoPZHViewController.m"
-            timestampString = "458452533.574414"
+            filePath = "PZH/HYSegmentedControl.m"
+            timestampString = "458645550.826587"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
-            landmarkName = "-jumpPage:"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "-updateWebView"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

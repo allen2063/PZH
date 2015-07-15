@@ -14,12 +14,12 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,title;
+@synthesize videoPlayer,title,touchedSegBtn;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:242/255.0 green:67/255.0 blue:0/255.0 alpha:1]];
+    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGBValue(0xf24300)];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];    //导航栏按钮颜色
 

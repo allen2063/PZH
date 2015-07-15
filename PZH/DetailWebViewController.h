@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "HYSegmentedControl.h"
+
 @interface DetailWebViewController : UIViewController<UIWebViewDelegate>
 @property (strong,nonatomic)UIWebView * webView;
-@property (strong,nonatomic)UISegmentedControl * seg;
+@property (strong,nonatomic)HYSegmentedControl * seg;
 @property (strong,nonatomic)NSMutableArray * segArray;
 @property (strong,nonatomic)AppDelegate * appDelegate;
+@property (strong,nonatomic)UILabel * titleLabel;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArray;
 
 @end

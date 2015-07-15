@@ -23,7 +23,7 @@
         UIButton * testBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         testBtn.frame = CGRectMake(100,100,70,40);
         [testBtn setTitle:@"test autoLayout!" forState:UIControlStateNormal];
-        [testBtn addTarget:self action:@selector(jumpPage) forControlEvents:UIControlEventTouchUpInside];
+        [testBtn addTarget:self action:@selector(jumpPageForPicForPZH) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:testBtn];
     }
     return self;
@@ -34,7 +34,7 @@
     // Do any additional setup after loading the view.
 }
 
--(void)jumpPage{
+-(void)jumpPageForPicForPZH{
     NSMutableArray * arr = [[NSMutableArray alloc]initWithObjects:@"1",@"2",@"3",@"4",nil];
     DetailWebViewController * testWeb = [[DetailWebViewController alloc]initWithNibName:nil bundle:nil WithURL:nil andSegArray:arr];
     //[testWeb.segArray addObjectsFromArray:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",@"4", nil]];

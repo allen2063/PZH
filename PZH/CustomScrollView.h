@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CustomScrollView : UIView
+@interface CustomScrollView : UIView <UIScrollViewDelegate>
 @property (strong,nonatomic)UIScrollView * scr;
 //初始化函数
 - (id)initWithOriginY:(CGFloat)y Titles:(NSArray *)titles delegate:(id)delegate;

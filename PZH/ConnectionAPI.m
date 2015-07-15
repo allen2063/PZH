@@ -102,6 +102,39 @@
         webData = [NSMutableData data];
     }else NSLog(@"con为假  %@",webData);
 }
+
+- (void)getMenuContentAPIWithChannelName:(NSString *)ChannelName andChannelNext:(NSString *)ChannelNext{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<GetMenuContent xmlns=\"http://tempuri.org/\">"
+                         "<channelName>%@</channelName>"
+                         "<channelNext>%@</channelNext>"
+                         "</GetMenuContent>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",  ChannelName,ChannelNext];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: @"http://tempuri.org/GetMenuContent" forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
 //连接
 
 #pragma mark URL Connection Data Delegate Methods
@@ -130,6 +163,11 @@
     
     // 打印出得到的XML
     NSLog(@"%@", theXML);
+    //服务器报错
+    isfault = NO;
+    if ([theXML rangeOfString:@"soap:Fault"].length!=0) {
+        isfault = YES;
+    }
     // 使用NSXMLParser解析出我们想要的结果
     self.xmlParser = [[NSXMLParser alloc] initWithData: self.webData];
     [self.xmlParser setDelegate: self];
@@ -165,6 +203,9 @@
 
 // 结束解析这个元素名
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+    if (isfault) {
+        return;
+    }
     NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:soapResults forKey:@"1"];
     if ([elementName isEqualToString:self.matchingElementForMenuContent]) {
         //AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -188,6 +229,9 @@
     if (self.soapResults) {
         self.soapResults = nil;
     }
+    if (isfault) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:nil];
+    }
 }
 
 // 出错时，例如强制结束解析
@@ -196,6 +240,7 @@
         self.soapResults = nil;
     }
 }
+
 #pragma mark - readFileArray
 
 //读取热点业务

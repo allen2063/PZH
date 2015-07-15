@@ -10,14 +10,16 @@
 @interface ConnectionAPI : NSObject<NSXMLParserDelegate, NSURLConnectionDelegate>{
     //UIAlertView * alerts;
 
-    BOOL needToAnalysis;
+    BOOL isfault;
     int count;
     NSNotificationCenter *nc;
     NSMutableDictionary * UserInfo;
-    
 }
+- (void)getMenuContentAPIWithChannelName:(NSString *)ChannelName andChannelNext:(NSString *)ChannelNext;
+
 - (void)test;
 - (void)test2;
+
 @property (strong, nonatomic) NSMutableData *webData;
 @property (strong, nonatomic) NSMutableString *soapResults;
 @property (strong, nonatomic) NSXMLParser *xmlParser;

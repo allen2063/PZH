@@ -7,21 +7,23 @@
 //
 
 #import "HYSegmentedControl.h"
-
-#define HYSegmentedControl_Height 30.0
+#import "AppDelegate.h"
+#import "GMDCircleLoader.h"
 #define HYSegmentedControl_Width ([UIScreen mainScreen].bounds.size.width)
 #define Min_Width_4_Button 80.0
 
 #define Define_Tag_add 1000
 
-#define UIColorFromRGBValue(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+//#define UIColorFromRGBValue(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
-@interface HYSegmentedControl()
+@interface HYSegmentedControl(){
+    AppDelegate * appDelegate;
+}
 
+@property (strong, nonatomic)UIButton * touchedButton;
 @property (strong, nonatomic)UIScrollView *scrollView;
 @property (strong, nonatomic)NSMutableArray *array4Btn;
 @property (strong, nonatomic)UIView *bottomLineView;
-
 @end
 
 @implementation HYSegmentedControl
@@ -31,6 +33,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        
     }
     return self;
 }
@@ -39,8 +42,8 @@
 {
     CGRect rect4View = CGRectMake(.0f, y, HYSegmentedControl_Width, HYSegmentedControl_Height);
     if (self = [super initWithFrame:rect4View]) {
-        
-        self.backgroundColor = UIColorFromRGBValue(0xf3f3f3);
+        appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        self.backgroundColor = UIColorFromRGBValue(0xe3e3e3);
         [self setUserInteractionEnabled:YES];
         
         self.delegate = delegate;
@@ -53,29 +56,26 @@
         //
         //  set button
         //
-        CGFloat width4btn = rect4View.size.width/[titles count];
-        if (width4btn < Min_Width_4_Button) {
-            width4btn = Min_Width_4_Button;
-        }
-        
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, HYSegmentedControl_Width, HYSegmentedControl_Height)];
-        _scrollView.backgroundColor = [UIColor blueColor];
+//        CGFloat width4btn = rect4View.size.width/[titles count];
+//        if (width4btn < Min_Width_4_Button) {
+//            width4btn = Min_Width_4_Button;
+//        }
+        CGFloat width4btn = Min_Width_4_Button;
+        _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+        _scrollView.backgroundColor = self.backgroundColor;
         _scrollView.userInteractionEnabled = YES;
         _scrollView.contentSize = CGSizeMake([titles count]*width4btn, HYSegmentedControl_Height);
         _scrollView.showsHorizontalScrollIndicator = NO;
-        _scrollView.showsVerticalScrollIndicator = NO;
-        //_scrollView.contentOffset = CGPointZero;
-        //_scrollView.bounces = NO;
-        //_scrollView.scrollEnabled = NO;
-        //_scrollView.directionalLockEnabled = YES;
-        NSLog(@"frame:%@,size:%@,point:%@",NSStringFromCGRect(_scrollView.frame) ,NSStringFromCGSize(_scrollView.contentSize),NSStringFromCGPoint(_scrollView.contentOffset));
+        _scrollView.contentInset = UIEdgeInsetsMake(-NAVIGATIONHIGHT, 0, 0, 0);      //解决父视图偏移。。。蛋疼了好久
+
+        
         for (int i = 0; i<[titles count]; i++) {
             
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(i*width4btn, .0f, width4btn, HYSegmentedControl_Height);
-            [btn setTitleColor:UIColorFromRGBValue(0x999999) forState:UIControlStateNormal];
-            btn.titleLabel.font = [UIFont systemFontOfSize:14];
-            [btn setTitleColor:UIColorFromRGBValue(0x454545) forState:UIControlStateSelected];
+            [btn setTitleColor:UIColorFromRGBValue(0x676767) forState:UIControlStateNormal];
+            btn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [btn setTitleColor:UIColorFromRGBValue(0x3c3c3c) forState:UIControlStateSelected];
             [btn setTitle:[titles objectAtIndex:i] forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(segmentedControlChange:) forControlEvents:UIControlEventTouchUpInside];
             btn.tag = Define_Tag_add+i;
@@ -94,20 +94,18 @@
         CGFloat originY = (HYSegmentedControl_Height - height4Line)/2;
         for (int i = 1; i<[titles count]; i++) {
             UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(i*width4btn-1.0f, originY, 1.0f, height4Line)];
-            lineView.backgroundColor = UIColorFromRGBValue(0xcccccc);
-            [_scrollView addSubview:lineView];
+            lineView.backgroundColor = UIColorFromRGBValue(0x676767);
+            //[_scrollView addSubview:lineView];
         }
         
         //
         //  bottom lineView
         //
         _bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(5.0f, HYSegmentedControl_Height-1, width4btn-10.0f, 1.0f)];
-        _bottomLineView.backgroundColor = UIColorFromRGBValue(0x454545);
+        _bottomLineView.backgroundColor = UIColorFromRGBValue(0x676767);
         [_scrollView addSubview:_bottomLineView];
         
         [self addSubview:_scrollView];
-        NSLog(@"self:%@",NSStringFromCGRect(self.frame) );
-
     }
     return self;
 }
@@ -117,6 +115,7 @@
 //
 - (void)segmentedControlChange:(UIButton *)btn
 {
+    self.touchedButton = btn;
     btn.selected = YES;
     for (UIButton *subBtn in self.array4Btn) {
         if (subBtn != btn) {
@@ -139,8 +138,7 @@
         pt.x = 0;
         canScrolle = YES;
     }
-    NSLog(@"frame:%@,size:%@,point:%@",NSStringFromCGRect(_scrollView.frame) ,NSStringFromCGSize(_scrollView.contentSize),NSStringFromCGPoint(_scrollView.contentOffset));
-    NSLog(@"pt:%@",NSStringFromCGPoint(pt));
+    
     if (canScrolle) {
         [UIView animateWithDuration:0.3 animations:^{
             _scrollView.contentOffset = pt;
@@ -155,14 +153,31 @@
         }];
     }
     
-    NSLog(@"frame:%@,size:%@,point:%@",NSStringFromCGRect(_scrollView.frame) ,NSStringFromCGSize(_scrollView.contentSize),NSStringFromCGPoint(_scrollView.contentOffset));
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(hySegmentedControlSelectAtIndex:)]) {
         [self.delegate hySegmentedControlSelectAtIndex:btn.tag - 1000];
     }
+    [self updateWebView];
 }
 
+- (void)updateWebView{
+    if ([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0) {
+        if ([self.touchedButton.currentTitle isEqualToString:@"市情概况"]) {        //市情概况不需要点击
+            return;
+        }
+        if([self.touchedButton.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来
+            [appDelegate.conAPI getMenuContentAPIWithChannelName:self.touchedButton.currentTitle andChannelNext:appDelegate.title];
+        }else{
+            [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:self.touchedButton.currentTitle];
+        }
+        [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
+    }else if(!([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0)){
+                        appDelegate.touchedSegBtn = self.touchedButton.tag;
+        NSLog(@"%d",appDelegate.touchedSegBtn);
+    }
+}
 
-#warning ////// index 从 0 开始
+//#warning ////// index 从 0 开始
 // delegete method
 - (void)changeSegmentedControlWithIndex:(NSInteger)index
 {

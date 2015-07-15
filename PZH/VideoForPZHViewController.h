@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VideoPlayerViewController.h"
+#import "HYSegmentedControl.h"
 @interface VideoForPZHViewController : UIViewController
+@property (strong,nonatomic)NSMutableArray * videoArray;
+@property (strong,nonatomic)HYSegmentedControl * seg;
+@property (strong,nonatomic)UILabel * titleLabel;
 
 @end
+

@@ -17,7 +17,7 @@
 @implementation MainViewController
 @synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView;
 
-#define UIColorFromRGBValue(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 #define SCROllVIEWHIGHT ((self.view.bounds.size.height == 480)?  UISCREENHEIGHT*0.44:UISCREENHEIGHT*0.47) //4&4s是480
 #define MAINNEWSHIGHT (UISCREENHEIGHT*0.16)
 #define MAINBTNHIGHT (UISCREENHEIGHT*0.12)
@@ -28,7 +28,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.view.backgroundColor = [UIColor colorWithRed:236/255.0 green:236/255.0 blue:236/255.0 alpha:1];//[UIColor yellowColor];//
+        self.view.backgroundColor = UIColorFromRGBValue(0xececec);
         CGRect bounds = [[UIScreen mainScreen] bounds];
         self.view.frame = bounds;
         self.intoPZHViewController = [[IntoPZHViewController alloc]init];
@@ -46,12 +46,13 @@
         //首页展示新闻
         self.mainNewsBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.mainNewsBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+SCROllVIEWHIGHT,UISCREENWIDTH,MAINNEWSHIGHT);
-        [self.mainNewsBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.mainNewsBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.mainNewsBtn.tag = 5;
-        self.mainNewsBtn.backgroundColor = [UIColor whiteColor];
+        [self.mainNewsBtn setBackgroundImage:[UIImage imageNamed:@"xw_bj.png"] forState:UIControlStateNormal];
+        [self.mainNewsBtn setBackgroundImage:[UIImage imageNamed:@"dj_bj.png"] forState:UIControlStateSelected];
         
-        UIImageView * mainNewsBackgroundImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"xw_bj.png"]];
-        mainNewsBackgroundImgVIew.frame = self.mainNewsBtn.bounds;
+        //UIImageView * mainNewsBackgroundImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"xw_bj.png"]];
+        //mainNewsBackgroundImgVIew.frame = self.mainNewsBtn.bounds;
         
         UIImageView * mainNewsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ph.png"]];
         mainNewsImgView.frame = CGRectMake(INTERVALX*1, INTERVALY*2, UISCREENWIDTH/3-2*INTERVALX, MAINNEWSHIGHT-INTERVALY*4);
@@ -76,7 +77,7 @@
 //        bodyLabel.font =font1;
         
         [bodyLabel setBackgroundColor:[UIColor clearColor]];
-        [bodyLabel setTextColor:[UIColor colorWithRed:103/255.0 green:103/255.0 blue:103/255.0 alpha:1]];
+        [bodyLabel setTextColor:UIColorFromRGBValue(0x676767)];
         [bodyLabel setNumberOfLines:0];
         bodyLabel.font = [UIFont systemFontOfSize:13];;
         
@@ -86,19 +87,19 @@
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [bodyLabel.text length])];
         bodyLabel.attributedText = attributedString;
         
-        [mainNewsBackgroundImgVIew addSubview:bodyLabel];
-        [mainNewsBackgroundImgVIew addSubview:newsTitleLabel];
-        [mainNewsBackgroundImgVIew addSubview:mainNewsImgView];
-        [self.mainNewsBtn addSubview:mainNewsBackgroundImgVIew];
+        [self.mainNewsBtn addSubview:bodyLabel];
+        [self.mainNewsBtn addSubview:newsTitleLabel];
+        [self.mainNewsBtn addSubview:mainNewsImgView];
         [self.view addSubview:self.mainNewsBtn];
         
         //走进攀枝花
-        self.intoPZHBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.intoPZHBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         self.intoPZHBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+SCROllVIEWHIGHT+MAINNEWSHIGHT+INTERVALY,MAINBTNWIDTH,MAINBTNHIGHT);
-        [self.intoPZHBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.intoPZHBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.intoPZHBtn.tag = 1;
-        self.intoPZHBtn.backgroundColor = [UIColor whiteColor];
-        
+        [self.intoPZHBtn setBackgroundImage:[UIImage imageNamed:@"bdj_bj.png"] forState:UIControlStateNormal];
+        [self.intoPZHBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+
         UILabel * intoPZHLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, UISCREENWIDTH/4, UISCREENHEIGHT/15)];
         intoPZHLabel.center = CGPointMake(MAINBTNWIDTH/5*3, MAINBTNHIGHT/2);
         intoPZHLabel.text = @"走进攀枝花";
@@ -114,11 +115,12 @@
         [self.view addSubview:self.intoPZHBtn];
         
         //政务公开
-        self.openGovernmentAffairsBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.openGovernmentAffairsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         self.openGovernmentAffairsBtn.frame = CGRectMake((INTERVALX+UISCREENWIDTH)/2,NAVIGATIONHIGHT+SCROllVIEWHIGHT+MAINNEWSHIGHT+INTERVALY,MAINBTNWIDTH,MAINBTNHIGHT);
-        [self.openGovernmentAffairsBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.openGovernmentAffairsBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.openGovernmentAffairsBtn.tag = 2;
-        self.openGovernmentAffairsBtn.backgroundColor = [UIColor whiteColor];
+        [self.openGovernmentAffairsBtn setBackgroundImage:[UIImage imageNamed:@"bdj_bj.png"] forState:UIControlStateNormal];
+        [self.openGovernmentAffairsBtn setBackgroundImage:[UIImage imageNamed:@"dj_bj.png"] forState:UIControlStateHighlighted];
         
         UILabel * openGovernmentAffairsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, UISCREENWIDTH/4, UISCREENHEIGHT/15)];
         openGovernmentAffairsLabel.center = CGPointMake(MAINBTNWIDTH/5*3, MAINBTNHIGHT/2);
@@ -135,11 +137,12 @@
         [self.view addSubview:self.openGovernmentAffairsBtn];
         
         //网上办事
-        self.onlineBusinessBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.onlineBusinessBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         self.onlineBusinessBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+SCROllVIEWHIGHT+MAINNEWSHIGHT+INTERVALY*2+MAINBTNHIGHT,MAINBTNWIDTH,MAINBTNHIGHT);
-        [self.onlineBusinessBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.onlineBusinessBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.onlineBusinessBtn.tag = 3;
-        self.onlineBusinessBtn.backgroundColor = [UIColor whiteColor];
+        [self.onlineBusinessBtn setBackgroundImage:[UIImage imageNamed:@"bdj_bj.png"] forState:UIControlStateNormal];
+        [self.onlineBusinessBtn setBackgroundImage:[UIImage imageNamed:@"dj_bj.png"] forState:UIControlStateHighlighted];
         
         UILabel * onlineBusinessLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, UISCREENWIDTH/4, UISCREENHEIGHT/15)];
         onlineBusinessLabel.center = CGPointMake(MAINBTNWIDTH/5*3, MAINBTNHIGHT/2);
@@ -156,11 +159,12 @@
         [self.view addSubview:self.onlineBusinessBtn];
         
         //公共服务
-        self.publicServiceBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.publicServiceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         self.publicServiceBtn.frame = CGRectMake((INTERVALX+UISCREENWIDTH)/2,NAVIGATIONHIGHT+SCROllVIEWHIGHT+MAINNEWSHIGHT+INTERVALY*2+MAINBTNHIGHT,MAINBTNWIDTH,MAINBTNHIGHT);
-        [self.publicServiceBtn addTarget:self action:@selector(jumpPage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.publicServiceBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.publicServiceBtn.tag = 4;
-        self.publicServiceBtn.backgroundColor = [UIColor whiteColor];
+        [self.publicServiceBtn setBackgroundImage:[UIImage imageNamed:@"bdj_bj.png"] forState:UIControlStateNormal];
+        [self.publicServiceBtn setBackgroundImage:[UIImage imageNamed:@"dj_bj.png"] forState:UIControlStateHighlighted];
         
         UILabel * publicServiceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, UISCREENWIDTH/4, UISCREENHEIGHT/15)];
         publicServiceLabel.center = CGPointMake(MAINBTNWIDTH/5*3, MAINBTNHIGHT/2);
@@ -182,6 +186,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = item;
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 //    
 //    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, UISCREENWIDTH, 20)];
@@ -205,11 +211,10 @@
     [self.scrollView recountTheTimeIsPause:YES];   //避免页面跳转时scrollView错位
 }
 
--(void)jumpPage:(UIButton *)btn{
+-(void)jumpPageForMainView:(UIButton *)btn{
 
     switch (btn.tag) {
         case 1:
-            appDelegate.title = @"走进攀枝花";
             [self.navigationController pushViewController:self.intoPZHViewController animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
             break;

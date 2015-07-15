@@ -84,7 +84,7 @@
         
     }
     subViewsArray = appDelegate.window.subviews;
-    NSLog(@"array%@",subViewsArray);
+    //NSLog(@"array%@",subViewsArray);
     
     
     GMDCircleLoader *hud = [GMDCircleLoader HUDForView:view];
