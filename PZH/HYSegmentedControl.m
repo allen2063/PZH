@@ -161,7 +161,7 @@
 }
 
 - (void)updateWebView{
-    if ([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0) {
+    if ([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0) {               //非视频攀枝花页面
         if ([self.touchedButton.currentTitle isEqualToString:@"市情概况"]) {        //市情概况不需要点击
             return;
         }
@@ -171,9 +171,8 @@
             [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:self.touchedButton.currentTitle];
         }
         [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
-    }else if(!([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0)){
+    }else if(!([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0)){        //视频攀枝花页面
                         appDelegate.touchedSegBtn = self.touchedButton.tag;
-        NSLog(@"%d",appDelegate.touchedSegBtn);
     }
 }
 

@@ -66,6 +66,8 @@
 		56D437791B5649D80010CFB2 /* bf.png in Resources */ = {isa = PBXBuildFile; fileRef = 56D437771B5649D80010CFB2 /* bf.png */; };
 		56D4377C1B564D830010CFB2 /* bf_bj1.png in Resources */ = {isa = PBXBuildFile; fileRef = 56D4377A1B564D830010CFB2 /* bf_bj1.png */; };
 		56D4377D1B564D830010CFB2 /* bf_bj2.png in Resources */ = {isa = PBXBuildFile; fileRef = 56D4377B1B564D830010CFB2 /* bf_bj2.png */; };
+		56D437811B56645B0010CFB2 /* VDLPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D4377F1B56645B0010CFB2 /* VDLPlaybackViewController.m */; };
+		56D437821B56645B0010CFB2 /* VDLPlaybackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56D437801B56645B0010CFB2 /* VDLPlaybackViewController.xib */; };
 		56D68EA31B4B6DF800C1F60C /* GMDCircleLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EA21B4B6DF800C1F60C /* GMDCircleLoader.m */; };
 		56D68EA91B4BA3EE00C1F60C /* SXZWMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EA71B4BA3EE00C1F60C /* SXZWMainViewController.m */; };
 		56D68EAC1B4BC99D00C1F60C /* CustomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D68EAB1B4BC99D00C1F60C /* CustomScrollView.m */; };
@@ -171,6 +173,10 @@
 		56D437771B5649D80010CFB2 /* bf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bf.png; path = Resource/bf.png; sourceTree = SOURCE_ROOT; };
 		56D4377A1B564D830010CFB2 /* bf_bj1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bf_bj1.png; path = Resource/bf_bj1.png; sourceTree = SOURCE_ROOT; };
 		56D4377B1B564D830010CFB2 /* bf_bj2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bf_bj2.png; path = Resource/bf_bj2.png; sourceTree = SOURCE_ROOT; };
+		56D4377E1B56645B0010CFB2 /* VDLPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDLPlaybackViewController.h; sourceTree = "<group>"; };
+		56D4377F1B56645B0010CFB2 /* VDLPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDLPlaybackViewController.m; sourceTree = "<group>"; };
+		56D437801B56645B0010CFB2 /* VDLPlaybackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VDLPlaybackViewController.xib; sourceTree = "<group>"; };
+		56D437831B5665720010CFB2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		56D68EA11B4B6DF800C1F60C /* GMDCircleLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMDCircleLoader.h; sourceTree = "<group>"; };
 		56D68EA21B4B6DF800C1F60C /* GMDCircleLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMDCircleLoader.m; sourceTree = "<group>"; };
 		56D68EA61B4BA3EE00C1F60C /* SXZWMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SXZWMainViewController.h; sourceTree = "<group>"; };
@@ -317,6 +323,7 @@
 		564B565D1B43E867003A4A14 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				56D437831B5665720010CFB2 /* AudioUnit.framework */,
 				5645C55C1B466A8C0037C505 /* MobileVLCKit.framework */,
 				562EEF841B451CA6006ADF6D /* Foundation.framework */,
 				562EEF821B451C8E006ADF6D /* UIKit.framework */,
@@ -364,6 +371,9 @@
 				5645C5571B4669AB0037C505 /* VDLViewController.h */,
 				5645C5581B4669AB0037C505 /* VDLViewController.m */,
 				5645C5591B4669AB0037C505 /* VDLViewController.xib */,
+				56D4377E1B56645B0010CFB2 /* VDLPlaybackViewController.h */,
+				56D4377F1B56645B0010CFB2 /* VDLPlaybackViewController.m */,
+				56D437801B56645B0010CFB2 /* VDLPlaybackViewController.xib */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -586,6 +596,7 @@
 				56ECAADC1B54FCED004480BC /* tb_2.png in Resources */,
 				56ECAAE11B54FCED004480BC /* tb_7.png in Resources */,
 				56CD15EE1B5626B300685244 /* dj_4.png in Resources */,
+				56D437821B56645B0010CFB2 /* VDLPlaybackViewController.xib in Resources */,
 				5645C55B1B4669AB0037C505 /* VDLViewController.xib in Resources */,
 				56BAB2251B4D093700E3CE50 /* AdDataPlist.plist in Resources */,
 				56CD15EF1B5626B300685244 /* dj_5.png in Resources */,
@@ -611,6 +622,7 @@
 				564B56581B43E823003A4A14 /* IntoPZHViewController.m in Sources */,
 				564B56251B43E78F003A4A14 /* main.m in Sources */,
 				562821621B4A47B10044B4A9 /* DetailWebViewController.m in Sources */,
+				56D437811B56645B0010CFB2 /* VDLPlaybackViewController.m in Sources */,
 				56BAB2231B4D093700E3CE50 /* AdScrollView.m in Sources */,
 				56D68EA31B4B6DF800C1F60C /* GMDCircleLoader.m in Sources */,
 				56BAB2241B4D093700E3CE50 /* AdDataModel.m in Sources */,

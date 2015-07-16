@@ -14,7 +14,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,title,touchedSegBtn;
+@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtn;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -28,6 +28,7 @@
     MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
     self.conAPI = [[ConnectionAPI alloc]init];
     self.videoPlayer = [[VDLViewController alloc] init];
+    self.superVideoPlayer = [[VDLPlaybackViewController alloc]init];
     UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.rootViewController = navCon;
     //mainViewController.navigationItem.titleView = titleLabel;
@@ -37,11 +38,12 @@
 
 - (void)playStreamFromURL:(NSURL *)url
 {
-    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.videoPlayer];
+    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.superVideoPlayer];
     navCon.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.window.rootViewController presentViewController:navCon animated:YES completion:nil];
     
-    [self.videoPlayer playMediaFromURL:url];
+    //[self.videoPlayer playMediaFromURL:url];
+    [self.superVideoPlayer playMediaFromURL:url];
 }
 
 
