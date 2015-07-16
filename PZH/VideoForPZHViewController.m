@@ -22,6 +22,8 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelegate.touchedSegBtn = 1000;    //设置默认播放链接
+
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -46,7 +48,8 @@
     [super viewWillAppear:YES];
     self.titleLabel.text = @"视频攀枝花";
     appDelegate.title = @"视频攀枝花";
-    appDelegate.touchedSegBtn = 1000;
+//    if (appDelegate.touchedSegBtn<1000 || appDelegate.touchedSegBtn>103) {  //  如果第一次打开此页面并没有按其他按钮
+//    }
 }
 
 - (void)createSegmentedControl
@@ -58,7 +61,7 @@
 
 -(void)jumpPageForVideoPZH:(UIButton *)btn{
     //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
-
+    NSLog(@"btn.tag:%ld",(long)appDelegate.touchedSegBtn);
     switch (appDelegate.touchedSegBtn-999) {
         case 1:
             [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];

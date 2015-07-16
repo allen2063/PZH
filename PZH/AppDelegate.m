@@ -44,6 +44,7 @@
     
     //[self.videoPlayer playMediaFromURL:url];
     [self.superVideoPlayer playMediaFromURL:url];
+    NSLog(@"nrl:%@",url);
 }
 
 

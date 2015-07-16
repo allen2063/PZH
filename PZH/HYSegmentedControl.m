@@ -20,7 +20,7 @@
     AppDelegate * appDelegate;
 }
 
-@property (strong, nonatomic)UIButton * touchedButton;
+//@property (strong, nonatomic)UIButton * touchedButton;
 @property (strong, nonatomic)UIScrollView *scrollView;
 @property (strong, nonatomic)NSMutableArray *array4Btn;
 @property (strong, nonatomic)UIView *bottomLineView;
@@ -115,7 +115,7 @@
 //
 - (void)segmentedControlChange:(UIButton *)btn
 {
-    self.touchedButton = btn;
+    //self.touchedButton = btn;
     btn.selected = YES;
     for (UIButton *subBtn in self.array4Btn) {
         if (subBtn != btn) {
@@ -157,22 +157,23 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(hySegmentedControlSelectAtIndex:)]) {
         [self.delegate hySegmentedControlSelectAtIndex:btn.tag - 1000];
     }
-    [self updateWebView];
+    [self updateWebViewWithTouchedBtn:btn];
 }
 
-- (void)updateWebView{
+- (void)updateWebViewWithTouchedBtn:(UIButton *)btn{
+    NSLog(@"touchedBtn.tag:%ld",(long)btn.tag);
     if ([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0) {               //非视频攀枝花页面
-        if ([self.touchedButton.currentTitle isEqualToString:@"市情概况"]) {        //市情概况不需要点击
+        if ([btn.currentTitle isEqualToString:@"市情概况"]) {        //市情概况不需要点击
             return;
         }
-        if([self.touchedButton.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来
-            [appDelegate.conAPI getMenuContentAPIWithChannelName:self.touchedButton.currentTitle andChannelNext:appDelegate.title];
+        if([btn.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来
+            [appDelegate.conAPI getMenuContentAPIWithChannelName:btn.currentTitle andChannelNext:appDelegate.title];
         }else{
-            [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:self.touchedButton.currentTitle];
+            [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:btn.currentTitle];
         }
         [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
     }else if(!([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0)){        //视频攀枝花页面
-                        appDelegate.touchedSegBtn = self.touchedButton.tag;
+                        appDelegate.touchedSegBtn = btn.tag;
     }
 }
 

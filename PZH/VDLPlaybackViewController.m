@@ -90,9 +90,9 @@
 
 - (IBAction)playandPause:(id)sender
 {
-    if (_mediaplayer.isPlaying)
+    if (_mediaplayer.isPlaying){
         [_mediaplayer pause];
-
+    }
     [_mediaplayer play];
 }
 
@@ -204,7 +204,7 @@
     if (currentState == VLCMediaPlayerStateEnded || currentState == VLCMediaPlayerStateStopped)
         [self performSelector:@selector(closePlayback:) withObject:nil afterDelay:2.];
 
-    [self.playPauseButton setTitle:[_mediaplayer isPlaying]? @"Pause" : @"Play" forState:UIControlStateNormal];
+    [self.playPauseButton setTitle:[_mediaplayer isPlaying]? @"暂停" : @"播放" forState:UIControlStateNormal];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -225,8 +225,9 @@
 
 - (void)toggleControlsVisible
 {
-    BOOL controlsHidden = !self.controllerPanel.hidden;
-    self.controllerPanel.hidden = controlsHidden;
+//    BOOL controlsHidden = !self.controllerPanel.hidden;
+//    self.controllerPanel.hidden = controlsHidden;
+    BOOL controlsHidden = !self.toolbar.hidden;
     self.toolbar.hidden = controlsHidden;
     //[[UIApplication sharedApplication] setStatusBarHidden:controlsHidden withAnimation:UIStatusBarAnimationFade];    //不注释掉退出播放器会在其他页面隐藏状态栏
 }
