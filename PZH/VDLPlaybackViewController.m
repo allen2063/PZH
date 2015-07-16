@@ -228,7 +228,7 @@
     BOOL controlsHidden = !self.controllerPanel.hidden;
     self.controllerPanel.hidden = controlsHidden;
     self.toolbar.hidden = controlsHidden;
-    [[UIApplication sharedApplication] setStatusBarHidden:controlsHidden withAnimation:UIStatusBarAnimationFade];
+    //[[UIApplication sharedApplication] setStatusBarHidden:controlsHidden withAnimation:UIStatusBarAnimationFade];    //不注释掉退出播放器会在其他页面隐藏状态栏
 }
 
 - (void)_resetIdleTimer
