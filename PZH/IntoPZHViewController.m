@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "DetailWebViewController.h"
 #import "EconomyViewController.h"
+#import "GMDCircleLoader.h"
 @interface IntoPZHViewController (){
     AppDelegate * appDelegate;
 }
@@ -216,24 +217,36 @@
             appDelegate.title = @"市情概况";
             [self.navigationController pushViewController:detailViewController animated:YES];
             [appDelegate.conAPI getMenuContentAPIWithChannelName:@"走进攀枝花" andChannelNext:@"市情概况"];
+            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+
             break;
         case 2:
             detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
             appDelegate.title = @"自然概况";
             [self.navigationController pushViewController:detailViewController animated:YES];
             [appDelegate.conAPI getMenuContentAPIWithChannelName:@"自然概况" andChannelNext:@"地理位置"];
+            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
             break;
         case 3:
-            //appDelegate.title = @"自然概况";
+            appDelegate.title = @"国民经济";
             [self.navigationController pushViewController:economyViewController animated:YES];
             //[appDelegate.conAPI getMenuContentAPIWithChannelName:@"自然概况" andChannelNext:@"地理位置"];
             break;
         case 4:
+            appDelegate.title = @"图看攀枝花";
             [self.navigationController pushViewController:picForPZH animated:YES];
+            [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:@"城市新貌" andPageSize:@"15" andCurPage:@"1"];
+            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+
             break;
         case 5:
+            appDelegate.title = @"视频攀枝花";
             [self.navigationController pushViewController:videoForPZH animated:YES];
+            [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:@"视频攀枝花" andChannelNext:@"形象片"];
+            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+
             break;
         default:
             break;

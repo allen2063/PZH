@@ -162,18 +162,30 @@
 
 - (void)updateWebViewWithTouchedBtn:(UIButton *)btn{
     NSLog(@"touchedBtn.tag:%ld",(long)btn.tag);
-    if ([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0) {               //非视频攀枝花页面
-        if ([btn.currentTitle isEqualToString:@"市情概况"]) {        //市情概况不需要点击
-            return;
-        }
-        if([btn.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来
-            [appDelegate.conAPI getMenuContentAPIWithChannelName:btn.currentTitle andChannelNext:appDelegate.title];
-        }else{
-            [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:btn.currentTitle];
-        }
+    if ([appDelegate.title isEqualToString:@"市情概况"] ) {
+            return;//市情概况不需要点击
+//        if([btn.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来
+//            [appDelegate.conAPI getMenuContentAPIWithChannelName:btn.currentTitle andChannelNext:appDelegate.title];
+//        }else{
+//            [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:btn.currentTitle];
+//        }
+//        [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
+    }else if ([appDelegate.title isEqualToString:@"自然概况"]){
+        [appDelegate.conAPI getMenuContentAPIWithChannelName:appDelegate.title andChannelNext:btn.currentTitle];
         [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
-    }else if(!([appDelegate.title rangeOfString:@"视频攀枝花"].length == 0)){        //视频攀枝花页面
-                        appDelegate.touchedSegBtn = btn.tag;
+    }else if ([btn.currentTitle rangeOfString:@"20"].length !=0){
+              //国民经济需要调换过来
+        [appDelegate.conAPI getMenuContentAPIWithChannelName:btn.currentTitle andChannelNext:appDelegate.title];
+        [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
+    }
+    else if([appDelegate.title isEqualToString:@"视频攀枝花"]){        //视频攀枝花页面
+        //appDelegate.touchedSegBtn = btn.tag;
+        [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:appDelegate.title andChannelNext:btn.currentTitle];
+        [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
+    }
+    else if([appDelegate.title isEqualToString:@"图看攀枝花"]){        //图看攀枝花页面
+        appDelegate.touchedSegBtn = btn.tag;
+        
     }
 }
 

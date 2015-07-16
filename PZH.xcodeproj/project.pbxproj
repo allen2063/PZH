@@ -60,6 +60,7 @@
 		56BF0ACC1B535D490021DBFA /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 56BF0AC71B535D490021DBFA /* 4.png */; };
 		56BF0ACD1B535D490021DBFA /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = 56BF0AC81B535D490021DBFA /* 5.png */; };
 		56C064631B5397820054D8C4 /* HYSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C064621B5397820054D8C4 /* HYSegmentedControl.m */; };
+		56C6AF6E1B57912D00A3BABA /* djzt.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C6AF6D1B57912D00A3BABA /* djzt.png */; };
 		56CD15EE1B5626B300685244 /* dj_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CD15EC1B5626B300685244 /* dj_4.png */; };
 		56CD15EF1B5626B300685244 /* dj_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CD15ED1B5626B300685244 /* dj_5.png */; };
 		56CD15F11B56296F00685244 /* bdj_bj.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CD15F01B56296F00685244 /* bdj_bj.png */; };
@@ -167,6 +168,7 @@
 		56BF0AC81B535D490021DBFA /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 5.png; path = Resource/5.png; sourceTree = SOURCE_ROOT; };
 		56C064611B5397820054D8C4 /* HYSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYSegmentedControl.h; sourceTree = "<group>"; };
 		56C064621B5397820054D8C4 /* HYSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYSegmentedControl.m; sourceTree = "<group>"; };
+		56C6AF6D1B57912D00A3BABA /* djzt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = djzt.png; path = Resource/djzt.png; sourceTree = SOURCE_ROOT; };
 		56CD15EC1B5626B300685244 /* dj_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dj_4.png; path = Resource/dj_4.png; sourceTree = SOURCE_ROOT; };
 		56CD15ED1B5626B300685244 /* dj_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dj_5.png; path = Resource/dj_5.png; sourceTree = SOURCE_ROOT; };
 		56CD15F01B56296F00685244 /* bdj_bj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bdj_bj.png; path = Resource/bdj_bj.png; sourceTree = SOURCE_ROOT; };
@@ -450,6 +452,7 @@
 		56D437751B5647A40010CFB2 /* 视频攀枝花 */ = {
 			isa = PBXGroup;
 			children = (
+				56C6AF6D1B57912D00A3BABA /* djzt.png */,
 				56D437771B5649D80010CFB2 /* bf.png */,
 				56D4377A1B564D830010CFB2 /* bf_bj1.png */,
 				56D4377B1B564D830010CFB2 /* bf_bj2.png */,
@@ -599,6 +602,7 @@
 				56D437821B56645B0010CFB2 /* VDLPlaybackViewController.xib in Resources */,
 				5645C55B1B4669AB0037C505 /* VDLViewController.xib in Resources */,
 				56BAB2251B4D093700E3CE50 /* AdDataPlist.plist in Resources */,
+				56C6AF6E1B57912D00A3BABA /* djzt.png in Resources */,
 				56CD15EF1B5626B300685244 /* dj_5.png in Resources */,
 				56AAD7A01B4E61C800BD2294 /* 导航栏.png in Resources */,
 			);

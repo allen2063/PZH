@@ -12,6 +12,6 @@
 @property (strong,nonatomic)NSMutableArray * videoArray;
 @property (strong,nonatomic)HYSegmentedControl * seg;
 @property (strong,nonatomic)UILabel * titleLabel;
-
+@property (strong,nonatomic)NSString * urlString;
 @end
 

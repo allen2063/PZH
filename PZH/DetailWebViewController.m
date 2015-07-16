@@ -58,7 +58,6 @@
     self.seg = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:self.segArray delegate:self] ;
     self.seg.frame = CGRectMake(0, NAVIGATIONHIGHT, self.view.frame.size.width, HYSegmentedControl_Height);
     [self.view addSubview:self.seg];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -66,7 +65,7 @@
     
     self.titleLabel.text = appDelegate.title;
     //self.title = [self.segArray objectAtIndex:0];
-    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+    //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
 
 //    NSLayoutConstraint *constraintTopForSeg = [
 //                                      NSLayoutConstraint

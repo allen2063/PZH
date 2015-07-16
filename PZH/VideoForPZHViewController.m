@@ -8,6 +8,7 @@
 
 #import "VideoForPZHViewController.h"
 #import "AppDelegate.h"
+#import "GMDCircleLoader.h"
 @interface VideoForPZHViewController (){
     AppDelegate * appDelegate;
 }
@@ -15,7 +16,7 @@
 @end
 
 @implementation VideoForPZHViewController
-@synthesize videoArray,seg,titleLabel;
+@synthesize videoArray,seg,titleLabel,urlString;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -23,6 +24,7 @@
         self.view.frame = [[UIScreen mainScreen] bounds];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDelegate.touchedSegBtn = 1000;    //设置默认播放链接
+        //self.urlString = @"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv";
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -32,6 +34,8 @@
         self.navigationItem.titleView = self.titleLabel;
         self.videoArray = [[NSMutableArray alloc]initWithObjects:@"形象片",@"规划片",@"岩箭之谜",@"阴传的秘密", nil];
         
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetSPPZH_ContentResult:) name:@"GetSPPZH_ContentResult" object:nil];
+
         [self createSegmentedControl];
         UIButton * vedioBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         vedioBtn.backgroundColor = [UIColor lightGrayColor];
@@ -48,8 +52,7 @@
     [super viewWillAppear:YES];
     self.titleLabel.text = @"视频攀枝花";
     appDelegate.title = @"视频攀枝花";
-//    if (appDelegate.touchedSegBtn<1000 || appDelegate.touchedSegBtn>103) {  //  如果第一次打开此页面并没有按其他按钮
-//    }
+    //[GMDCircleLoader hideFromView:self.view animated:YES];
 }
 
 - (void)createSegmentedControl
@@ -60,27 +63,12 @@
 }
 
 -(void)jumpPageForVideoPZH:(UIButton *)btn{
-    //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
-    NSLog(@"btn.tag:%ld",(long)appDelegate.touchedSegBtn);
-    switch (appDelegate.touchedSegBtn-999) {
-        case 1:
-            [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
-            break;
-        case 2:
-            [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/ghp/2325.wmv"]];
-            break;
-        case 3:
-            [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/yjzm/VTS_01_1.wmv"]];
-            break;
-        case 4:
-            [appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/ycdmm/VTS_01_2.wmv"]];
-            break;
-    }
-    
-//    VideoPlayerViewController * videoPlayer = [[VideoPlayerViewController alloc]init];
-//    UINavigationController *presNavigation = [[UINavigationController alloc] initWithRootViewController: videoPlayer];
-//    [self.navigationController presentViewController:presNavigation animated:YES completion:nil];
-//    //[self.navigationController pushViewController:videoPlayer animated:YES];
+    [appDelegate playStreamFromURL:[NSURL URLWithString:self.urlString]];
+}
+
+-(void)GetSPPZH_ContentResult:(NSNotification *)note{
+    self.urlString = [[note userInfo] objectForKey:@"1"];
+    [GMDCircleLoader hideFromView:self.view animated:YES];
 }
 
 - (void)viewDidLoad {

@@ -8,7 +8,6 @@
 
 #import "ConnectionAPI.h"
 #import "AppDelegate.h"
-
 @implementation ConnectionAPI
 
 
@@ -19,8 +18,8 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFound;
-@synthesize matchingElementForMenuContent;
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo;
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo;
 @synthesize matchingElementForLoadMainPagePic;
 @synthesize soapResults1;
 @synthesize elementFound1;
@@ -36,6 +35,8 @@
     self = [super init];
     count = 0;
     matchingElementForMenuContent = @"GetMenuContentResult";
+    matchingElementForPZHPic = @"GetYXPZH_ContentResult";
+    matchingElementForPZHVideo = @"GetSPPZH_ContentResult";
     matchingElementForLoadMainPagePic = @"LoadMainPagePicResult";
     return self;
 }
@@ -103,7 +104,8 @@
     }else NSLog(@"con为假  %@",webData);
 }
 
-- (void)getMenuContentAPIWithChannelName:(NSString *)ChannelName andChannelNext:(NSString *)ChannelNext{
+- (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
+    
     NSString *soapMsg = [NSString stringWithFormat:
                          @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                          "<soap12:Envelope "
@@ -116,7 +118,7 @@
                          "<channelNext>%@</channelNext>"
                          "</GetMenuContent>"
                          "</soap12:Body>"
-                         "</soap12:Envelope>",  ChannelName,ChannelNext];
+                         "</soap12:Envelope>",  channelName,channelNext];
     
     NSLog(@"%@",soapMsg);
     NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
@@ -134,6 +136,73 @@
         webData = [NSMutableData data];
     }else NSLog(@"con为假  %@",webData);
 }
+
+- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andHannelNext:(NSString *)hannelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<GetYXPZH_Content xmlns=\"http://tempuri.org/\">"
+                         "<channelName>%@</channelName>"
+                         "<channelNext>%@</channelNext>"
+                         "<PageSize>%@</PageSize>"
+                         "<CurPage>%@</CurPage>"
+                         "</GetYXPZH_Content>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",  channelName,hannelNext,pageSize,curPage];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: @"http://tempuri.org/GetYXPZH_Content" forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
+- (void)getVideoForPZHAPIWihtChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<GetSPPZH_Content xmlns=\"http://tempuri.org/\">"
+                         "<channelName>%@</channelName>"
+                         "<channelNext>%@</channelNext>"
+                         "</GetSPPZH_Content>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",  channelName,channelNext];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: @"http://tempuri.org/GetSPPZH_Content" forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
 
 //连接
 
@@ -184,19 +253,25 @@
         if (!self.soapResults) {
             self.soapResults = [[NSMutableString alloc] init];
         }
-        self.elementFound = YES;
+        self.elementFoundForMenuContent = YES;
     }
-    else if ([elementName isEqualToString:self.matchingElementForLoadMainPagePic]) {
+    else if ([elementName isEqualToString:self.matchingElementForPZHPic]) {
         if (!self.soapResults) {
             self.soapResults = [[NSMutableString alloc] init];
         }
-        self.elementFound1 = YES;
+        self.elementFoundForPZHPic = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPZHVideo]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForPZHVideo = YES;
     }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFound||self.elementFound1) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent) {
         [self.soapResults appendString: string];
     }
 }
@@ -208,21 +283,24 @@
     }
     NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:soapResults forKey:@"1"];
     if ([elementName isEqualToString:self.matchingElementForMenuContent]) {
-        //AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMenuContentResult" object:self userInfo:d];
-        //[alert show];
-        self.elementFound = FALSE;
+        self.elementFoundForMenuContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }
-    else if ([elementName isEqualToString:self.matchingElementForLoadMainPagePic]) {
-        //AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMenuContentResult" object:self userInfo:d];
-        //[alert show];
-        self.elementFound = FALSE;
+    else if ([elementName isEqualToString:self.matchingElementForPZHPic]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetYXPZH_ContentResult" object:self userInfo:d];
+        self.elementFoundForPZHPic = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
-    }}
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPZHVideo]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetSPPZH_ContentResult" object:self userInfo:d];
+        self.elementFoundForPZHVideo = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+}
 
 // 解析整个文件结束后
 - (void)parserDidEndDocument:(NSXMLParser *)parser {

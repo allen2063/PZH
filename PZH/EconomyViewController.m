@@ -294,6 +294,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.titleLabel.text = @"国民经济";
+    appDelegate.title = @"国民经济";
 }
 
 -(void)jumpPageForEconomy:(UIButton *)btn{

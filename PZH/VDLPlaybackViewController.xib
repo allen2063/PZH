@@ -178,7 +178,6 @@
 								<string key="NSFrame">{{20, 47}, {284, 22}}</string>
 								<reference key="NSSuperview" ref="897908297"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
@@ -227,7 +226,7 @@
 					<object class="IBUISlider" id="134433983">
 						<reference key="NSNextResponder" ref="646556287"/>
 						<int key="NSvFlags">290</int>
-						<string key="NSFrame">{{5, 10}, {188, 23}}</string>
+						<string key="NSFrame">{{5, 10}, {200, 23}}</string>
 						<reference key="NSSuperview" ref="646556287"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="438248784"/>
@@ -245,10 +244,9 @@
 					<object class="IBUIButton" id="637398771">
 						<reference key="NSNextResponder" ref="646556287"/>
 						<int key="NSvFlags">289</int>
-						<string key="NSFrame">{{241, 6}, {59, 29}}</string>
+						<string key="NSFrame">{{253, 6}, {47, 29}}</string>
 						<reference key="NSSuperview" ref="646556287"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -270,7 +268,7 @@
 					<object class="IBUIButton" id="438248784">
 						<reference key="NSNextResponder" ref="646556287"/>
 						<int key="NSvFlags">289</int>
-						<string key="NSFrame">{{193, 11}, {50, 20}}</string>
+						<string key="NSFrame">{{211, 10}, {50, 20}}</string>
 						<reference key="NSSuperview" ref="646556287"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="637398771"/>
@@ -568,9 +566,9 @@
 						<int key="objectID">30</int>
 						<reference key="object" ref="646556287"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="438248784"/>
 							<reference ref="637398771"/>
 							<reference ref="134433983"/>
+							<reference ref="438248784"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Time view</string>
@@ -603,6 +601,7 @@
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<reference key="14.IBNSViewMetadataGestureRecognizers" ref="0"/>
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="187.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<reference key="30.IBNSViewMetadataGestureRecognizers" ref="0"/>
@@ -626,7 +625,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">205</int>
+			<int key="maxID">210</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
