@@ -201,7 +201,7 @@
 		}
 		
 		if (scrollView.contentInset.top != 0) {
-			scrollView.contentInset = UIEdgeInsetsZero;
+			scrollView.contentInset = UIEdgeInsetsZero;  //
 		}
 		
 	}
