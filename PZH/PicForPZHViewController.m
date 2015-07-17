@@ -33,10 +33,31 @@
         self.segArray = [NSMutableArray arrayWithObjects:@"城市新貌",@"自然风光",@"美食天地",@"开发建设",@"旅游产品",@"节庆赛事",@"新福家园",@"阳光攀枝花", nil];
         [self createSegmentedControl];
         self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height))];
-        self.webView.delegate=self;
-        self.webView.scalesPageToFit =YES;
-        self.webView.scrollView.bounces = NO;
+        self.webView.delegate = self;
+        self.webView.scrollView.delegate = self;
+        self.webView.scalesPageToFit = YES;
         self.webView.backgroundColor = [UIColor yellowColor];
+        self.webView.scrollView.bounces = YES;
+        self.webView.scrollView.pagingEnabled = YES;
+        self.webView.scrollView.frame = self.webView.bounds;
+        
+        //初始化refreshView，添加到webview 的 scrollView子视图中
+        if (_refreshHeaderView == nil) {
+            _refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, 0-self.webView.scrollView.bounds.size.height, self.webView.scrollView.frame.size.width, self.webView.scrollView.bounds.size.height)];
+            _refreshHeaderView.delegate = self;
+            [self.webView.scrollView addSubview:_refreshHeaderView];
+        }
+        [_refreshHeaderView refreshLastUpdatedDate];
+        
+        //初始化refreshView，添加到webview 的 scrollView子视图中
+        if (_refreshBottomView == nil) {
+            _refreshBottomView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0,self.webView.scrollView.bounds.size.height, self.webView.scrollView.frame.size.width, self.webView.scrollView.bounds.size.height)];
+            _refreshBottomView.delegate = self;
+            [self.webView.scrollView addSubview:_refreshBottomView];
+        }
+        [_refreshBottomView refreshLastUpdatedDate];
+        
+        
         [self.view addSubview:self.webView];
     }
     return self;
@@ -65,22 +86,68 @@
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
-    [GMDCircleLoader hideFromView:self.view animated:YES];
-}
+#pragma mark - webview delegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     [GMDCircleLoader hideFromView:self.view animated:YES];
     [GMDCircleLoader setOnView:self.view withTitle:@"解析中..." animated:YES];
+    
 }
 
-
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    [GMDCircleLoader hideFromView:self.view animated:YES];
+    
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.webView.scrollView];
+}
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     UIAlertView *alterview = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alterview show];
+    
+    NSLog(@"load page error:%@", [error description]);
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.webView.scrollView];
 }
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    
+    //[self loadPage];
+    [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:@"城市新貌" andPageSize:@"5" andCurPage:@"1"];
+    _reloading = YES;
+
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    return _reloading; // should return if data source model is reloading
+    
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+    
+    return [NSDate date]; // should return date data source was last changed
+}
+
 
 
 - (void)didReceiveMemoryWarning {

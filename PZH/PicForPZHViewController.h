@@ -8,7 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "HYSegmentedControl.h"
-@interface PicForPZHViewController : UIViewController<UIWebViewDelegate>
+#import "EGORefreshTableHeaderView.h"
+
+@interface PicForPZHViewController : UIViewController<UIWebViewDelegate,UIScrollViewDelegate,EGORefreshTableHeaderDelegate>{
+    //下拉视图
+    EGORefreshTableHeaderView * _refreshHeaderView;
+    EGORefreshTableHeaderView * _refreshBottomView;
+
+    //刷新标识，是否正在刷新过程中
+    BOOL _reloading;
+}
 @property (strong,nonatomic)UILabel * titleLabel;
 @property (strong,nonatomic)HYSegmentedControl * seg;
 @property (strong,nonatomic)NSMutableArray * segArray;
