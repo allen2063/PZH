@@ -14,7 +14,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtn;
+@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtn,currentPageForPic;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

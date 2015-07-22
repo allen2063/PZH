@@ -24,18 +24,18 @@
 //  THE SOFTWARE.
 //
 
-#import "EGORefreshTableHeaderView.h"
+#import "EGORefreshTableHeaderViewTest.h"
 
 
 #define TEXT_COLOR	 [UIColor colorWithRed:87.0/255.0 green:108.0/255.0 blue:137.0/255.0 alpha:1.0]
 #define FLIP_ANIMATION_DURATION 0.18f
-#define BOTTOM scrollView.contentSize.height - scrollView.frame.size.height
 
-@interface EGORefreshTableHeaderView (Private)
+
+@interface EGORefreshTableHeaderViewTest (Private)
 - (void)setState:(EGOPullRefreshState)aState;
 @end
 
-@implementation EGORefreshTableHeaderView
+@implementation EGORefreshTableHeaderViewTest
 
 @synthesize delegate=_delegate;
 
@@ -74,6 +74,8 @@
 		layer.frame = CGRectMake(25.0f, frame.size.height - 65.0f, 30.0f, 55.0f);
 		layer.contentsGravity = kCAGravityResizeAspect;
 		layer.contents = (id)[UIImage imageNamed:@"blueArrow.png"].CGImage;
+        
+        scrView = [[UIScrollView alloc]init];
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
@@ -91,7 +93,7 @@
 		[view release];
 		
 		
-		[self setState:EGOOPullRefreshNormal];
+		//[self setState:EGOOPullJuge];
 		
     }
 	
@@ -127,9 +129,19 @@
 }
 
 - (void)setState:(EGOPullRefreshState)aState{
-	
+    //NSLog(@"scrView.contentOffset.y:%f",scrView.contentOffset.y);
 	switch (aState) {
-		case EGOOPullRefreshPulling:
+        case EGOOPullJuge:
+            if (scrView.contentOffset.y<0) {
+                [self setState:EGOOPullDownRefreshNormal];
+            }
+            else {
+                [self setState:EGOOPullUpRefreshNormal];
+            }
+            
+            break;
+            
+		case EGOOPullDownRefreshPulling:
 			
 			_statusLabel.text = NSLocalizedString(@"Release to refresh...", @"Release to refresh status");
 			[CATransaction begin];
@@ -138,9 +150,9 @@
 			[CATransaction commit];
 			
 			break;
-		case EGOOPullRefreshNormal:
+		case EGOOPullDownRefreshNormal:
 			
-			if (_state == EGOOPullRefreshPulling) {
+			if (_state == EGOOPullDownRefreshPulling) {
 				[CATransaction begin];
 				[CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
 				_arrowImage.transform = CATransform3DIdentity;
@@ -158,7 +170,7 @@
 			[self refreshLastUpdatedDate];
 			
 			break;
-		case EGOOPullRefreshLoading:
+		case EGOOPullDownRefreshLoading:
 			
 			_statusLabel.text = NSLocalizedString(@"Loading...", @"Loading Status");
 			[_activityView startAnimating];
@@ -168,6 +180,45 @@
 			[CATransaction commit];
 			
 			break;
+        case EGOOPullUpRefreshPulling:
+            
+            _statusLabel.text = NSLocalizedString(@"Release to refresh...", @"Release to refresh status");
+            [CATransaction begin];
+            [CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
+            _arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 180.0f, 0.0f, 0.0f, 1.0f);
+            [CATransaction commit];
+            
+            break;
+        case EGOOPullUpRefreshNormal:
+            
+            if (_state == EGOOPullDownRefreshPulling) {
+                [CATransaction begin];
+                [CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
+                _arrowImage.transform = CATransform3DIdentity;
+                [CATransaction commit];
+            }
+            
+            _statusLabel.text = NSLocalizedString(@"Pull up to refresh...", @"Pull up to refresh status");
+            [_activityView stopAnimating];
+            [CATransaction begin];
+            [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+            _arrowImage.hidden = NO;
+            _arrowImage.transform = CATransform3DIdentity;
+            [CATransaction commit];
+            
+            [self refreshLastUpdatedDate];
+            
+            break;
+        case EGOOPullUpRefreshLoading:
+            
+            _statusLabel.text = NSLocalizedString(@"Loading...", @"Loading Status");
+            [_activityView startAnimating];
+            [CATransaction begin];
+            [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+            _arrowImage.hidden = YES;
+            [CATransaction commit];
+            
+            break;
 		default:
 			break;
 	}
@@ -179,35 +230,60 @@
 #pragma mark -
 #pragma mark ScrollView Methods
 
-- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {	
-    NSLog(@"scrollView.contentOffset.y:%f,scrollView.contentInset.top%f",scrollView.contentOffset.y,scrollView.contentInset.top);
-
-	if (_state == EGOOPullRefreshLoading) {
+- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {
+    scrView = scrollView;
+    //NSLog(@"scrollView.contentOffset.y:%f  scrView.contentOffset.y:%f",scrollView.contentOffset.y,scrView.contentOffset.y);
+    if (_state == EGOOPullJuge) {
+        if (scrollView.contentOffset.y>scrollView.contentSize.height -scrollView.bounds.size.height) {
+            [self setState:EGOOPullUpRefreshNormal];
+        }
+        else if(scrollView.contentOffset.y < 0) {
+            [self setState:EGOOPullDownRefreshNormal];
+        }
+    }
+	if (_state == EGOOPullDownRefreshLoading) {
 		
-		CGFloat offset = MAX(scrollView.contentOffset.y, BOTTOM);
-		offset = MIN(offset, BOTTOM+60);
+		CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
+        offset = MIN(offset, 60);
+		scrollView.contentInset = UIEdgeInsetsMake(offset, 0.0f, 0.0f, 0.0f);
         //NSLog(@"offset:%f,scrollView.contentOffset.y:%f",offset,scrollView.contentOffset.y);
+	}
+    else if (_state == EGOOPullUpRefreshLoading) {
+        
+        CGFloat offset = MAX(scrollView.contentOffset.y, scrollView.contentSize.height -scrollView.bounds.size.height);
+        offset = MIN(offset, scrollView.contentSize.height -scrollView.bounds.size.height + 60.0f);
+        scrollView.contentInset = UIEdgeInsetsMake(offset, 0.0f, 0.0f, 0.0f);
+        NSLog(@"Loading:offset:%f,scrollView.contentOffset.y:%f",offset,scrollView.contentOffset.y);
 
-		scrollView.contentInset = UIEdgeInsetsMake(-offset, 0.0f, 0.0f, 0.0f);
-		
-	} else if (scrollView.isDragging) {
+    }
+    else if (scrollView.isDragging) {
 		
 		BOOL _loading = NO;
 		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
 			_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
 		}
 		
-		if (_state == EGOOPullRefreshPulling && scrollView.contentOffset.y < BOTTOM + 65.0f && scrollView.contentOffset.y >BOTTOM && !_loading) {
-			[self setState:EGOOPullRefreshNormal];
-		} else if (_state == EGOOPullRefreshNormal && scrollView.contentOffset.y > BOTTOM + 65.0f && !_loading) {
-			[self setState:EGOOPullRefreshPulling];
+		if (_state == EGOOPullDownRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !_loading) {
+			[self setState:EGOOPullDownRefreshNormal];
 		}
+        else if (_state == EGOOPullDownRefreshNormal && scrollView.contentOffset.y < -65.0f && !_loading) {
+			[self setState:EGOOPullDownRefreshPulling];
+		}
+        else if (_state == EGOOPullUpRefreshPulling && scrollView.contentOffset.y < 65.0f && scrollView.contentOffset.y > 0.0f && !_loading){
+            [self setState:EGOOPullUpRefreshNormal];
+        }
+        else if (_state == EGOOPullUpRefreshNormal && scrollView.contentOffset.y > 65.0f && !_loading) {
+            [self setState:EGOOPullUpRefreshPulling];
+        }
 		
 		if (scrollView.contentInset.top != 0) {
-			scrollView.contentInset = UIEdgeInsetsZero;
+			scrollView.contentInset = UIEdgeInsetsZero;  //
 		}
 		
 	}
+    if (((scrollView.contentOffset.y < -65.0f) ||(scrollView.contentOffset.y>scrollView.contentSize.height-scrollView.bounds.size.height + 65.0f)) ) {
+        [self setState:EGOOPullJuge];
+    }
 	
 }
 
@@ -218,20 +294,33 @@
 		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
 	}
 	
-	if (scrollView.contentOffset.y >= BOTTOM + 65.0f && !_loading) {
+	if (scrollView.contentOffset.y <= - 65.0f && !_loading) {
 		
 		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
 			[_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
 		}
 		
-		[self setState:EGOOPullRefreshLoading];
+		[self setState:EGOOPullDownRefreshLoading];
 		[UIView beginAnimations:nil context:NULL];
 		[UIView setAnimationDuration:0.2];
-		scrollView.contentInset = UIEdgeInsetsMake(-BOTTOM + 60.0f, 0.0f, 0.0f, 0.0f);
+		scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
 		[UIView commitAnimations];
 		
 	}
-	
+    else if (scrollView.contentOffset.y >= scrollView.contentSize.height-scrollView.bounds.size.height + 65.0f && !_loading) {
+        
+        if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
+            [_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
+        }
+        
+        [self setState:EGOOPullUpRefreshLoading];
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2];
+        scrollView.contentInset = UIEdgeInsetsMake(scrollView.contentSize.height -scrollView.bounds.size.height + 60.0f, 0.0f, 0.0f, 0.0f);
+        [UIView commitAnimations];
+        
+    }
+    //NSLog(@"offset:%@contentSize:%f",NSStringFromCGPoint(scrollView.contentOffset),scrollView.contentSize.height);
 }
 
 - (void)egoRefreshScrollViewDidEndDraggingWithRefreshButton:(UIScrollView *)scrollView {
@@ -244,23 +333,32 @@
     if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
         [_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
     }
+    if (_state == EGOOPullDownRefreshNormal ||_state == EGOOPullDownRefreshPulling) {
+        [self setState:EGOOPullDownRefreshLoading];
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2];
+        scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+        [UIView commitAnimations];
+    }
+    else if (_state == EGOOPullUpRefreshNormal ||_state == EGOOPullUpRefreshPulling){
+        [self setState:EGOOPullUpRefreshLoading];
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2];
+        scrollView.contentInset = UIEdgeInsetsMake(scrollView.contentSize.height -scrollView.bounds.size.height + 60.0f, 0.0f, 0.0f, 0.0f);
+        [UIView commitAnimations];
+    }
     
-    [self setState:EGOOPullRefreshLoading];
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.2];
-    scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-    [UIView commitAnimations];
 	
 }
 
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
-    NSLog(@"finishedLoading");
+
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:.3];
-	[scrollView setContentInset:UIEdgeInsetsMake(-BOTTOM, 0.0f, 0.0f, 0.0f)];
+	[scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
 	[UIView commitAnimations];
 	
-	[self setState:EGOOPullRefreshNormal];
+	[self setState:EGOOPullJuge];
     
 }
 

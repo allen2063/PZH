@@ -9,6 +9,7 @@
 #import "HYSegmentedControl.h"
 #import "AppDelegate.h"
 #import "GMDCircleLoader.h"
+#import "PicForPZHViewController.h"
 #define HYSegmentedControl_Width ([UIScreen mainScreen].bounds.size.width)
 #define Min_Width_4_Button 80.0
 
@@ -24,6 +25,7 @@
 @property (strong, nonatomic)UIScrollView *scrollView;
 @property (strong, nonatomic)NSMutableArray *array4Btn;
 @property (strong, nonatomic)UIView *bottomLineView;
+
 @end
 
 @implementation HYSegmentedControl
@@ -66,7 +68,11 @@
         _scrollView.userInteractionEnabled = YES;
         _scrollView.contentSize = CGSizeMake([titles count]*width4btn, HYSegmentedControl_Height);
         _scrollView.showsHorizontalScrollIndicator = NO;
-        _scrollView.contentInset = UIEdgeInsetsMake(-NAVIGATIONHIGHT, 0, 0, 0);      //解决父视图偏移。。。蛋疼了好久
+       // _scrollView.contentInset = UIEdgeInsetsMake(-NAVIGATIONHIGHT, 0, 0, 0);      //解决父视图偏移。。。蛋疼了好久
+
+//        if ([self.superview isKindOfClass:[PicForPZHViewController class]]) {
+//            _scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);      //解决父视图偏移。。。蛋疼了好久
+//        }
 
         
         for (int i = 0; i<[titles count]; i++) {
@@ -184,7 +190,12 @@
         [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
     }
     else if([appDelegate.title isEqualToString:@"图看攀枝花"]){        //图看攀枝花页面
-        appDelegate.touchedSegBtn = btn.tag;
+//        appDelegate.touchedSegBtn = btn.tag;
+//        NSString * countOfPic = [NSString stringWithFormat:@"%d",NUMBEROFPICFORPAGE];
+//        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:btn.currentTitle andPageSize:countOfPic andCurPage:@"1"];
+//        appDelegate.currentPageForPic = 1;
+        NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];
         
     }
 }

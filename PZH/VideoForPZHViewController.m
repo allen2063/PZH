@@ -25,6 +25,7 @@
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDelegate.touchedSegBtn = 1000;    //设置默认播放链接
         //self.urlString = @"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv";
+        self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];

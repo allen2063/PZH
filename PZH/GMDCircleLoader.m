@@ -74,7 +74,7 @@
 // Hide the leader in view
 //------------------------------------
 + (BOOL)hideFromView:(UIView *)view animated:(BOOL)animated {
-    
+    //去除黑色背景
     AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSArray *subViewsArray = appDelegate.window.subviews;
     for (UIView * aView in subViewsArray ) {

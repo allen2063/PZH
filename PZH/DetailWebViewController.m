@@ -36,7 +36,7 @@
 //        self.seg.selectedSegmentIndex = 0;//设置默认选择项索引
 //        self.seg.segmentedControlStyle=UISegmentedControlStyleBar;
 //        [self.view addSubview:self.seg];
-        
+        self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
         [self createSegmentedControl];
         
         self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height))];

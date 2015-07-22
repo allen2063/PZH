@@ -236,8 +236,9 @@
             break;
         case 4:
             appDelegate.title = @"图看攀枝花";
+            //[self.navigationController pushViewController:collectionViewController animated:YES];
             [self.navigationController pushViewController:picForPZH animated:YES];
-            //[appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:@"城市新貌" andPageSize:@"5" andCurPage:@"1"];
+            //[appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:@"城市新貌" andPageSize:@"15" andCurPage:@"1"];
             //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
 
             break;
