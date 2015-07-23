@@ -14,6 +14,8 @@
 @interface PicForPZHViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,DJRefreshDelegate>{
     AppDelegate * appDelegate;
     DJRefreshDirection directionForNow;
+    int threadCount;
+    int totalCellForSeg;
 }
 @property (strong,nonatomic)HYSegmentedControl * seg;
 @property (nonatomic,strong)UICollectionView * collectionView;
@@ -38,7 +40,7 @@
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
-        self.segArray = [NSMutableArray arrayWithObjects:@"城市新貌",@"自然风光",@"美食天地",@"开发建设",@"旅游产品",@"节庆赛事",@"新福家园", nil];
+        self.segArray = [NSMutableArray arrayWithObjects:@"城市新貌",@"自然风光",@"美食天地",@"开发建设",@"旅游产品",@"节庆赛事",@"幸福家园", nil];
         self.tempArray = [[NSMutableArray alloc]init];
         self.currentSegTitle = @"城市新貌";
         [self createSegmentedControl];
@@ -60,6 +62,79 @@
     // Do any additional setup after loading the view.
 }
 
+-(void)GetYXPZH_ContentResult:(NSNotification *)note{
+    
+    if ([[[self.dataList objectAtIndex:0] objectForKey:@"imgView"] isKindOfClass:[NSString class]]) {
+        [self.dataList removeAllObjects];
+    }
+    
+    NSString *htmlString = [[[note userInfo] objectForKey:@"1"]stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSMutableArray * tempArrays = (NSMutableArray *)[htmlString componentsSeparatedByString:@";"];
+    totalCellForSeg = [[tempArrays objectAtIndex:0]intValue];
+    [tempArrays removeObjectAtIndex:0];
+    int picsInPage = NUMBEROFPICFORPAGE;
+    //如果返回的实际图片数小于请求的图片数
+    if (NUMBEROFPICFORPAGE > (tempArrays.count-1)) {
+        picsInPage = (int)tempArrays.count -1;    //去除切除后尾部的空元素
+    }
+    //NSLog(@"多进程开始  计时开始");
+    //多线程返回计数
+    threadCount = 0;
+    for (int i = 0; i<picsInPage; i++) {
+        
+        NSArray * tempArrayss = [[tempArrays objectAtIndex:i ] componentsSeparatedByString:@","];
+        NSMutableArray * tempArraysss = [[NSMutableArray alloc]initWithArray:tempArrayss];
+        [tempArraysss addObject:[NSString stringWithFormat:@"%d",picsInPage]];
+        [tempArraysss addObject:[NSString stringWithFormat:@"%d",i]];
+        [NSThread detachNewThreadSelector:@selector(loadData:) toTarget:self withObject:tempArraysss];
+        
+        //        NSArray * tempArrayss = [[tempArrays objectAtIndex:i ] componentsSeparatedByString:@","];
+        //        NSString * url = [(NSString*)[tempArrayss objectAtIndex:1]stringByReplacingOccurrencesOfString:@" " withString:@""];
+        //        NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+        //        UIImage* image = [[UIImage alloc] initWithData:imageData];
+        //        UIImageView * testImgView = [[UIImageView alloc]initWithImage:image];
+        //        NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArrayss objectAtIndex:0],@"title",testImgView,@"img", nil];
+        //        [self.dataList addObject:dic];
+    }
+    //调用结束动画
+    //    NSLog(@"单进程结束  计时结束");
+    //    __weak typeof(self)weakSelf=self;
+    //    __strong typeof(weakSelf)strongSelf=weakSelf;
+    //
+    //    [strongSelf addDataForDirection:directionForNow];
+}
+
+- (void) loadData:(NSMutableArray *) tempArraysss
+{
+    NSString * url = [(NSString*)[tempArraysss objectAtIndex:1]stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+    UIImage* image = [[UIImage alloc] initWithData:imageData];
+    UIImageView * testImgView = [[UIImageView alloc]initWithImage:image];
+    NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",testImgView,@"imgView",image,@"img", nil];
+    [self.dataList addObject:dic];
+    threadCount++;
+    //NSLog(@"come:%@ back:%@ total:%@",[tempArraysss objectAtIndex:3],[NSString stringWithFormat:@"%d",threadCount],[tempArraysss objectAtIndex:2]);
+    if([[tempArraysss objectAtIndex:2] isEqualToString:[NSString stringWithFormat:@"%d",threadCount]]){
+        [self performSelectorOnMainThread:@selector(returnToMainThread:) withObject:image waitUntilDone:YES];
+    }
+    
+}
+
+-(void) returnToMainThread:(UIImage*) image{
+    //NSLog(@"多进程结束  计时结束");
+    //调用结束动画
+    __weak typeof(self)weakSelf=self;
+    __strong typeof(weakSelf)strongSelf=weakSelf;
+    
+    [strongSelf addDataForDirection:directionForNow];
+}
+
+- (void)segTouched:(NSNotification *)note{
+    //获取二级标题  然后调用动画效果
+    self.currentSegTitle = [[note userInfo] objectForKey:@"title"];
+    [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:NO];
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.titleLabel.text = @"图看攀枝花";
@@ -68,22 +143,16 @@
     self.automaticallyAdjustsScrollViewInsets=NO;
     
     //self.view.backgroundColor=[UIColor whiteColor];
-    
-    
-    
     for (NSInteger i=0; i<NUMBEROFPICFORPAGE; i++) {
-        NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:@"图看攀枝花",@"title",@"defaultPic",@"img", nil];
+        NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:@"图看攀枝花",@"title",@"defaultPic",@"imgView", nil];
         [self.tempArray addObject:dic];
     }
     _dataList=[[NSMutableArray alloc] initWithArray:self.tempArray];
 
-    
     UICollectionViewFlowLayout * flowLayout=[[UICollectionViewFlowLayout alloc] init];
     flowLayout.itemSize=CGSizeMake(88, CELLVIEWHEIGHT);
     flowLayout.minimumLineSpacing=5;
     flowLayout.sectionInset=UIEdgeInsetsMake(10, 14, 10, 14);
-    
-    
     
     _collectionView=[[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.delegate=self;
@@ -133,43 +202,6 @@
 //    });
 }
 
--(void)GetYXPZH_ContentResult:(NSNotification *)note{
-    
-    if ([[[self.dataList objectAtIndex:0] objectForKey:@"img"] isKindOfClass:[NSString class]]) {
-        [self.dataList removeAllObjects];
-    }
-    
-    NSString *htmlString = [[[note userInfo] objectForKey:@"1"]stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSArray * tempArrays = [htmlString componentsSeparatedByString:@";"];
-    int picsInPage = NUMBEROFPICFORPAGE;
-    //如果返回的实际图片数小于请求的图片数
-    if (NUMBEROFPICFORPAGE > (tempArrays.count-1)) {
-        picsInPage = (int)tempArrays.count -1;    //去除切除后尾部的空元素
-    }
-    for (int i = 0; i<picsInPage; i++) {
-        NSArray * tempArrayss = [[tempArrays objectAtIndex:i ] componentsSeparatedByString:@","];
-        NSString * url = [(NSString*)[tempArrayss objectAtIndex:1]stringByReplacingOccurrencesOfString:@" " withString:@""];
-        NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
-        UIImage* image = [[UIImage alloc] initWithData:imageData];
-        UIImageView * testImgView = [[UIImageView alloc]initWithImage:image];
-        NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArrayss objectAtIndex:0],@"title",testImgView,@"img", nil];
-        [self.dataList addObject:dic];
-    }
-    //调用结束动画
-    __weak typeof(self)weakSelf=self;
-    __strong typeof(weakSelf)strongSelf=weakSelf;
-    
-    [strongSelf addDataForDirection:directionForNow];
-    
-}
-
-- (void)segTouched:(NSNotification *)note{
-    //获取二级标题  然后调用动画效果
-    self.currentSegTitle = [[note userInfo] objectForKey:@"title"];
-    [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:NO];
-}
-
-
 - (void)addDataForDirection:(DJRefreshDirection)direction
 {
     
@@ -190,12 +222,9 @@
 //        [self.dataList addObject:@""];
 //    }
     
-    
     [self.refresh finishRefreshingDirection:direction animation:NO];
     
     [self.collectionView reloadData];
-    
-    
     
     ///设置是否有下拉刷新
     if ([self.dataList count]>8)
@@ -205,9 +234,6 @@
     else{
         self.refresh.bottomEnabled=NO;
     }
-    
-    
-    
 }
 
 
@@ -228,10 +254,10 @@
     testLabel.font = [UIFont systemFontOfSize:13];
     testLabel.textAlignment = NSTextAlignmentCenter;
     
-    if ([[[self.dataList objectAtIndex:0] objectForKey:@"img"] isKindOfClass:[UIImageView class]]) {
-        testImgView = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"img"];
+    if ([[[self.dataList objectAtIndex:0] objectForKey:@"imgView"] isKindOfClass:[UIImageView class]]) {
+        testImgView = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"imgView"];
         testLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
-        NSLog(@"%ld",(long)indexPath.row);
+        //NSLog(@"%ld",(long)indexPath.row);
     }else{
         testImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"jz.png"]];
         testLabel.text = @"图看攀枝花";
@@ -243,6 +269,62 @@
     
     cell.backgroundView =testBtn ;
     return cell;
+}
+
+- (void)collectionView:(UICollectionView * )collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    UIView *backgroundView = [[UIView alloc]initWithFrame:self.view.bounds];
+    backgroundView.center = self.view.center;
+    backgroundView.tag = 101;
+    backgroundView.backgroundColor = [UIColor blackColor];
+    backgroundView.alpha = 0;
+    [self.view addSubview:backgroundView];
+    
+    UIImage * selectedImg = [self.dataList[indexPath.row]objectForKey:@"img"];
+    float imgRatio = selectedImg.size.height/selectedImg.size.width ;
+    NSLog(@"imgRatio:%@",NSStringFromCGSize(selectedImg.size));
+    float screeRatio = self.view.frame.size.height/self.view.frame.size.width;
+    CGSize bigImgSize;
+    if (imgRatio>screeRatio) {
+        //长为最大值   宽等比例转换
+        bigImgSize = CGSizeMake((self.view.frame.size.height*18/20)/imgRatio, self.view.frame.size.height*18/20);
+    }else{
+        //宽为最大值   长等比例转换
+        bigImgSize = CGSizeMake(self.view.frame.size.width*18/20, (self.view.frame.size.width*18/20)*imgRatio);
+    }
+    
+    UIImageView * bigImgView = [[UIImageView alloc]initWithImage:selectedImg];
+    bigImgView.frame = CGRectZero;
+    bigImgView.tag = 102;
+    bigImgView.center = CGPointMake(self.view.center.x, self.view.center.y+32);
+    bigImgView.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:bigImgView];
+    NSLog(@"bigImgSize:%@ screenSize:%@",NSStringFromCGSize(bigImgSize),NSStringFromCGSize(self.view.frame.size));
+
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelPic)];
+    [bigImgView addGestureRecognizer:recognizer];
+    [backgroundView addGestureRecognizer:recognizer];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.4];
+    backgroundView.alpha = 0.4;
+    if (imgRatio>screeRatio) {
+        //长为最大值  则高度固定    宽的起始点浮动（frame.x）
+        bigImgView.frame = CGRectMake((self.view.frame.size.width-bigImgSize.width)/2  , self.view.frame.size.height*1/20+32, bigImgSize.width, bigImgSize.height);
+    }
+    else{
+        //宽为最大值  则宽度固定    长的高度点浮动（frame.y）
+        bigImgView.frame = CGRectMake(self.view.frame.size.width*1/20, (self.view.frame.size.height-bigImgSize.height)/2 +32, bigImgSize.width, bigImgSize.height);
+    }
+    [UIView commitAnimations];
+}
+
+- (void)cancelPic{
+    UIView * backgroundView = [self.view viewWithTag:101];
+    [backgroundView removeFromSuperview];
+
+    UIView * bigImgView = [self.view viewWithTag:102];
+    [bigImgView removeFromSuperview];
 }
 
 - (void)getDataForCollectionView{
