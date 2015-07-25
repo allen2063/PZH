@@ -16,14 +16,14 @@
 @end
 
 @implementation VideoForPZHViewController
-@synthesize videoArray,seg,titleLabel,urlString;
+@synthesize videoArray,seg,titleLabel,urlString,videoBtn;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        appDelegate.touchedSegBtn = 1000;    //设置默认播放链接
+        appDelegate.touchedSegBtnTag = 1000;    //设置默认播放链接
         //self.urlString = @"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv";
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
 
@@ -38,13 +38,13 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetSPPZH_ContentResult:) name:@"GetSPPZH_ContentResult" object:nil];
 
         [self createSegmentedControl];
-        UIButton * vedioBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        vedioBtn.backgroundColor = [UIColor lightGrayColor];
-        vedioBtn.frame = CGRectMake(UISCREENWIDTH*0.025,NAVIGATIONHIGHT+HYSegmentedControl_Height+UISCREENHEIGHT/18,UISCREENWIDTH*0.95,UISCREENWIDTH*0.85/1.72);
-        [vedioBtn addTarget:self action:@selector(jumpPageForVideoPZH:) forControlEvents:UIControlEventTouchUpInside];
-        [vedioBtn setBackgroundImage:[UIImage imageNamed:@"bf_bj1.png"] forState:UIControlStateNormal];
-        [vedioBtn setBackgroundImage:[UIImage imageNamed:@"bf_bj2.png"] forState:UIControlStateHighlighted];
-        [self.view addSubview:vedioBtn];
+        self.videoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.videoBtn.backgroundColor = [UIColor lightGrayColor];
+        self.videoBtn.frame = CGRectMake(UISCREENWIDTH*0.025,NAVIGATIONHIGHT+HYSegmentedControl_Height+UISCREENHEIGHT/18,UISCREENWIDTH*0.95,UISCREENWIDTH*0.55);
+        [self.videoBtn addTarget:self action:@selector(jumpPageForVideoPZH:) forControlEvents:UIControlEventTouchUpInside];
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp.png"] forState:UIControlStateNormal];
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp_1.png"] forState:UIControlStateHighlighted];
+        [self.view addSubview:self.videoBtn];
     }
     return self;
 }
@@ -68,7 +68,28 @@
 }
 
 -(void)GetSPPZH_ContentResult:(NSNotification *)note{
-    self.urlString = [[note userInfo] objectForKey:@"1"];
+
+    switch (appDelegate.touchedSegBtnTag) {
+        case 1000:
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp.png"] forState:UIControlStateNormal];
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp_1.png"] forState:UIControlStateHighlighted];
+            break;
+        case 1001:
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp.png"] forState:UIControlStateNormal];
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp_1.png"] forState:UIControlStateHighlighted];
+            break;
+        case 1002:
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm.png"] forState:UIControlStateNormal];
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm_1.png"] forState:UIControlStateHighlighted];
+            break;
+        case 1003:
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm.png"] forState:UIControlStateNormal];
+            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm_1.png"] forState:UIControlStateHighlighted];
+            break;
+        default:
+            break;
+    }
+    self.urlString = [[note userInfo] objectForKey:@"info"];
     [GMDCircleLoader hideFromView:self.view animated:YES];
 }
 

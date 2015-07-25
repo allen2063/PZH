@@ -163,7 +163,7 @@
 }
 
 - (void)MenuContentResults:(NSNotification *)note{
-    NSString *htmlString = [[note userInfo] objectForKey:@"1"];
+    NSString *htmlString = [[note userInfo] objectForKey:@"info"];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
 }
 

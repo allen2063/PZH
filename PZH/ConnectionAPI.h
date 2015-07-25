@@ -15,11 +15,12 @@
     NSNotificationCenter *nc;
     NSMutableDictionary * UserInfo;
 }
+- (void)getTopNews;
+- (void)getMainPagePic;
 - (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext;
 - (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andHannelNext:(NSString *)hannelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
 - (void)getVideoForPZHAPIWihtChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext;
-- (void)test;
-- (void)test2;
+
 
 @property (strong, nonatomic) NSMutableData *webData;
 @property (strong, nonatomic) NSMutableString *soapResults;
@@ -27,11 +28,18 @@
 @property (nonatomic) BOOL elementFoundForMenuContent;
 @property (nonatomic) BOOL elementFoundForPZHPic;
 @property (nonatomic) BOOL elementFoundForPZHVideo;
+@property (nonatomic) BOOL elementFoundForLoadMainPagePic;
+@property (nonatomic) BOOL elementFoundForLoadTopNewsPic;
+@property (nonatomic) BOOL elementFoundForLoadTopNews;
+@property (nonatomic) BOOL elementFoundForLoadTopNewsContent;
 
 @property (strong, nonatomic) NSString *matchingElementForMenuContent;
 @property (strong, nonatomic) NSString *matchingElementForPZHPic;
 @property (strong, nonatomic) NSString *matchingElementForPZHVideo;
 @property (strong, nonatomic) NSString *matchingElementForLoadMainPagePic;
+@property (strong, nonatomic) NSString *matchingElementForLoadTopNewsPic;
+@property (strong, nonatomic) NSString *matchingElementForLoadTopNews;
+@property (strong, nonatomic) NSString *matchingElementForLoadTopNewsContent;
 
 @property (strong, nonatomic) NSURLConnection *conn;
 @property (strong, nonatomic) NSMutableString *getXMLResults;
@@ -39,12 +47,12 @@
 @property (strong, nonatomic) NSDictionary *resultDic;
 @property (strong, nonatomic) NSArray *resultArray;
 
-@property (strong, nonatomic) NSMutableString *soapResults1;
-@property (nonatomic) BOOL elementFound1;
-@property (strong, nonatomic) NSString *matchingElement2;
-@property (strong, nonatomic) NSMutableString *soapResults2;
-@property (nonatomic) BOOL elementFound2;
-@property (strong, nonatomic) NSString *matchingElement3;
-@property (nonatomic) BOOL elementFound3;
-@property (strong, nonatomic) NSString *matchingElement4;
+//@property (strong, nonatomic) NSMutableString *soapResults1;
+//@property (nonatomic) BOOL elementFound1;
+//@property (strong, nonatomic) NSString *matchingElement2;
+//@property (strong, nonatomic) NSMutableString *soapResults2;
+//@property (nonatomic) BOOL elementFound2;
+//@property (strong, nonatomic) NSString *matchingElement3;
+//@property (nonatomic) BOOL elementFound3;
+//@property (strong, nonatomic) NSString *matchingElement4;
 @end

@@ -14,7 +14,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtn,currentPageForPic;
+@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtnTag,currentPageForPic;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -32,6 +32,10 @@
     UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.rootViewController = navCon;
     //mainViewController.navigationItem.titleView = titleLabel;
+    AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.conAPI getTopNews];
+    [appDelegate.conAPI getMainPagePic];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

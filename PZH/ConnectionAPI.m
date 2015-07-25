@@ -18,17 +18,16 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo;
-@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo;
-@synthesize matchingElementForLoadMainPagePic;
-@synthesize soapResults1;
-@synthesize elementFound1;
-@synthesize matchingElement2;       //isentender
-@synthesize soapResults2;
-@synthesize elementFound2;
-@synthesize matchingElement3;       //isextender
-@synthesize elementFound3;
-@synthesize matchingElement4;       //SessionID
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForLoadTopNewsPic;
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForLoadTopNewsPic;
+//@synthesize soapResults1;
+//@synthesize elementFound1;
+//@synthesize matchingElement2;       //isentender
+//@synthesize soapResults2;
+//@synthesize elementFound2;
+//@synthesize matchingElement3;       //isextender
+//@synthesize elementFound3;
+//@synthesize matchingElement4;       //SessionID
 
 
 - (id)init{
@@ -37,12 +36,14 @@
     matchingElementForMenuContent = @"GetMenuContentResult";
     matchingElementForPZHPic = @"GetYXPZH_ContentResult";
     matchingElementForPZHVideo = @"GetSPPZH_ContentResult";
-    matchingElementForLoadMainPagePic = @"LoadMainPagePicResult";
+    matchingElementForLoadMainPagePic = @"LoadMainPagePicResult";   ///
+    matchingElementForLoadTopNews = @"LoadTopNewsResult";     ///
+//    matchingElementForLoadTopNewsContent = @"LoadTopNewsContentResult";
+//    matchingElementForLoadTopNewsPic = @"LoadTopNewsPicResult";      //
     return self;
 }
 
-- (void)test{
-    
+- (void)withInterface:(NSString *)interface{
     NSString *soapMsg = [NSString stringWithFormat:
                          @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                          "<soap12:Envelope "
@@ -50,18 +51,17 @@
                          "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
                          "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
                          "<soap12:Body>"
-                         "<GetMenuContent xmlns=\"http://tempuri.org/\">"
-                         "<channelId>%@</channelId>"
-                         "</GetMenuContent>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "</%@>"
                          "</soap12:Body>"
-                         "</soap12:Envelope>",  @"01fb7c1b-b3d2-486e-af9d-eb64126184b9"];
-
+                         "</soap12:Envelope>",interface,interface];
+    
     NSLog(@"%@",soapMsg);
     NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetMenuContent" forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
     [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [req setHTTPMethod:@"POST"];
@@ -73,30 +73,39 @@
     }else NSLog(@"con为假  %@",webData);
 }
 
-- (void)test2{
+- (void)getMainPagePic{
+    [self withInterface:@"LoadMainPagePic"];
+}
+
+- (void)getTopNews{
+    [self withInterface:@"LoadTopNews"];
+}
+
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "</%@>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,interface];
     
-    NSString * soapMsg12 = [NSString stringWithFormat:
-                            @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-                            "<soap:Envelope \r\n"
-                            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \r\n"
-                            "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\r\n "
-                            "xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n"
-                            "<soap:Body>\r\n"
-                            "<LoadMainPagePic  xmlns=\"http://tempuri.org/\">\r\n"
-                            "</LoadMainPagePic >\r\n"
-                            "</soap:Body>\r\n"
-                            "</soap:Envelope>\r\n"];
-    NSLog(@"%@",soapMsg12);
-    
+    NSLog(@"%@",soapMsg);
     NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg12 length]];
-    [req addValue: @"http://tempuri.org/LoadMainPagePic" forHTTPHeaderField:@"SOAPAction"];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
     [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg12 dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
     
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
@@ -105,7 +114,39 @@
 }
 
 - (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
-    
+    [self withInterface:@"GetMenuContent" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext];
+//    NSString *soapMsg = [NSString stringWithFormat:
+//                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+//                         "<soap12:Envelope "
+//                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+//                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+//                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+//                         "<soap12:Body>"
+//                         "<GetMenuContent xmlns=\"http://tempuri.org/\">"
+//                         "<channelName>%@</channelName>"
+//                         "<channelNext>%@</channelNext>"
+//                         "</GetMenuContent>"
+//                         "</soap12:Body>"
+//                         "</soap12:Envelope>",  channelName,channelNext];
+//    
+//    NSLog(@"%@",soapMsg);
+//    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+//    NSURL * url = [NSURL URLWithString:ur] ;
+//    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+//    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+//    [req addValue: @"http://tempuri.org/GetMenuContent" forHTTPHeaderField:@"SOAPAction"];
+//    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+//    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+//    [req setHTTPMethod:@"POST"];
+//    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+//    if(conn){
+//        webData = [NSMutableData data];
+//    }else NSLog(@"con为假  %@",webData);
+}
+
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value andArgument3Name:(NSString *)argument3Name andArgument3Value:(NSString *)argument3Value andArgument4Name:(NSString *)argument4Name andArgument4Value:(NSString *)argument4Value{
     NSString *soapMsg = [NSString stringWithFormat:
                          @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                          "<soap12:Envelope "
@@ -113,19 +154,21 @@
                          "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
                          "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
                          "<soap12:Body>"
-                         "<GetMenuContent xmlns=\"http://tempuri.org/\">"
-                         "<channelName>%@</channelName>"
-                         "<channelNext>%@</channelNext>"
-                         "</GetMenuContent>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "</%@>"
                          "</soap12:Body>"
-                         "</soap12:Envelope>",  channelName,channelNext];
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,argument3Name,argument3Value,argument3Name,argument4Name,argument4Value,argument4Name,interface];
     
     NSLog(@"%@",soapMsg);
     NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetMenuContent" forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
     [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [req setHTTPMethod:@"POST"];
@@ -137,70 +180,73 @@
     }else NSLog(@"con为假  %@",webData);
 }
 
-- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andHannelNext:(NSString *)hannelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
-    NSString *soapMsg = [NSString stringWithFormat:
-                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                         "<soap12:Envelope "
-                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
-                         "<soap12:Body>"
-                         "<GetYXPZH_Content xmlns=\"http://tempuri.org/\">"
-                         "<channelName>%@</channelName>"
-                         "<channelNext>%@</channelNext>"
-                         "<PageSize>%@</PageSize>"
-                         "<CurPage>%@</CurPage>"
-                         "</GetYXPZH_Content>"
-                         "</soap12:Body>"
-                         "</soap12:Envelope>",  channelName,hannelNext,pageSize,curPage];
-    
-    NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
-    NSURL * url = [NSURL URLWithString:ur] ;
-    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetYXPZH_Content" forHTTPHeaderField:@"SOAPAction"];
-    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
-    if(conn){
-        webData = [NSMutableData data];
-    }else NSLog(@"con为假  %@",webData);
+
+- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andHannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetYXPZH_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
+//    NSString *soapMsg = [NSString stringWithFormat:
+//                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+//                         "<soap12:Envelope "
+//                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+//                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+//                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+//                         "<soap12:Body>"
+//                         "<GetYXPZH_Content xmlns=\"http://tempuri.org/\">"
+//                         "<channelName>%@</channelName>"
+//                         "<channelNext>%@</channelNext>"
+//                         "<PageSize>%@</PageSize>"
+//                         "<CurPage>%@</CurPage>"
+//                         "</GetYXPZH_Content>"
+//                         "</soap12:Body>"
+//                         "</soap12:Envelope>",  channelName,hannelNext,pageSize,curPage];
+//    
+//    NSLog(@"%@",soapMsg);
+//    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+//    NSURL * url = [NSURL URLWithString:ur] ;
+//    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+//    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+//    [req addValue: @"http://tempuri.org/GetYXPZH_Content" forHTTPHeaderField:@"SOAPAction"];
+//    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+//    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+//    [req setHTTPMethod:@"POST"];
+//    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+//    if(conn){
+//        webData = [NSMutableData data];
+//    }else NSLog(@"con为假  %@",webData);
 }
 
 - (void)getVideoForPZHAPIWihtChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
-    NSString *soapMsg = [NSString stringWithFormat:
-                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                         "<soap12:Envelope "
-                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
-                         "<soap12:Body>"
-                         "<GetSPPZH_Content xmlns=\"http://tempuri.org/\">"
-                         "<channelName>%@</channelName>"
-                         "<channelNext>%@</channelNext>"
-                         "</GetSPPZH_Content>"
-                         "</soap12:Body>"
-                         "</soap12:Envelope>",  channelName,channelNext];
-    
-    NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
-    NSURL * url = [NSURL URLWithString:ur] ;
-    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetSPPZH_Content" forHTTPHeaderField:@"SOAPAction"];
-    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
-    if(conn){
-        webData = [NSMutableData data];
-    }else NSLog(@"con为假  %@",webData);
+    [self withInterface:@"GetSPPZH_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext];
+//    NSString *soapMsg = [NSString stringWithFormat:
+//                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+//                         "<soap12:Envelope "
+//                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+//                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+//                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+//                         "<soap12:Body>"
+//                         "<GetSPPZH_Content xmlns=\"http://tempuri.org/\">"
+//                         "<channelName>%@</channelName>"
+//                         "<channelNext>%@</channelNext>"
+//                         "</GetSPPZH_Content>"
+//                         "</soap12:Body>"
+//                         "</soap12:Envelope>",  channelName,channelNext];
+//    
+//    NSLog(@"%@",soapMsg);
+//    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+//    NSURL * url = [NSURL URLWithString:ur] ;
+//    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+//    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+//    [req addValue: @"http://tempuri.org/GetSPPZH_Content" forHTTPHeaderField:@"SOAPAction"];
+//    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+//    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+//    [req setHTTPMethod:@"POST"];
+//    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+//    if(conn){
+//        webData = [NSMutableData data];
+//    }else NSLog(@"con为假  %@",webData);
 }
 
 
@@ -267,11 +313,35 @@
         }
         self.elementFoundForPZHVideo = YES;
     }
+    else if ([elementName isEqualToString:self.matchingElementForLoadMainPagePic]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadMainPagePic = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNewsPic]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadTopNewsPic = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNewsContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadTopNewsContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNews]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadTopNews = YES;
+    }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForLoadTopNewsPic) {
         [self.soapResults appendString: string];
     }
 }
@@ -281,7 +351,7 @@
     if (isfault) {
         return;
     }
-    NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:soapResults forKey:@"1"];
+    NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:soapResults forKey:@"info"];
     if ([elementName isEqualToString:self.matchingElementForMenuContent]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMenuContentResult" object:self userInfo:d];
         self.elementFoundForMenuContent = FALSE;
@@ -297,6 +367,30 @@
     else if ([elementName isEqualToString:self.matchingElementForPZHVideo]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GetSPPZH_ContentResult" object:self userInfo:d];
         self.elementFoundForPZHVideo = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadMainPagePic]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadMainPagePicResult" object:self userInfo:d];
+        self.elementFoundForLoadMainPagePic = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNews]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadTopNewsResult" object:self userInfo:d];
+        self.matchingElementForLoadTopNews = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNewsPic]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadTopNewsPicResult" object:self userInfo:d];
+        self.matchingElementForLoadTopNewsPic = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNewsContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadTopNewsContentResult" object:self userInfo:d];
+        self.matchingElementForLoadTopNewsContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }

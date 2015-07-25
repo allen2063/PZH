@@ -168,6 +168,7 @@
 
 - (void)updateWebViewWithTouchedBtn:(UIButton *)btn{
     NSLog(@"touchedBtn.tag:%ld",(long)btn.tag);
+    appDelegate.touchedSegBtnTag = btn.tag;
     if ([appDelegate.title isEqualToString:@"市情概况"] ) {
             return;//市情概况不需要点击
 //        if([btn.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来

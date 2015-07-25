@@ -57,8 +57,7 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
         self.contentOffset = CGPointMake(UISCREENWIDTHS, 0);
         self.contentSize = CGSizeMake(UISCREENWIDTHS * 3, UISCREENHEIGHTS);
         self.delegate = self;
-        
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MainPagePicResult:) name:@"LoadMainPagePicResult" object:nil];
         
         _leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTHS, UISCREENHEIGHTS)];
         [self addSubview:_leftImageView];
@@ -72,6 +71,25 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
         
     }
     return self;
+}
+
+- (void)MainPagePicResult:(NSNotification *)note{
+    NSString * imgUrl =  [[note userInfo] objectForKey:@"info"];
+    NSMutableArray * imgUrlArray = (NSMutableArray *)[imgUrl componentsSeparatedByString:@";"];
+    [imgUrlArray removeLastObject];
+    [NSThread detachNewThreadSelector:@selector(loadImg:) toTarget:self withObject:imgUrlArray];
+}
+
+- (void)loadImg:(NSMutableArray *)imgUrlArray{
+    NSData * leftimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[imgUrlArray objectAtIndex:0]]];
+    UIImage* leftImage = [[UIImage alloc] initWithData:leftimageData];
+    NSData * centerimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[imgUrlArray objectAtIndex:1]]];
+    UIImage* centerImage = [[UIImage alloc] initWithData:centerimageData];
+    NSData * rightimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[imgUrlArray objectAtIndex:2]]];
+    UIImage* rightImage = [[UIImage alloc] initWithData:rightimageData];
+    _leftImageView.image =leftImage;
+    _centerImageView.image =centerImage;
+    _rightImageView.image =rightImage;
 }
 
 #pragma mark - 设置广告所使用的图片(名字)

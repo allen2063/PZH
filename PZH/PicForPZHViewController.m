@@ -63,12 +63,11 @@
 }
 
 -(void)GetYXPZH_ContentResult:(NSNotification *)note{
-    
     if ([[[self.dataList objectAtIndex:0] objectForKey:@"imgView"] isKindOfClass:[NSString class]]) {
         [self.dataList removeAllObjects];
     }
     
-    NSString *htmlString = [[[note userInfo] objectForKey:@"1"]stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *htmlString = [[[note userInfo] objectForKey:@"info"]stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSMutableArray * tempArrays = (NSMutableArray *)[htmlString componentsSeparatedByString:@";"];
     totalCellForSeg = [[tempArrays objectAtIndex:0]intValue];
     [tempArrays removeObjectAtIndex:0];
@@ -81,7 +80,6 @@
     //多线程返回计数
     threadCount = 0;
     for (int i = 0; i<picsInPage; i++) {
-        
         NSArray * tempArrayss = [[tempArrays objectAtIndex:i ] componentsSeparatedByString:@","];
         NSMutableArray * tempArraysss = [[NSMutableArray alloc]initWithArray:tempArrayss];
         [tempArraysss addObject:[NSString stringWithFormat:@"%d",picsInPage]];
@@ -183,6 +181,7 @@
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction
 {   //获取方向  方便在接收到服务器返回后调用结束动画时传递方向
     directionForNow = direction;
+    self.collectionView.userInteractionEnabled = NO;
     NSString * countOfPic = [NSString stringWithFormat:@"%d",NUMBEROFPICFORPAGE];
     if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
     {
@@ -225,7 +224,8 @@
     [self.refresh finishRefreshingDirection:direction animation:NO];
     
     [self.collectionView reloadData];
-    
+    self.collectionView.userInteractionEnabled = YES;
+
     ///设置是否有下拉刷新
     if ([self.dataList count]>8)
     {
@@ -253,7 +253,7 @@
     UILabel * testLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 73, 88, 23)];
     testLabel.font = [UIFont systemFontOfSize:13];
     testLabel.textAlignment = NSTextAlignmentCenter;
-    
+
     if ([[[self.dataList objectAtIndex:0] objectForKey:@"imgView"] isKindOfClass:[UIImageView class]]) {
         testImgView = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"imgView"];
         testLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
