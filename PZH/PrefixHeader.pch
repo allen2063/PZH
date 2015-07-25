@@ -19,5 +19,6 @@
 #define iOSVERSION [[[UIDevice currentDevice]systemVersion]floatValue]
 #define HYSegmentedControl_Height 40.0
 #define NUMBEROFPICFORPAGE 15
+#define NUMBEROFTITLEFORPAGE 15
 
 #endif

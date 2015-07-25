@@ -13,6 +13,6 @@
 @property (strong,nonatomic)NSMutableArray * announcementOfPublicArray;
 @property (strong,nonatomic)NSMutableArray * leadersActivitiesArray;
 @property (strong,nonatomic)NSMutableArray * workConferenceArray;
-@property (strong,nonatomic)NSMutableArray * dynamicOfdepartmentArray;
+@property (strong,nonatomic)NSMutableArray * dynamicOfDepartmentArray;
 @property (strong,nonatomic)NSMutableArray * countyNewsArray;
 @end

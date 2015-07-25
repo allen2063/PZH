@@ -202,6 +202,7 @@
     [super viewWillAppear:YES];
     //appDelegate.title = @"走进攀枝花";
     self.titleLabel.text = @"走进攀枝花";
+    appDelegate.parentTitle = @"走进攀枝花";
 }
 
 -(void)jumpPageForIntoPZH:(UIButton *)btn{
@@ -243,7 +244,7 @@
         case 5:
             appDelegate.title = @"视频攀枝花";
             [self.navigationController pushViewController:videoForPZH animated:YES];
-            [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:@"视频攀枝花" andChannelNext:@"形象片"];
+            [appDelegate.conAPI getVideoForPZHAPIWithChannelName:@"视频攀枝花" andChannelNext:@"形象片"];
             [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
 
             break;

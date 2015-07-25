@@ -14,7 +14,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtnTag,currentPageForPic;
+@synthesize videoPlayer,superVideoPlayer,title,parentTitle,touchedSegBtnTag,currentPageNumber;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -24,6 +24,7 @@
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];    //导航栏按钮颜色
 
     self.title = [[NSString alloc]init];
+    self.parentTitle = [[NSString alloc]init];
     //self.titleLabel.text = @"攀枝花公众信息网";
     MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
     self.conAPI = [[ConnectionAPI alloc]init];

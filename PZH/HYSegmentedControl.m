@@ -187,7 +187,7 @@
     }
     else if([appDelegate.title isEqualToString:@"视频攀枝花"]){        //视频攀枝花页面
         //appDelegate.touchedSegBtn = btn.tag;
-        [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:appDelegate.title andChannelNext:btn.currentTitle];
+        [appDelegate.conAPI getVideoForPZHAPIWithChannelName:appDelegate.title andChannelNext:btn.currentTitle];
         [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
     }
     else if([appDelegate.title isEqualToString:@"图看攀枝花"]){        //图看攀枝花页面

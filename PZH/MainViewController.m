@@ -58,7 +58,7 @@
         
         self.mainNewsTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*2, UISCREENWIDTH*2/3-INTERVALX, INTERVALY*6)];
         self.mainNewsTitleLabel.text = @"习近平：坚定不移打赢禁毒战!!";
-        self.mainNewsTitleLabel.font = [UIFont systemFontOfSize:15];
+        self.mainNewsTitleLabel.font = [UIFont systemFontOfSize:15];   //boldSystemFontOfSize 加粗
         self.mainNewsTitleLabel.textAlignment = NSTextAlignmentLeft;
         //titleLabel.backgroundColor = [UIColor yellowColor];
         self.mainNewsTitleLabel.tag = 101;

@@ -69,7 +69,7 @@
     
     NSString *htmlString = [[[note userInfo] objectForKey:@"info"]stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSMutableArray * tempArrays = (NSMutableArray *)[htmlString componentsSeparatedByString:@";"];
-    totalCellForSeg = [[tempArrays objectAtIndex:0]intValue];
+    totalCellForSeg = [[tempArrays objectAtIndex:0]intValue];       //此seg里面共有多少图片
     [tempArrays removeObjectAtIndex:0];
     int picsInPage = NUMBEROFPICFORPAGE;
     //如果返回的实际图片数小于请求的图片数
@@ -186,12 +186,12 @@
     if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
     {
         self.dataList = [[NSMutableArray alloc] initWithArray:self.tempArray];
-        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:@"1"];
-        appDelegate.currentPageForPic = 1;
+        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andChannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:@"1"];
+        appDelegate.currentPageNumber = 1;
     }
     else if (self.refresh.refreshingDirection==DJRefreshingDirectionBottom){
-        NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageForPic];
-        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:curPage];
+        NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageNumber];
+        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andChannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:curPage];
     }
     
 //    __weak typeof(self)weakSelf=self;

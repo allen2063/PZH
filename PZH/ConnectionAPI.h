@@ -18,10 +18,11 @@
 - (void)getTopNews;
 - (void)getMainPagePic;
 - (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext;
-- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andHannelNext:(NSString *)hannelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
-- (void)getVideoForPZHAPIWihtChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext;
-
-
+- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
+- (void)getVideoForPZHAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext;
+- (void)getAnnouncementOfPublicArrayListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
+- (void)getAnnouncementOfPublicContentWithTitle:(NSString *)title;
+- (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
 @property (strong, nonatomic) NSMutableData *webData;
 @property (strong, nonatomic) NSMutableString *soapResults;
 @property (strong, nonatomic) NSXMLParser *xmlParser;
@@ -29,17 +30,23 @@
 @property (nonatomic) BOOL elementFoundForPZHPic;
 @property (nonatomic) BOOL elementFoundForPZHVideo;
 @property (nonatomic) BOOL elementFoundForLoadMainPagePic;
-@property (nonatomic) BOOL elementFoundForLoadTopNewsPic;
 @property (nonatomic) BOOL elementFoundForLoadTopNews;
 @property (nonatomic) BOOL elementFoundForLoadTopNewsContent;
+@property (nonatomic) BOOL elementFoundForAnnouncementOfPublicArrayList;
+@property (nonatomic) BOOL elementFoundForAnnouncementOfPublicContent;
+@property (nonatomic) BOOL elementFoundForOpenGovernmentAffairsArrayList;
 
 @property (strong, nonatomic) NSString *matchingElementForMenuContent;
 @property (strong, nonatomic) NSString *matchingElementForPZHPic;
 @property (strong, nonatomic) NSString *matchingElementForPZHVideo;
 @property (strong, nonatomic) NSString *matchingElementForLoadMainPagePic;
-@property (strong, nonatomic) NSString *matchingElementForLoadTopNewsPic;
 @property (strong, nonatomic) NSString *matchingElementForLoadTopNews;
 @property (strong, nonatomic) NSString *matchingElementForLoadTopNewsContent;
+@property (strong, nonatomic) NSString *matchingElementForAnnouncementOfPublicArrayList;
+@property (strong, nonatomic) NSString *matchingElementForAnnouncementOfPublicContent;
+@property (strong, nonatomic) NSString *matchingElementForOpenGovernmentAffairsArrayList;
+
+
 
 @property (strong, nonatomic) NSURLConnection *conn;
 @property (strong, nonatomic) NSMutableString *getXMLResults;

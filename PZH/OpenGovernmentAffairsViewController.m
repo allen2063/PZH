@@ -8,6 +8,7 @@
 
 #import "OpenGovernmentAffairsViewController.h"
 #import "AppDelegate.h"
+#import "NewsViewController.h"
 @interface OpenGovernmentAffairsViewController (){
     AppDelegate * appDelegate;
 }
@@ -19,7 +20,7 @@
 #define INTERVALY UISCREENHEIGHT/35
 #define MAINBTNWIDTH UISCREENWIDTH*1/3
 #define MAINBTNHEIGHT UISCREENWIDTH/4
-@synthesize countyNewsArray,leadersActivitiesArray,dynamicOfdepartmentArray,workConferenceArray,announcementOfPublicArray;
+@synthesize countyNewsArray,leadersActivitiesArray,dynamicOfDepartmentArray,workConferenceArray,announcementOfPublicArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -60,7 +61,7 @@
         
         UIButton * announcementOfPublicBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         announcementOfPublicBtn.frame = CGRectMake(0,NAVIGATIONHIGHT,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY*1.5);
-        [announcementOfPublicBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
+        [announcementOfPublicBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         announcementOfPublicBtn.tag = 1;
         [announcementOfPublicBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
@@ -72,7 +73,7 @@
         
         UIImageView * announcementOfPublicImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gggs.png"]];
         announcementOfPublicImgView.frame = CGRectMake(INTERVALX,INTERVALY,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * announcementOfPublicLabelImg = [UIImage imageNamed:@"1.png"];
+        UIImage * announcementOfPublicLabelImg = [UIImage imageNamed:@"zi_1.png"];
         UIImageView * cannouncementOfPublicLabelImgView = [[UIImageView alloc]initWithImage:announcementOfPublicLabelImg];
         cannouncementOfPublicLabelImgView.frame = CGRectMake(0, 0, announcementOfPublicLabelImg.size.width/3.3, announcementOfPublicLabelImg.size.height/3.3);
         cannouncementOfPublicLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
@@ -85,7 +86,7 @@
         self.leadersActivitiesArray = [[NSMutableArray alloc]initWithObjects:@"讲话",@"活动",@"会议",@"调研",@"其他", nil];
         UIButton * leadersActivitiesBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         leadersActivitiesBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*1.5+MAINBTNHEIGHT,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
-        [leadersActivitiesBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
+        [leadersActivitiesBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         leadersActivitiesBtn.tag = 2;
         [leadersActivitiesBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
@@ -102,7 +103,7 @@
         
         UIImageView * leadersActivitiesImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ldhd.png"]];
         leadersActivitiesImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);;
-        UIImage * leadersActivitiesLabelImg = [UIImage imageNamed:@"2.png"];
+        UIImage * leadersActivitiesLabelImg = [UIImage imageNamed:@"zi_2.png"];
         UIImageView * leadersActivitiesLabelImgView = [[UIImageView alloc]initWithImage:leadersActivitiesLabelImg];
         leadersActivitiesLabelImgView.frame = CGRectMake(0, 0, leadersActivitiesLabelImg.size.width/3.3, leadersActivitiesLabelImg.size.height/3.3);
         leadersActivitiesLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
@@ -115,7 +116,7 @@
         self.workConferenceArray = [[NSMutableArray alloc]initWithObjects:@"市委会议",@"政府会议",@"人大会议",@"政协会议", nil];
         UIButton * workConferenceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         workConferenceBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*2.5+MAINBTNHEIGHT*2,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
-        [workConferenceBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
+        [workConferenceBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         workConferenceBtn.tag = 3;
         [workConferenceBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
@@ -133,7 +134,7 @@
         
         UIImageView * workConferenceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gzhy.png"]];
         workConferenceImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * workConferenceLabelImg = [UIImage imageNamed:@"3.png"];
+        UIImage * workConferenceLabelImg = [UIImage imageNamed:@"zi_3.png"];
         UIImageView * workConferenceLabelImgView = [[UIImageView alloc]initWithImage:workConferenceLabelImg];
         workConferenceLabelImgView.frame = CGRectMake(0, 0, workConferenceLabelImg.size.width/3.3, workConferenceLabelImg.size.height/3.3);
         workConferenceLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
@@ -143,10 +144,10 @@
         [scrView addSubview:workConferenceBtn];
         
         //部门动态
-        self.dynamicOfdepartmentArray = [[NSMutableArray alloc]initWithObjects:@"部门会议", nil];
+        self.dynamicOfDepartmentArray = [[NSMutableArray alloc]initWithObjects:@"部门会议", nil];
         UIButton * dynamicOfdepartmentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         dynamicOfdepartmentBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*3.5+MAINBTNHEIGHT*3,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
-        [dynamicOfdepartmentBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
+        [dynamicOfdepartmentBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         dynamicOfdepartmentBtn.tag = 3;
         [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
@@ -159,7 +160,7 @@
         
         UIImageView * dynamicOfdepartmentImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bmdt.png"]];
         dynamicOfdepartmentImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * dynamicOfdepartmentLabelImg = [UIImage imageNamed:@"3.png"];
+        UIImage * dynamicOfdepartmentLabelImg = [UIImage imageNamed:@"zi_4.png"];
         UIImageView * dynamicOfdepartmentLabelImgView = [[UIImageView alloc]initWithImage:dynamicOfdepartmentLabelImg];
         dynamicOfdepartmentLabelImgView.frame = CGRectMake(0, 0, dynamicOfdepartmentLabelImg.size.width/3.3, dynamicOfdepartmentLabelImg.size.height/3.3);
         dynamicOfdepartmentLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
@@ -172,7 +173,7 @@
         self.countyNewsArray = [[NSMutableArray alloc]initWithObjects:@"区县快讯", nil];
         UIButton * countyNewsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         countyNewsBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*4.5+MAINBTNHEIGHT*4,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
-        [countyNewsBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
+        [countyNewsBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         countyNewsBtn.tag = 3;
         [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
@@ -185,7 +186,7 @@
         
         UIImageView * countyNewsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"qxkx.png"]];
         countyNewsImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * countyNewsLabelImg = [UIImage imageNamed:@"3.png"];
+        UIImage * countyNewsLabelImg = [UIImage imageNamed:@"zi_5.png"];
         UIImageView * countyNewsLabelImgView = [[UIImageView alloc]initWithImage:countyNewsLabelImg];
         countyNewsLabelImgView.frame = CGRectMake(0, 0, countyNewsLabelImg.size.width/3.3, countyNewsLabelImg.size.height/3.3);
         countyNewsLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
@@ -200,16 +201,66 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = item;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     //appDelegate.title = @"走进攀枝花";
     self.titleLabel.text = @"政务公开";
+    appDelegate.parentTitle = @"政务公开";
 }
 
-- (void)jumpPageForIntoPZH:(UIButton *)btn{
-    
+- (void)jumpPageForOpenGovernmentAffairs:(UIButton *)btn{
+    NewsViewController * newsViewController = [NewsViewController alloc];
+//    VideoForPZHViewController * videoForPZH = [[VideoForPZHViewController alloc]init];
+//    DetailWebViewController * detailViewController = [DetailWebViewController alloc];
+//    EconomyViewController * economyViewController = [[EconomyViewController alloc]init];
+    switch (btn.tag) {
+        case 1:
+//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.cityOverview];
+            appDelegate.title = @"公告公示";
+            newsViewController = [newsViewController init];
+            [self.navigationController pushViewController:newsViewController animated:YES];
+//            [appDelegate.conAPI getAnnouncementOfPublicArrayListWithPageSize:@"15" andCurPage:@"1"];
+//            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            
+            break;
+        case 2:
+            appDelegate.title = @"领导活动";
+            newsViewController = [newsViewController init];
+            [self.navigationController pushViewController:newsViewController animated:YES];
+//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
+//            appDelegate.title = @"自然概况";
+//            [self.navigationController pushViewController:detailViewController animated:YES];
+//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"自然概况" andChannelNext:@"地理位置"];
+//            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            
+            break;
+        case 3:
+//            appDelegate.title = @"国民经济";
+//            [self.navigationController pushViewController:economyViewController animated:YES];
+//            //[appDelegate.conAPI getMenuContentAPIWithChannelName:@"自然概况" andChannelNext:@"地理位置"];
+            break;
+        case 4:
+//            appDelegate.title = @"图看攀枝花";
+//            //[self.navigationController pushViewController:collectionViewController animated:YES];
+//            [self.navigationController pushViewController:picForPZH animated:YES];
+//            //[appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:@"城市新貌" andPageSize:@"15" andCurPage:@"1"];
+//            //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            
+            break;
+        case 5:
+//            appDelegate.title = @"视频攀枝花";
+//            [self.navigationController pushViewController:videoForPZH animated:YES];
+//            [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:@"视频攀枝花" andChannelNext:@"形象片"];
+//            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

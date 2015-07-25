@@ -16,6 +16,7 @@
 @property (strong,nonatomic)NSMutableArray * segArray;
 @property (strong,nonatomic)AppDelegate * appDelegate;
 @property (strong,nonatomic)UILabel * titleLabel;
+@property (strong,nonatomic)UIImageView * overheadInformationSumImgView;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArray;
 
 @end

@@ -14,6 +14,7 @@
 
 @implementation DetailWebViewController
 @synthesize webView,seg,segArray,appDelegate,titleLabel;
+#define OVERHEADINFORMATIONCELLLABELHEIGHT 15
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArrays
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,7 +47,7 @@
         [self.view addSubview:self.webView];
         
         self.appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetMenuContentResult" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetWebResult" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fault) name:@"fault" object:nil];
 
         }
@@ -64,95 +65,13 @@
     [super viewWillAppear:YES];
     
     self.titleLabel.text = appDelegate.title;
+    if (![appDelegate.parentTitle isEqualToString:@"走进攀枝花"]) {
+        [self addLabelForType:2];
+    }
+    
     //self.title = [self.segArray objectAtIndex:0];
     //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-
-//    NSLayoutConstraint *constraintTopForSeg = [
-//                                      NSLayoutConstraint
-//                                      constraintWithItem:self.seg
-//                                      attribute:NSLayoutAttributeTop
-//                                      relatedBy:NSLayoutRelationEqual
-//                                      toItem:self.view
-//                                      attribute:NSLayoutAttributeTop
-//                                      multiplier:1.0f
-//                                      constant:64
-//                                      ];
-//    
-//    NSLayoutConstraint *constraintWidthForSeg = [
-//                                            NSLayoutConstraint
-//                                            constraintWithItem:self.seg
-//                                            attribute:NSLayoutAttributeWidth
-//                                            relatedBy:NSLayoutRelationEqual
-//                                            toItem:self.view
-//                                            attribute:NSLayoutAttributeWidth
-//                                            multiplier:1.0f
-//                                            constant:00.0f
-//                                            ];
-//    
-//    NSLayoutConstraint *constraintHighForSeg = [
-//                                          NSLayoutConstraint
-//                                          constraintWithItem:self.seg
-//                                          attribute:NSLayoutAttributeHeight
-//                                          relatedBy:NSLayoutRelationEqual
-//                                          toItem:self.view
-//                                          attribute:NSLayoutAttributeHeight
-//                                          multiplier:0.06
-//                                          constant:00.0f
-//                                          ];
-//    
-//    NSLayoutConstraint *constraintXForSeg = [
-//                                                NSLayoutConstraint
-//                                                constraintWithItem:self.seg
-//                                                attribute:NSLayoutAttributeCenterX
-//                                                relatedBy:NSLayoutRelationEqual
-//                                                toItem:self.view
-//                                                attribute:NSLayoutAttributeCenterX
-//                                                multiplier:1
-//                                                constant:00.0f
-//                                                ];
-//    [self.view addConstraint:constraintTopForSeg];
-//    [self.view addConstraint:constraintWidthForSeg];
-//    [self.view addConstraint:constraintHighForSeg];
-//    [self.view addConstraint:constraintXForSeg];
     
-//    NSLayoutConstraint *constraintBottomForWeb = [
-//                                               NSLayoutConstraint
-//                                               constraintWithItem:self.webView
-//                                               attribute:NSLayoutAttributeBottom
-//                                               relatedBy:NSLayoutRelationEqual
-//                                               toItem:self.view
-//                                               attribute:NSLayoutAttributeBottom
-//                                               multiplier:1.0f
-//                                               constant:0
-//                                               ];
-//    
-//    NSLayoutConstraint *constraintTopForWeb = [
-//                                                  NSLayoutConstraint
-//                                                  constraintWithItem:self.webView
-//                                                  attribute:NSLayoutAttributeTop
-//                                                  relatedBy:NSLayoutRelationEqual
-//                                                  toItem:self.view
-//                                                  attribute:NSLayoutAttributeBottom
-//                                                  multiplier:1.0f
-//                                                  constant:120
-//                                                  ];
-//    
-//    NSLayoutConstraint *constraintWidthForWeb = [
-//                                                 NSLayoutConstraint
-//                                                 constraintWithItem:self.webView
-//                                                 attribute:NSLayoutAttributeWidth
-//                                                 relatedBy:NSLayoutRelationEqual
-//                                                 toItem:self.view
-//                                                 attribute:NSLayoutAttributeWidth
-//                                                 multiplier:1.0f
-//                                                 constant:00.0f
-//                                                 ];
-//    
-//    [self.view addConstraint:constraintTopForWeb];
-//    [self.view addConstraint:constraintWidthForWeb];
-//    [self.view addConstraint:constraintBottomForWeb];
-    
-    //NSLog(@"%@,%@,%@",NSStringFromCGSize(self.seg.intrinsicContentSize),self.seg.hasAmbiguousLayout?@"YES":@"NO",NSStringFromCGSize(self.webView.intrinsicContentSize));
 }
 
 - (void)fault{
@@ -165,6 +84,9 @@
 - (void)MenuContentResults:(NSNotification *)note{
     NSString *htmlString = [[note userInfo] objectForKey:@"info"];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+//    if (htmlString rangeOfString:@"") {
+//        <#statements#>
+//    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
@@ -187,6 +109,131 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)addLabelForType:(int)type{
+    //政务公开等详情图上的标签
+    self.overheadInformationSumImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bg.png"]];
+    [self.view addSubview:self.overheadInformationSumImgView];
+    if(type == 6){
+        self.overheadInformationSumImgView.frame = CGRectMake(0,NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, OVERHEADINFORMATIONCELLLABELHEIGHT*5);
+        
+        UILabel *  overheadInformationCellNameLabel1= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT/2, 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel1.text = @"索引号:";
+        overheadInformationCellNameLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel1.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel1.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel1];
+        
+        UILabel *  overheadInformationCellNameLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2 + 10, OVERHEADINFORMATIONCELLLABELHEIGHT/2 , 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel2.text = @"发布日期:";
+        overheadInformationCellNameLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel2.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel2.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel2];
+        
+        UILabel *  overheadInformationCellNameLabel3= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT*1.5, 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel3.text = @"主题分类:";
+        overheadInformationCellNameLabel3.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel3.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel3.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel3];
+        
+        UILabel *  overheadInformationCellNameLabel4= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+10, 1.5*OVERHEADINFORMATIONCELLLABELHEIGHT , 30, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel4.text = @"文号:";
+        overheadInformationCellNameLabel4.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel4.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel4.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel4];
+        
+        UILabel *  overheadInformationCellNameLabel5= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT*2.5, 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel5.text = @"发布机构:";
+        overheadInformationCellNameLabel5.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel5.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel5.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel5];
+        
+        UILabel *  overheadInformationCellNameLabel6= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT*3.5, 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel6.text = @"关键词:";
+        overheadInformationCellNameLabel6.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel6.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel6.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel6];
+        
+        UILabel *  overheadInformationCellValueLabel1= [[UILabel alloc]initWithFrame:CGRectMake(55,OVERHEADINFORMATIONCELLLABELHEIGHT/2,UISCREENWIDTH/2 - 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel1.tag = 1;
+        overheadInformationCellValueLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel1.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel1.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel1];
+        
+        UILabel *  overheadInformationCellValueLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+70, OVERHEADINFORMATIONCELLLABELHEIGHT/2 ,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel2.tag = 2;
+        overheadInformationCellValueLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel2.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel2.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel2];
+        
+        UILabel *  overheadInformationCellValueLabel3= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT*1.5,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel3.tag = 3;
+        overheadInformationCellValueLabel3.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel3.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel3.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel3];
+        
+        UILabel *  overheadInformationCellValueLabel4= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+40, 1.5*OVERHEADINFORMATIONCELLLABELHEIGHT ,UISCREENWIDTH/2 - 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel4.tag = 4;
+        overheadInformationCellValueLabel4.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel4.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel4.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel4];
+        
+        UILabel *  overheadInformationCellValueLabel5= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT*2.5,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel5.tag = 5;
+        overheadInformationCellValueLabel5.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel5.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel5.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel5];
+        
+        UILabel *  overheadInformationCellValueLabel6= [[UILabel alloc]initWithFrame:CGRectMake(55,OVERHEADINFORMATIONCELLLABELHEIGHT*3.5,UISCREENWIDTH/2 - 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel6.tag = 6;
+        overheadInformationCellValueLabel6.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel6.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel6.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel6];
+    }
+    else if (type == 2){
+        self.overheadInformationSumImgView.frame = CGRectMake(0,NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, OVERHEADINFORMATIONCELLLABELHEIGHT*2);
+        UILabel *  overheadInformationCellNameLabel1= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT/2, 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel1.text = @"发布日期:";
+        overheadInformationCellNameLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel1.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel1.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel1];
+        
+        UILabel *  overheadInformationCellNameLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2 + 10, OVERHEADINFORMATIONCELLLABELHEIGHT/2 , 30, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel2.text = @"来源:";
+        overheadInformationCellNameLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel2.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel2.backgroundColor = [UIColor yellowColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel2];
+        
+        UILabel *  overheadInformationCellValueLabel1= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT/2,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel1.tag = 1;
+        overheadInformationCellValueLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel1.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel1.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel1];
+        
+        UILabel *  overheadInformationCellValueLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+40, OVERHEADINFORMATIONCELLLABELHEIGHT/2 ,UISCREENWIDTH/2 - 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel2.tag = 2;
+        overheadInformationCellValueLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel2.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel2.backgroundColor = [UIColor blueColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel2];
+    }
+    self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height+self.overheadInformationSumImgView.frame.size.height, UISCREENWIDTH, UISCREENHEIGHT-(NAVIGATIONHIGHT+HYSegmentedControl_Height+self.overheadInformationSumImgView.frame.size.height));
+
 }
 
 - (void)didReceiveMemoryWarning {
