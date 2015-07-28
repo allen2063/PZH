@@ -144,15 +144,15 @@
         [scrView addSubview:workConferenceBtn];
         
         //部门动态
-        self.dynamicOfDepartmentArray = [[NSMutableArray alloc]initWithObjects:@"部门会议", nil];
+        self.dynamicOfDepartmentArray = [[NSMutableArray alloc]initWithObjects:@"部门动态", nil];
         UIButton * dynamicOfdepartmentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         dynamicOfdepartmentBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*3.5+MAINBTNHEIGHT*3,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
         [dynamicOfdepartmentBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
-        dynamicOfdepartmentBtn.tag = 3;
+        dynamicOfdepartmentBtn.tag = 4;
         [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
         UILabel * dynamicOfdepartmentLabel = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        dynamicOfdepartmentLabel.text = @"部门会议";
+        dynamicOfdepartmentLabel.text = @"部门动态";
         dynamicOfdepartmentLabel.font = [UIFont systemFontOfSize:12];
         dynamicOfdepartmentLabel.textAlignment = NSTextAlignmentLeft;
         dynamicOfdepartmentLabel.backgroundColor = [UIColor clearColor];
@@ -174,7 +174,7 @@
         UIButton * countyNewsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         countyNewsBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*4.5+MAINBTNHEIGHT*4,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
         [countyNewsBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
-        countyNewsBtn.tag = 3;
+        countyNewsBtn.tag = 5;
         [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
         UILabel * countyNewsLabel = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
@@ -214,48 +214,32 @@
 
 - (void)jumpPageForOpenGovernmentAffairs:(UIButton *)btn{
     NewsViewController * newsViewController = [NewsViewController alloc];
-//    VideoForPZHViewController * videoForPZH = [[VideoForPZHViewController alloc]init];
-//    DetailWebViewController * detailViewController = [DetailWebViewController alloc];
-//    EconomyViewController * economyViewController = [[EconomyViewController alloc]init];
     switch (btn.tag) {
         case 1:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.cityOverview];
             appDelegate.title = @"公告公示";
             newsViewController = [newsViewController init];
             [self.navigationController pushViewController:newsViewController animated:YES];
-//            [appDelegate.conAPI getAnnouncementOfPublicArrayListWithPageSize:@"15" andCurPage:@"1"];
-//            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-            
             break;
         case 2:
             appDelegate.title = @"领导活动";
             newsViewController = [newsViewController init];
             [self.navigationController pushViewController:newsViewController animated:YES];
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
-//            appDelegate.title = @"自然概况";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"自然概况" andChannelNext:@"地理位置"];
-//            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-            
             break;
         case 3:
-//            appDelegate.title = @"国民经济";
-//            [self.navigationController pushViewController:economyViewController animated:YES];
-//            //[appDelegate.conAPI getMenuContentAPIWithChannelName:@"自然概况" andChannelNext:@"地理位置"];
+            appDelegate.title = @"工作会议";
+            newsViewController = [newsViewController init];
+            [self.navigationController pushViewController:newsViewController animated:YES];
             break;
         case 4:
-//            appDelegate.title = @"图看攀枝花";
-//            //[self.navigationController pushViewController:collectionViewController animated:YES];
-//            [self.navigationController pushViewController:picForPZH animated:YES];
-//            //[appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:@"城市新貌" andPageSize:@"15" andCurPage:@"1"];
-//            //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-            
+            appDelegate.title = @"部门动态";
+            newsViewController = [newsViewController init];
+            [self.navigationController pushViewController:newsViewController animated:YES];
             break;
         case 5:
-//            appDelegate.title = @"视频攀枝花";
-//            [self.navigationController pushViewController:videoForPZH animated:YES];
-//            [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:@"视频攀枝花" andChannelNext:@"形象片"];
-//            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            appDelegate.title = @"区县快讯";
+            newsViewController = [newsViewController init];
+            [self.navigationController pushViewController:newsViewController animated:YES];
+            break;
             
             break;
         default:

@@ -18,9 +18,9 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList;
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent;
 
-@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList;
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent;
 //@synthesize soapResults1;
 //@synthesize elementFound1;
 //@synthesize matchingElement2;       //isentender
@@ -39,10 +39,11 @@
     matchingElementForPZHVideo = @"GetSPPZH_ContentResult";
     matchingElementForLoadMainPagePic = @"LoadMainPagePicResult";   ///
     matchingElementForLoadTopNews = @"LoadTopNewsResult";     ///
-//    matchingElementForLoadTopNewsContent = @"LoadTopNewsContentResult";
+    matchingElementForLoadTopNewsContent = @"LoadTopNewsContentResult";
     matchingElementForAnnouncementOfPublicArrayList = @"GetGGGS_ListResult";
     matchingElementForAnnouncementOfPublicContent = @"GetGGGS_ContentResult";
     matchingElementForOpenGovernmentAffairsArrayList = @"GetZWGK_ListResult";//根据接口  貌似政务公开里面领导活动 工作会议 部门动态 区县快讯的list都用同一个接口
+    matchingElementForPassageContent = @"GetGGFW_ContentResult";//所有文章列表都是用此接口
     return self;
 }
 
@@ -140,6 +141,39 @@
     }else NSLog(@"con为假  %@",webData);
 }
 
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value andArgument3Name:(NSString *)argument3Name andArgument3Value:(NSString *)argument3Value{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "</%@>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,argument3Name,argument3Value,argument3Name,interface];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
 - (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value andArgument3Name:(NSString *)argument3Name andArgument3Value:(NSString *)argument3Value andArgument4Name:(NSString *)argument4Name andArgument4Value:(NSString *)argument4Value{
     NSString *soapMsg = [NSString stringWithFormat:
                          @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -182,6 +216,11 @@
     [self withInterface:@"LoadTopNews"];
 }
 
+- (void)getTopNewsContentWithTitile:(NSString *)title{
+    [self withInterface:@"LoadTopNewsContent" andArgument1Name:@"title" andArgument1Value:title];
+}
+
+
 - (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
     [self withInterface:@"GetMenuContent" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext];
 }
@@ -204,6 +243,10 @@
 
 - (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
     [self withInterface:@"GetZWGK_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
+}
+
+- (void)getPassageContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
 }
 
 
@@ -306,11 +349,17 @@
         }
         self.elementFoundForOpenGovernmentAffairsArrayList = YES;
     }
+    else if ([elementName isEqualToString:self.matchingElementForPassageContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForPassageContent = YES;
+    }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent) {
         [self.soapResults appendString: string];
     }
 }
@@ -367,7 +416,7 @@
         [self.xmlParser abortParsing];
     }
     else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfPublicContent]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetWebResult" object:self userInfo:d];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageContentResult" object:self userInfo:d];
         self.elementFoundForAnnouncementOfPublicContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
@@ -375,6 +424,12 @@
     else if ([elementName isEqualToString:self.matchingElementForOpenGovernmentAffairsArrayList]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GetZWGK_ListResult" object:self userInfo:d];
         self.elementFoundForOpenGovernmentAffairsArrayList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPassageContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageContentResult" object:self userInfo:d];
+        self.elementFoundForPassageContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }

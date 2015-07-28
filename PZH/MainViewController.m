@@ -7,9 +7,10 @@
 //
 
 #import "MainViewController.h"
-
+#import "DetailWebViewController.h"
 @interface MainViewController (){
     AppDelegate * appDelegate;
+    BOOL topNewsIsLoaded;
 }
 
 @end
@@ -42,9 +43,10 @@
         self.navigationItem.titleView = self.titleLabel;
         
         //首页头条新闻
+        topNewsIsLoaded = NO;
         self.mainNewsBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.mainNewsBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+SCROllVIEWHIGHT,UISCREENWIDTH,MAINNEWSHIGHT);
-        [self.mainNewsBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
+        [self.mainNewsBtn addTarget:self action:@selector(jumpPageForTopNews) forControlEvents:UIControlEventTouchUpInside];
         self.mainNewsBtn.tag = 5;
         [self.mainNewsBtn setBackgroundImage:[UIImage imageNamed:@"xw_bj.png"] forState:UIControlStateNormal];
         [self.mainNewsBtn setBackgroundImage:[UIImage imageNamed:@"dj_bj.png"] forState:UIControlStateSelected];
@@ -191,14 +193,6 @@
     // Do any additional setup after loading the view.
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = item;
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    
-//    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, UISCREENWIDTH, 20)];
-//    statusBarView.backgroundColor=[UIColor redColor];
-//    [self.view addSubview:statusBarView];
-    //[[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:242/255.0 green:67/255.0 blue:0/255.0 alpha:1]];
-
-    //[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
     [self createScrollView];
 }
 
@@ -212,7 +206,6 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     [self.scrollView recountTheTimeIsPause:YES];   //避免页面跳转时scrollView错位
-    
 }
 
 - (void)LoadTopNewsResult:(NSNotification *)note{
@@ -224,6 +217,7 @@
     self.mainNewsImgView.image = topNewsImage;
     self.mainNewsTitleLabel.text = [topNewsInfoArray objectAtIndex:1];
     self.mainNewsbodyLabel.text = [topNewsInfoArray objectAtIndex:2];
+    topNewsIsLoaded = YES;
 }
 
 - (void)jumpPageForMainView:(UIButton *)btn{
@@ -231,10 +225,12 @@
     self.openGovernmentAffairsViewController = [[OpenGovernmentAffairsViewController alloc]init];
     switch (btn.tag) {
         case 1:
+            appDelegate.parentTitle = @"走进攀枝花";
             [self.navigationController pushViewController:self.intoPZHViewController animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
             break;
         case 2:
+            appDelegate.parentTitle = @"政务公开";
             [self.navigationController pushViewController:self.openGovernmentAffairsViewController animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
             break;
@@ -254,6 +250,16 @@
         default:
             break;
     }
+}
+
+- (void)jumpPageForTopNews{
+    if (topNewsIsLoaded == YES) {
+        [appDelegate.conAPI getTopNewsContentWithTitile:self.mainNewsTitleLabel.text];
+        NSMutableArray * arr = [[NSMutableArray alloc]initWithObjects:@"头条新闻", nil];
+        
+        DetailWebViewController * detail = [[DetailWebViewController alloc]initWithNibName:nil bundle:nil WithURL:nil andSegArray:arr];
+        [self.navigationController pushViewController:detail animated:YES];
+    }else NSLog(@"等待加载头条新闻");
 }
 
 

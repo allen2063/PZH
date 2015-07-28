@@ -30,7 +30,7 @@
 //----------------------------------
 // To change the color and frame size of the spinner, simply change the color and frame definition here.
 //----------------------------------
-#define GMD_SPINNER_COLOR       UIColorFromRGBValue(0x3c3c3c)
+#define GMD_SPINNER_COLOR       UIColorFromRGBValue(0xf24300)   //  橙色 0xf24300   黑色 0x3c3c3c
 #define GMD_SPINNER_FRAME       CGRectMake(40.0f, 40.0f, 40.0f, 40.0f)
 #define GMD_SPINNER_IMAGE       CGRectMake(15, 15,30,30)
 #define GMD_IMAGE               [UIImage imageNamed:@"image"]

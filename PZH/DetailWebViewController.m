@@ -47,9 +47,10 @@
         [self.view addSubview:self.webView];
         
         self.appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetWebResult" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetWebResult" object:nil];//走进攀枝花
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fault) name:@"fault" object:nil];
-
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"PassageContentResult" object:nil];//带标签的文章
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"LoadTopNewsContentResult" object:nil];//头条新闻
         }
     return self;
 }
@@ -82,11 +83,37 @@
 }
 
 - (void)MenuContentResults:(NSNotification *)note{
-    NSString *htmlString = [[note userInfo] objectForKey:@"info"];
-    [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
-//    if (htmlString rangeOfString:@"") {
-//        <#statements#>
-//    }
+    NSString *info = [[note userInfo] objectForKey:@"info"];
+    [self.webView loadHTMLString:info baseURL:[NSURL URLWithString:info]];
+}
+
+- (void)PassageContentResult:(NSNotification *)note{
+    NSString *info = [[note userInfo] objectForKey:@"info"];
+    NSMutableArray * arr = (NSMutableArray *)[info componentsSeparatedByString:@";."];
+    if (arr.count ==3) {
+        UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:7];           //  tag7是发布时间
+        aLabel.text = [arr objectAtIndex:0];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:8];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:1];
+        NSString *htmlString = [arr objectAtIndex:2];
+        [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+    }else if(arr.count == 7){
+        [self addLabelForType:6];
+        UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:1];           //  tag7是发布时间
+        aLabel.text = [arr objectAtIndex:0];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:2];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:1];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:3];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:2];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:4];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:3];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:5];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:4];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:6];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:5];
+        NSString *htmlString = [arr objectAtIndex:6];
+        [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
@@ -114,6 +141,7 @@
 - (void)addLabelForType:(int)type{
     //政务公开等详情图上的标签
     self.overheadInformationSumImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bg.png"]];
+    [self.overheadInformationSumImgView removeFromSuperview];
     [self.view addSubview:self.overheadInformationSumImgView];
     if(type == 6){
         self.overheadInformationSumImgView.frame = CGRectMake(0,NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, OVERHEADINFORMATIONCELLLABELHEIGHT*5);
@@ -208,28 +236,28 @@
         overheadInformationCellNameLabel1.text = @"发布日期:";
         overheadInformationCellNameLabel1.font = [UIFont systemFontOfSize:12];
         overheadInformationCellNameLabel1.textAlignment = NSTextAlignmentLeft;
-        overheadInformationCellNameLabel1.backgroundColor = [UIColor yellowColor];
+        overheadInformationCellNameLabel1.backgroundColor = [UIColor clearColor];
         [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel1];
         
         UILabel *  overheadInformationCellNameLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2 + 10, OVERHEADINFORMATIONCELLLABELHEIGHT/2 , 30, OVERHEADINFORMATIONCELLLABELHEIGHT)];
         overheadInformationCellNameLabel2.text = @"来源:";
         overheadInformationCellNameLabel2.font = [UIFont systemFontOfSize:12];
         overheadInformationCellNameLabel2.textAlignment = NSTextAlignmentLeft;
-        overheadInformationCellNameLabel2.backgroundColor = [UIColor yellowColor];
+        overheadInformationCellNameLabel2.backgroundColor = [UIColor clearColor];
         [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel2];
         
         UILabel *  overheadInformationCellValueLabel1= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT/2,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
-        overheadInformationCellValueLabel1.tag = 1;
+        overheadInformationCellValueLabel1.tag = 7;
         overheadInformationCellValueLabel1.font = [UIFont systemFontOfSize:12];
         overheadInformationCellValueLabel1.textAlignment = NSTextAlignmentLeft;
-        overheadInformationCellValueLabel1.backgroundColor = [UIColor blueColor];
+        overheadInformationCellValueLabel1.backgroundColor = [UIColor clearColor];
         [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel1];
         
         UILabel *  overheadInformationCellValueLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+40, OVERHEADINFORMATIONCELLLABELHEIGHT/2 ,UISCREENWIDTH/2 - 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
-        overheadInformationCellValueLabel2.tag = 2;
+        overheadInformationCellValueLabel2.tag = 8;
         overheadInformationCellValueLabel2.font = [UIFont systemFontOfSize:12];
         overheadInformationCellValueLabel2.textAlignment = NSTextAlignmentLeft;
-        overheadInformationCellValueLabel2.backgroundColor = [UIColor blueColor];
+        overheadInformationCellValueLabel2.backgroundColor = [UIColor clearColor];
         [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel2];
     }
     self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height+self.overheadInformationSumImgView.frame.size.height, UISCREENWIDTH, UISCREENHEIGHT-(NAVIGATIONHIGHT+HYSegmentedControl_Height+self.overheadInformationSumImgView.frame.size.height));

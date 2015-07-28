@@ -74,10 +74,10 @@
 //            _scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);      //解决父视图偏移。。。蛋疼了好久
 //        }
 
-        
+        UIButton *btn ;
         for (int i = 0; i<[titles count]; i++) {
             
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(i*width4btn, .0f, width4btn, HYSegmentedControl_Height);
             [btn setTitleColor:UIColorFromRGBValue(0x676767) forState:UIControlStateNormal];
             btn.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -108,8 +108,15 @@
         //  bottom lineView
         //
         _bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(5.0f, HYSegmentedControl_Height-1, width4btn-10.0f, 1.0f)];
+        //_bottomLineView.tag = 101;                  //  便于在特定情况下隐藏下划线
         _bottomLineView.backgroundColor = UIColorFromRGBValue(0x676767);
         [_scrollView addSubview:_bottomLineView];
+        
+        
+        if(titles.count == 1){                          //单个seg时只作为标签显示  无需响应点击  并去掉下划线
+            btn.userInteractionEnabled = NO;
+            [_bottomLineView removeFromSuperview];
+        }
         
         [self addSubview:_scrollView];
     }
@@ -195,10 +202,12 @@
 //        NSString * countOfPic = [NSString stringWithFormat:@"%d",NUMBEROFPICFORPAGE];
 //        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:btn.currentTitle andPageSize:countOfPic andCurPage:@"1"];
 //        appDelegate.currentPageForPic = 1;
-        NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];
-        
+//        NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];         //切换seg后调用对应页面类内部方法
     }
+    NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];         //切换seg后调用对应页面类内部方法
+
 }
 
 //#warning ////// index 从 0 开始

@@ -82,6 +82,8 @@
 		56BAB2241B4D093700E3CE50 /* AdDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56BAB2211B4D093700E3CE50 /* AdDataModel.m */; };
 		56BAB2251B4D093700E3CE50 /* AdDataPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56BAB2221B4D093700E3CE50 /* AdDataPlist.plist */; };
 		56C064631B5397820054D8C4 /* HYSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C064621B5397820054D8C4 /* HYSegmentedControl.m */; };
+		56C1B0951B65D2AB00370975 /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C1B0941B65D2AB00370975 /* CustomTableViewCell.m */; };
+		56C1B0971B661F1400370975 /* jzsb.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C1B0961B661F1400370975 /* jzsb.png */; };
 		56C99EA31B631B2A0046EABC /* hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C99E9D1B631B2A0046EABC /* hd.png */; };
 		56C99EA41B631B2A0046EABC /* hy.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C99E9E1B631B2A0046EABC /* hy.png */; };
 		56C99EA51B631B2A0046EABC /* jh.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C99E9F1B631B2A0046EABC /* jh.png */; };
@@ -233,6 +235,9 @@
 		56BAB2221B4D093700E3CE50 /* AdDataPlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AdDataPlist.plist; sourceTree = "<group>"; };
 		56C064611B5397820054D8C4 /* HYSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYSegmentedControl.h; sourceTree = "<group>"; };
 		56C064621B5397820054D8C4 /* HYSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYSegmentedControl.m; sourceTree = "<group>"; };
+		56C1B0931B65D2AB00370975 /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
+		56C1B0941B65D2AB00370975 /* CustomTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
+		56C1B0961B661F1400370975 /* jzsb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = jzsb.png; path = "图看攀枝花/jzsb.png"; sourceTree = "<group>"; };
 		56C99E9D1B631B2A0046EABC /* hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hd.png; sourceTree = "<group>"; };
 		56C99E9E1B631B2A0046EABC /* hy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hy.png; sourceTree = "<group>"; };
 		56C99E9F1B631B2A0046EABC /* jh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jh.png; sourceTree = "<group>"; };
@@ -432,6 +437,8 @@
 				56B1BFA11B6215B000A844CF /* OpenGovernmentAffairsViewController.m */,
 				56C99F511B632E4D0046EABC /* NewsViewController.h */,
 				56C99F521B632E4D0046EABC /* NewsViewController.m */,
+				56C1B0931B65D2AB00370975 /* CustomTableViewCell.h */,
+				56C1B0941B65D2AB00370975 /* CustomTableViewCell.m */,
 			);
 			name = openGovernmentAffairs;
 			sourceTree = "<group>";
@@ -596,6 +603,7 @@
 		56C99E9B1B631ACB0046EABC /* 图看攀枝花 */ = {
 			isa = PBXGroup;
 			children = (
+				56C1B0961B661F1400370975 /* jzsb.png */,
 				56C99EAD1B6321890046EABC /* jz.png */,
 			);
 			name = "图看攀枝花";
@@ -759,6 +767,7 @@
 				56B1C0561B6230B300A844CF /* dj_1.png in Resources */,
 				56C99F5F1B632EFE0046EABC /* pull_loading@3x.png in Resources */,
 				56C99EA61B631B2A0046EABC /* qt.png in Resources */,
+				56C1B0971B661F1400370975 /* jzsb.png in Resources */,
 				56B1C08C1B6230B300A844CF /* zjpzh.png in Resources */,
 				56B1C0681B6230B300A844CF /* sp.png in Resources */,
 				56B1C0791B6230B300A844CF /* tb_7.png in Resources */,
@@ -838,6 +847,7 @@
 				56DAE2FC1B5E1A8C0003C44E /* DJRefreshView.m in Sources */,
 				564B56591B43E823003A4A14 /* MainViewController.m in Sources */,
 				564B565A1B43E823003A4A14 /* PicForPZHViewController.m in Sources */,
+				56C1B0951B65D2AB00370975 /* CustomTableViewCell.m in Sources */,
 				56DAE2FB1B5E1A8C0003C44E /* DJRefreshTopView.m in Sources */,
 				564B56571B43E823003A4A14 /* ConnectionAPI.m in Sources */,
 				56C99F5D1B632EFE0046EABC /* DJRefreshProgressView.m in Sources */,

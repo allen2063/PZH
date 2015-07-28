@@ -202,7 +202,7 @@
     [super viewWillAppear:YES];
     //appDelegate.title = @"走进攀枝花";
     self.titleLabel.text = @"走进攀枝花";
-    appDelegate.parentTitle = @"走进攀枝花";
+    //appDelegate.parentTitle = @"走进攀枝花";
 }
 
 -(void)jumpPageForIntoPZH:(UIButton *)btn{

@@ -16,6 +16,7 @@
     NSMutableDictionary * UserInfo;
 }
 - (void)getTopNews;
+- (void)getTopNewsContentWithTitile:(NSString *)title;
 - (void)getMainPagePic;
 - (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext;
 - (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
@@ -23,6 +24,7 @@
 - (void)getAnnouncementOfPublicArrayListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
 - (void)getAnnouncementOfPublicContentWithTitle:(NSString *)title;
 - (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;
+- (void)getPassageContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title;
 @property (strong, nonatomic) NSMutableData *webData;
 @property (strong, nonatomic) NSMutableString *soapResults;
 @property (strong, nonatomic) NSXMLParser *xmlParser;
@@ -35,6 +37,7 @@
 @property (nonatomic) BOOL elementFoundForAnnouncementOfPublicArrayList;
 @property (nonatomic) BOOL elementFoundForAnnouncementOfPublicContent;
 @property (nonatomic) BOOL elementFoundForOpenGovernmentAffairsArrayList;
+@property (nonatomic) BOOL elementFoundForPassageContent;
 
 @property (strong, nonatomic) NSString *matchingElementForMenuContent;
 @property (strong, nonatomic) NSString *matchingElementForPZHPic;
@@ -45,6 +48,7 @@
 @property (strong, nonatomic) NSString *matchingElementForAnnouncementOfPublicArrayList;
 @property (strong, nonatomic) NSString *matchingElementForAnnouncementOfPublicContent;
 @property (strong, nonatomic) NSString *matchingElementForOpenGovernmentAffairsArrayList;
+@property (strong, nonatomic) NSString *matchingElementForPassageContent;
 
 
 

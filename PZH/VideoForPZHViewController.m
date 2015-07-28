@@ -16,17 +16,17 @@
 @end
 
 @implementation VideoForPZHViewController
-@synthesize videoArray,seg,titleLabel,urlString,videoBtn;
+@synthesize videoArray,seg,titleLabel,urlString,videoBtn,currentSegTitle;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        appDelegate.touchedSegBtnTag = 1000;    //设置默认播放链接
+        //appDelegate.touchedSegBtnTag = 1000;    //设置默认播放链接
         //self.urlString = @"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv";
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
-
+        self.currentSegTitle = @"形象片";
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -36,6 +36,7 @@
         self.videoArray = [[NSMutableArray alloc]initWithObjects:@"形象片",@"规划片",@"岩箭之迷",@"阴传的秘密", nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetSPPZH_ContentResult:) name:@"GetSPPZH_ContentResult" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouchedForVideo:) name:@"segTouched" object:nil];
 
         [self createSegmentedControl];
         self.videoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -67,27 +68,47 @@
     [appDelegate playStreamFromURL:[NSURL URLWithString:self.urlString]];
 }
 
--(void)GetSPPZH_ContentResult:(NSNotification *)note{
+- (void)segTouchedForVideo:(NSNotification *)note{
+    //获取seg标题
+    self.currentSegTitle = [[note userInfo] objectForKey:@"title"];
+}
 
-    switch (appDelegate.touchedSegBtnTag) {
-        case 1000:
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp.png"] forState:UIControlStateNormal];
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp_1.png"] forState:UIControlStateHighlighted];
-            break;
-        case 1001:
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp.png"] forState:UIControlStateNormal];
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp_1.png"] forState:UIControlStateHighlighted];
-            break;
-        case 1002:
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm.png"] forState:UIControlStateNormal];
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm_1.png"] forState:UIControlStateHighlighted];
-            break;
-        case 1003:
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm.png"] forState:UIControlStateNormal];
-            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm_1.png"] forState:UIControlStateHighlighted];
-            break;
-        default:
-            break;
+-(void)GetSPPZH_ContentResult:(NSNotification *)note{
+//    switch (appDelegate.touchedSegBtnTag) {
+//        case 1000:
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp.png"] forState:UIControlStateNormal];
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp_1.png"] forState:UIControlStateHighlighted];
+//            break;
+//        case 1001:
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp.png"] forState:UIControlStateNormal];
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp_1.png"] forState:UIControlStateHighlighted];
+//            break;
+//        case 1002:
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm.png"] forState:UIControlStateNormal];
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm_1.png"] forState:UIControlStateHighlighted];
+//            break;
+//        case 1003:
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm.png"] forState:UIControlStateNormal];
+//            [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm_1.png"] forState:UIControlStateHighlighted];
+//            break;
+//        default:
+//            break;
+//    }
+    if ([self.currentSegTitle isEqualToString:@"形象片"]) {
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp.png"] forState:UIControlStateNormal];
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"xxp_1.png"] forState:UIControlStateHighlighted];
+    }
+    else if ([self.currentSegTitle isEqualToString:@"规划片"]) {
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp.png"] forState:UIControlStateNormal];
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ghp_1.png"] forState:UIControlStateHighlighted];
+    }
+    else if ([self.currentSegTitle isEqualToString:@"岩箭之迷"]) {
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm.png"] forState:UIControlStateNormal];
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"yjzm_1.png"] forState:UIControlStateHighlighted];
+    }
+    else if ([self.currentSegTitle isEqualToString:@"阴传的秘密"]) {
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm.png"] forState:UIControlStateNormal];
+        [self.videoBtn setBackgroundImage:[UIImage imageNamed:@"ycdmm_1.png"] forState:UIControlStateHighlighted];
     }
     self.urlString = [[note userInfo] objectForKey:@"info"];
     [GMDCircleLoader hideFromView:self.view animated:YES];
