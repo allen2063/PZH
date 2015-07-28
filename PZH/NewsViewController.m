@@ -19,6 +19,7 @@
     DJRefreshDirection directionForNow;
     int countForView;//此页面第一次出现时自动下拉刷新
     int totalTitleForSeg;        //此seg里面共有多少文章
+    BOOL isLoading;              //  加载状态
 }
 @property (strong,nonatomic)HYSegmentedControl * seg;
 @property (nonatomic,strong)DJRefresh *refresh;
@@ -36,7 +37,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetGGGS_ListResult:) name:@"GetGGGS_ListResult" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetGGGS_ListResult:) name:@"GetZWGK_ListResult" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouchedForNews:) name:@"segTouched" object:nil];
-
+        isLoading = NO;
         countForView = 0;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouched:) name:@"segTouched" object:nil];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -64,7 +65,7 @@
         }
         _dataList=[[NSMutableArray alloc] init];
 
-//        self.tempArray = [[NSMutableArray alloc]init];
+        self.tempArray = [[NSMutableArray alloc]init];
         self.currentSegTitle = [self.segArray objectAtIndex:0];
         [self createSegmentedControl];
     }
@@ -72,21 +73,25 @@
 }
 
 - (void)GetGGGS_ListResult:(NSNotification *)note{
-    
+    if (directionForNow == DJRefreshDirectionTop) {
+        [self.dataList removeAllObjects];
+    }
+    [self.tempArray removeAllObjects];
     NSString *info =[[note userInfo] objectForKey:@"info"];
-    self.tempArray = (NSMutableArray *)[info componentsSeparatedByString:@";"];
-    totalTitleForSeg = (int)[self.tempArray objectAtIndex:0];           //当前列表下文章的总数
-    [self.tempArray removeObjectAtIndex:0];
-    [self.tempArray removeLastObject];
+    NSMutableArray * tempArrays = (NSMutableArray *)[info componentsSeparatedByString:@";"];
+    totalTitleForSeg = (int)[tempArrays objectAtIndex:0];           //当前列表下文章的总数
+    [tempArrays removeObjectAtIndex:0];
+    [tempArrays removeLastObject];
     NSMutableDictionary * dic;
-    for (int i = 0; i < self.tempArray.count; i++) {
-        NSArray * arr = [[self.tempArray objectAtIndex:i]componentsSeparatedByString:@","];
+    for (int i = 0; i < tempArrays.count; i++) {
+        NSArray * arr = [[tempArrays objectAtIndex:i]componentsSeparatedByString:@","];
         if (arr.count == 2) {
             dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time", nil];
         }else if (arr.count == 3){
             dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time",[arr objectAtIndex:2],@"label", nil];
         }
         [self.dataList addObject:dic];
+        [self.tempArray addObject:dic];
     }
     [self addDataWithDirection:directionForNow];
 }
@@ -138,12 +143,11 @@
 
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction{
     directionForNow = direction;
-    
+    isLoading = YES;
     NSString * countOfPic = [NSString stringWithFormat:@"%d",NUMBEROFTITLEFORPAGE];
     if([appDelegate.title isEqualToString:@"公告公示"]){
         if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
         {
-            [self.dataList removeAllObjects];
             appDelegate.currentPageNumber = 1;
             [appDelegate.conAPI getAnnouncementOfPublicArrayListWithPageSize:countOfPic andCurPage:@"1"];
         }
@@ -155,7 +159,7 @@
     else {//if([appDelegate.title isEqualToString:@"领导活动"]){
         if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
         {
-            [self.dataList removeAllObjects];
+            //[self.dataList removeAllObjects];
             appDelegate.currentPageNumber = 1;
             if([appDelegate.title isEqualToString:@"部门动态"]|| [appDelegate.title isEqualToString:@"区县快讯"]){     //接口格式上对部门动态和区县快讯不一样
                 [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:@"工作动态"andChannelNext:appDelegate.title  andPageSize:countOfPic andCurPage:@"1"];
@@ -180,9 +184,17 @@
 
 - (void)addDataWithDirection:(DJRefreshDirection)direction{
     
-    [_refresh finishRefreshingDirection:direction animation:YES];
-    
+//    if (directionForNow == DJRefreshDirectionTop) {
+//        [self.dataList removeAllObjects];
+//    }
+//    for (id dic in self.tempArray) {
+//        [self.dataList addObject:dic];
+//    }
     [self.tableView reloadData];
+    
+    [_refresh finishRefreshingDirection:direction animation:YES];
+
+    isLoading =NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -211,16 +223,21 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];//选中后的反显颜色即刻消失
+    if (isLoading) {
+        return;
+    }
     NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:self.currentSegTitle, nil];
     DetailWebViewController * detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
     NSString * currentPassageTitle = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
+    NSString * createTime = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"time"];;
     if ([appDelegate.title isEqualToString: @"公告公示"]) {
         [appDelegate.conAPI getAnnouncementOfPublicContentWithTitle:[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"title"] ];
     }else if([appDelegate.title isEqualToString: @"部门动态"]||[appDelegate.title isEqualToString: @"区县快讯"]){
         //NSString * channelNext = [self.segArray objectAtIndex:(appDelegate.touchedSegBtnTag - 1000)];
-        [appDelegate.conAPI getPassageContentWithChannelName:@"工作动态" andChannelNext:appDelegate.title andTitle:currentPassageTitle];
+        
+        [appDelegate.conAPI getPassageContentWithChannelName:@"工作动态" andChannelNext:appDelegate.title andTitle:currentPassageTitle andCreateTime:createTime];
     }else{
-        [appDelegate.conAPI getPassageContentWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andTitle:currentPassageTitle];
+        [appDelegate.conAPI getPassageContentWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andTitle:currentPassageTitle andCreateTime:createTime];
     }
     [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
     [self.navigationController pushViewController:detailViewController animated:YES];
