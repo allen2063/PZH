@@ -19,6 +19,8 @@
 @property (strong, nonatomic) VDLPlaybackViewController * superVideoPlayer;
 @property (strong, nonatomic) NSString * title;
 @property (strong, nonatomic) NSString * parentTitle;
+@property (strong, nonatomic) NSString * sonTitle;
+
 @property (nonatomic) NSInteger touchedSegBtnTag;
 @property (nonatomic) int currentPageNumber;
 - (void)playStreamFromURL:(NSURL *)url;

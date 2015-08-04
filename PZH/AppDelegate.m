@@ -25,6 +25,7 @@
 
     self.title = [[NSString alloc]init];
     self.parentTitle = [[NSString alloc]init];
+    self.sonTitle = [[NSString alloc]init];
     //self.titleLabel.text = @"攀枝花公众信息网";
     MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
     self.conAPI = [[ConnectionAPI alloc]init];

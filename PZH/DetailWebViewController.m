@@ -8,7 +8,9 @@
 
 #import "DetailWebViewController.h"
 #import "GMDCircleLoader.h"
-@interface DetailWebViewController ()
+@interface DetailWebViewController (){
+    BOOL isOutsideLink;
+}
 
 @end
 
@@ -28,7 +30,7 @@
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
-        
+        isOutsideLink = NO;
         self.segArray = segArrays;//[[NSMutableArray alloc]initWithArray:segArrays];
         //[self.segArray addObjectsFromArray:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",@"4", nil]];
 //        self.seg = [[UISegmentedControl alloc]initWithItems:self.segArray];
@@ -90,12 +92,13 @@
 - (void)PassageContentResult:(NSNotification *)note{
     NSString *info = [[note userInfo] objectForKey:@"info"];
     NSMutableArray * arr = (NSMutableArray *)[info componentsSeparatedByString:@";."];
+    NSString *htmlString;
     if (arr.count ==3) {
         UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:7];           //  tag7是发布时间
         aLabel.text = [arr objectAtIndex:0];
         aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:8];                     //  tag8是来源
         aLabel.text = [arr objectAtIndex:1];
-        NSString *htmlString = [arr objectAtIndex:2];
+        htmlString = [arr objectAtIndex:2];
         [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
     }else if(arr.count == 7){
         [self addLabelForType:6];
@@ -111,8 +114,17 @@
         aLabel.text = [arr objectAtIndex:4];
         aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:6];                     //  tag8是来源
         aLabel.text = [arr objectAtIndex:5];
-        NSString *htmlString = [arr objectAtIndex:6];
+        htmlString = [arr objectAtIndex:6];
         [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+    }
+    
+    if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {                             //  政府会议是外链   现对外链判断  如果是外链重新加载
+        isOutsideLink = YES;
+        NSURL *url = [[NSURL alloc] initWithString:htmlString];
+        [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+        self.webView.scalesPageToFit =YES;
+        [self.overheadInformationSumImgView removeFromSuperview];
+        self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
     }
 }
 
@@ -130,7 +142,9 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     UIAlertView *alterview = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    [alterview show];
+    if (!isOutsideLink) {
+        [alterview show];
+    }
 }
 
 - (void)viewDidLoad {

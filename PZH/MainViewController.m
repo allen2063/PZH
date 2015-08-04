@@ -16,7 +16,7 @@
 @end
 
 @implementation MainViewController
-@synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView,mainNewsbodyLabel,mainNewsImgView,mainNewsTitleLabel,openGovernmentAffairsViewController,openGovernmentAffairsBtn;
+@synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView,mainNewsbodyLabel,mainNewsImgView,mainNewsTitleLabel,openGovernmentAffairsViewController,openGovernmentAffairsBtn,onlineBusinessViewController,onlineBusinessBtn;
 
 
 #define SCROllVIEWHIGHT ((self.view.bounds.size.height == 480)?  UISCREENHEIGHT*0.44:UISCREENHEIGHT*0.47) //4&4s是480
@@ -223,6 +223,8 @@
 - (void)jumpPageForMainView:(UIButton *)btn{
     self.intoPZHViewController = [[IntoPZHViewController alloc]init];
     self.openGovernmentAffairsViewController = [[OpenGovernmentAffairsViewController alloc]init];
+    self.onlineBusinessViewController = [[OnlineBusinessViewController alloc]init];
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"该模块正在开发中，请稍候！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     switch (btn.tag) {
         case 1:
             appDelegate.parentTitle = @"走进攀枝花";
@@ -234,14 +236,15 @@
             [self.navigationController pushViewController:self.openGovernmentAffairsViewController animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
             break;
-//        case 3:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.cityOverview];
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            break;
-//        case 4:
+        case 3:
+            appDelegate.parentTitle = @"网上办事";
+            [self.navigationController pushViewController:self.onlineBusinessViewController animated:YES];
+            break;
+        case 4:
+            [alert show];
 //            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
 //            [self.navigationController pushViewController:detailViewController animated:YES];
-//            break;
+            break;
 //        case 5:
 //            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyOverview];
 //            [self.navigationController pushViewController:detailViewController animated:YES];

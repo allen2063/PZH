@@ -79,7 +79,7 @@
     [self.tempArray removeAllObjects];
     NSString *info =[[note userInfo] objectForKey:@"info"];
     NSMutableArray * tempArrays = (NSMutableArray *)[info componentsSeparatedByString:@";"];
-    totalTitleForSeg = (int)[tempArrays objectAtIndex:0];           //当前列表下文章的总数
+    totalTitleForSeg = [[tempArrays objectAtIndex:0] intValue];           //当前列表下文章的总数
     [tempArrays removeObjectAtIndex:0];
     [tempArrays removeLastObject];
     NSMutableDictionary * dic;
@@ -159,19 +159,18 @@
     else {//if([appDelegate.title isEqualToString:@"领导活动"]){
         if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
         {
-            //[self.dataList removeAllObjects];
             appDelegate.currentPageNumber = 1;
             if([appDelegate.title isEqualToString:@"部门动态"]|| [appDelegate.title isEqualToString:@"区县快讯"]){     //接口格式上对部门动态和区县快讯不一样
-                [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:@"工作动态"andChannelNext:appDelegate.title  andPageSize:countOfPic andCurPage:@"1"];
+                [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:@"工作动态"andChannelNext:appDelegate.title  andPageSize:countOfPic andCurPage:@"1"];
             }else
-            [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:@"1"];
+            [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:@"1"];
         }
         else if (self.refresh.refreshingDirection==DJRefreshingDirectionBottom){
             NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageNumber];
             if([appDelegate.title isEqualToString:@"部门动态"]|| [appDelegate.title isEqualToString:@"区县快讯"]){
-                [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:@"工作动态"andChannelNext:appDelegate.title  andPageSize:countOfPic andCurPage:curPage];
+                [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:@"工作动态"andChannelNext:appDelegate.title  andPageSize:countOfPic andCurPage:curPage];
             }else
-            [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:curPage];
+            [appDelegate.conAPI getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andPageSize:countOfPic andCurPage:curPage];
             //[self.segArray objectAtIndex:appDelegate.touchedSegBtnTag-1000]
         }
     }
@@ -209,7 +208,7 @@
     NSDictionary * dic = (NSDictionary * )[self.dataList objectAtIndex:indexPath.row];
     cell.titleLabel.text= [dic objectForKey:@"title"];
     cell.timeLabel.text =[dic objectForKey:@"time"];
-    if (dic.count == 3) {
+    if (dic.count == 3) {               //详情标签  并不是每一项都有
         cell.accessoryTextLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"label"];;
     }
     

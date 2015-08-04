@@ -54,7 +54,7 @@
         [scrView addSubview:splitLineImgView4];
         UIImageView * splitLineImgView5 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
         splitLineImgView5.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*5+INTERVALY*5.5, UISCREENWIDTH, 1);
-        [scrView addSubview:splitLineImgView5];
+        //[scrView addSubview:splitLineImgView5];
         
         //公告公示
         self.announcementOfPublicArray = [[NSMutableArray alloc]initWithObjects:@"公告公示", nil];
@@ -74,11 +74,11 @@
         UIImageView * announcementOfPublicImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gggs.png"]];
         announcementOfPublicImgView.frame = CGRectMake(INTERVALX,INTERVALY,MAINBTNWIDTH,MAINBTNHEIGHT);
         UIImage * announcementOfPublicLabelImg = [UIImage imageNamed:@"zi_1.png"];
-        UIImageView * cannouncementOfPublicLabelImgView = [[UIImageView alloc]initWithImage:announcementOfPublicLabelImg];
-        cannouncementOfPublicLabelImgView.frame = CGRectMake(0, 0, announcementOfPublicLabelImg.size.width/3.3, announcementOfPublicLabelImg.size.height/3.3);
-        cannouncementOfPublicLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
+        UIImageView * announcementOfPublicLabelImgView = [[UIImageView alloc]initWithImage:announcementOfPublicLabelImg];
+        announcementOfPublicLabelImgView.frame = CGRectMake(0, 0, announcementOfPublicLabelImg.size.width/3.3, announcementOfPublicLabelImg.size.height/3.3);
+        announcementOfPublicLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
         
-        [announcementOfPublicImgView addSubview:cannouncementOfPublicLabelImgView];
+        [announcementOfPublicImgView addSubview:announcementOfPublicLabelImgView];
         [announcementOfPublicBtn addSubview:announcementOfPublicImgView];
         [scrView addSubview:announcementOfPublicBtn];
         
@@ -209,7 +209,7 @@
     [super viewWillAppear:YES];
     //appDelegate.title = @"走进攀枝花";
     self.titleLabel.text = @"政务公开";
-    appDelegate.parentTitle = @"政务公开";
+    appDelegate.title = @"政务公开";
 }
 
 - (void)jumpPageForOpenGovernmentAffairs:(UIButton *)btn{

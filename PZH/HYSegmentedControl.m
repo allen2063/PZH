@@ -54,7 +54,7 @@
         //  array4btn
         //
         _array4Btn = [[NSMutableArray alloc] initWithCapacity:[titles count]];
-        
+        NSLog(@"titlse count %lu",(unsigned long)titles.count);
         //
         //  set button
         //

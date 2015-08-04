@@ -18,9 +18,9 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent;
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent,elementFoundForPassageList;
 
-@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent;
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent,matchingElementForPassageList;
 //@synthesize soapResults1;
 //@synthesize elementFound1;
 //@synthesize matchingElement2;       //isentender
@@ -43,7 +43,9 @@
     matchingElementForAnnouncementOfPublicArrayList = @"GetGGGS_ListResult";
     matchingElementForAnnouncementOfPublicContent = @"GetGGGS_ContentResult";
     matchingElementForOpenGovernmentAffairsArrayList = @"GetZWGK_ListResult";//根据接口  貌似政务公开里面领导活动 工作会议 部门动态 区县快讯的list都用同一个接口
-    matchingElementForPassageContent = @"GetGGFW_ContentResult";//所有文章列表都是用此接口
+    matchingElementForPassageContent = @"GetGGFW_ContentResult";//所有文章详情都是用此接口
+    matchingElementForPassageList = @"GetGGFW_ListResult";//所有文章列表都是用此接口
+
     return self;
 }
 
@@ -241,7 +243,7 @@
     [self withInterface:@"GetGGGS_Content" andArgument1Name:@"strTitle" andArgument1Value:title];
 }
 
-- (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+- (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
     [self withInterface:@"GetZWGK_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
 }
 
@@ -249,6 +251,17 @@
     [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title andArgument4Name:@"createTime" andArgument4Value:createTime];
 }
 
+- (void)getAnnouncementOfWork{
+    [self withInterface:@"GetBSGG_List"];
+}
+
+- (void)getWorkOnlineListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetGGFW_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
+}
+
+- (void)getWorkOnlineContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
+}
 
 //连接
 
@@ -355,11 +368,17 @@
         }
         self.elementFoundForPassageContent = YES;
     }
+    else if ([elementName isEqualToString:self.matchingElementForPassageList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForPassageList = YES;
+    }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent||self.elementFoundForPassageList) {
         [self.soapResults appendString: string];
     }
 }
@@ -370,9 +389,12 @@
         return;
     }
     NSMutableDictionary *d;
-    if (soapResults != nil) {
-        d = [NSMutableDictionary dictionaryWithObject:soapResults forKey:@"info"];
-    }else  NSLog(@"插入字典数据为空 ");
+    if (self.soapResults != nil) {
+        d = [[NSMutableDictionary alloc]initWithObjectsAndKeys:self.soapResults,@"info", nil];
+        //d = [NSMutableDictionary dictionaryWithObject:self.soapResults forKey:@"info"];
+        NSLog(@"");
+    }
+    else  NSLog(@"插入字典数据为空 ");
     if ([elementName isEqualToString:self.matchingElementForMenuContent]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GetWebResult" object:self userInfo:d];
         self.elementFoundForMenuContent = FALSE;
@@ -430,6 +452,14 @@
     else if ([elementName isEqualToString:self.matchingElementForPassageContent]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageContentResult" object:self userInfo:d];
         self.elementFoundForPassageContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPassageList]) {
+        NSLog(@"1%@",[d objectForKey:@"info"]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageListResult" object:self userInfo:d];
+        NSLog(@"2%@",[d objectForKey:@"info"]);
+        self.elementFoundForPassageList = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }
