@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OnlineBusinessSearchViewController : UIViewController
-
+@interface OnlineBusinessSearchViewController : UIViewController<UITextFieldDelegate>
+@property (strong,nonatomic)UILabel * titleLabel;
+@property (strong,nonatomic)NSMutableArray * segArray;
 @end

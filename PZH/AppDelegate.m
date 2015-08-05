@@ -14,7 +14,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,superVideoPlayer,title,parentTitle,touchedSegBtnTag,currentPageNumber;
+@synthesize videoPlayer,superVideoPlayer,title,parentTitle,touchedSegBtnTag,currentPageNumber,sonTitle,grandsonTitle;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -26,6 +26,8 @@
     self.title = [[NSString alloc]init];
     self.parentTitle = [[NSString alloc]init];
     self.sonTitle = [[NSString alloc]init];
+    self.grandsonTitle = [[NSString alloc]init];
+
     //self.titleLabel.text = @"攀枝花公众信息网";
     MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
     self.conAPI = [[ConnectionAPI alloc]init];

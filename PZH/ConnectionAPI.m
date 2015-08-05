@@ -18,9 +18,9 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent,elementFoundForPassageList;
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent,elementFoundForPassageList,elementFoundForCommonProblemsAndPoliciesAndRegulationsList,elementFoundForCommonProblemsAndPoliciesAndRegulationsContent,elementFoundForStatisticsOfWork,elementFoundForOnlineBusinessSearchResult,elementFoundForHotBusinessList,elementFoundForHotBusinessContent;
 
-@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent,matchingElementForPassageList;
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent,matchingElementForPassageList,matchingElementForCommonProblemsAndPoliciesAndRegulationsList,matchingElementForCommonProblemsAndPoliciesAndRegulationsContent,matchingElementForStatisticsOfWork,matchingElementForOnlineBusinessSearchResult,matchingElementForHotBusinessList,matchingElementForHotBusinessContent;
 //@synthesize soapResults1;
 //@synthesize elementFound1;
 //@synthesize matchingElement2;       //isentender
@@ -45,6 +45,12 @@
     matchingElementForOpenGovernmentAffairsArrayList = @"GetZWGK_ListResult";//根据接口  貌似政务公开里面领导活动 工作会议 部门动态 区县快讯的list都用同一个接口
     matchingElementForPassageContent = @"GetGGFW_ContentResult";//所有文章详情都是用此接口
     matchingElementForPassageList = @"GetGGFW_ListResult";//所有文章列表都是用此接口
+    matchingElementForCommonProblemsAndPoliciesAndRegulationsList = @"GetMXQY_ListResult";  //常见问题等
+    matchingElementForCommonProblemsAndPoliciesAndRegulationsContent = @"GetMXQY_ContentResult";  //常见问题等
+    matchingElementForStatisticsOfWork= @"GetBJTJ_SUMResult"; //办件统计
+    matchingElementForOnlineBusinessSearchResult= @"OnLineSelectResult"; //在线办事查询
+    matchingElementForHotBusinessList= @"GetRDBS_ListResult"; //热点办事列表
+    matchingElementForHotBusinessContent= @"GetRDBS_URLResult"; //热点办事内容
 
     return self;
 }
@@ -263,6 +269,29 @@
     [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
 }
 
+- (void)getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetMXQY_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
+}
+
+- (void)getCommonProblemsAndPoliciesAndRegulationsContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetMXQY_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
+}
+
+- (void)getStatisticsOfWork{
+    [self withInterface:@"GetBJTJ_SUM"];
+}
+
+- (void)getOnlineBusinessSearchResultWithString:(NSString *)string{
+    [self withInterface:@"OnLineSelect" andArgument1Name:@"GscProjectCodeId" andArgument1Value:string];
+}
+
+- (void)getHotBusinessListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetRDBS_List" andArgument1Name:@"PageSize" andArgument1Value:pageSize andArgument2Name:@"CurPage" andArgument2Value:curPage];
+}
+
+- (void)getHotBusinessContentWithTitle:(NSString *)title{
+    [self withInterface:@"GetRDBS_URL" andArgument1Name:@"Title" andArgument1Value:title];
+}
 //连接
 
 #pragma mark URL Connection Data Delegate Methods
@@ -374,11 +403,47 @@
         }
         self.elementFoundForPassageList = YES;
     }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForStatisticsOfWork]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForStatisticsOfWork = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForOnlineBusinessSearchResult]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForOnlineBusinessSearchResult = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForHotBusinessList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForHotBusinessContent = YES;
+    }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent||self.elementFoundForPassageList) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent||self.elementFoundForPassageList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent||self.elementFoundForStatisticsOfWork||self.elementFoundForOnlineBusinessSearchResult||self.elementFoundForHotBusinessList||self.elementFoundForHotBusinessContent) {
         [self.soapResults appendString: string];
     }
 }
@@ -456,10 +521,44 @@
         [self.xmlParser abortParsing];
     }
     else if ([elementName isEqualToString:self.matchingElementForPassageList]) {
-        NSLog(@"1%@",[d objectForKey:@"info"]);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageListResult" object:self userInfo:d];
-        NSLog(@"2%@",[d objectForKey:@"info"]);
         self.elementFoundForPassageList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMXQY_ListResult" object:self userInfo:d];
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMXQY_ContentResult" object:self userInfo:d];
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForStatisticsOfWork]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetBJTJ_SUMResult" object:self userInfo:d];
+        self.elementFoundForStatisticsOfWork = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForOnlineBusinessSearchResult]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"OnLineSelectResult" object:self userInfo:d];
+        self.elementFoundForOnlineBusinessSearchResult = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetRDBS_ListResult" object:self userInfo:d];
+        self.elementFoundForHotBusinessList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetRDBS_URLResult" object:self userInfo:d];
+        self.elementFoundForHotBusinessContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }

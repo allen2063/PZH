@@ -9,7 +9,7 @@
 #import "OnlineBusinessViewController.h"
 #import "AppDelegate.h"
 #import "AnnouncementOfWorkViewController.h"
-#import "ForTheCitizensViewController.h"
+#import "ForCitizensAndEnterpriseAndGreenChannelViewController.h"
 @interface OnlineBusinessViewController (){
     AppDelegate * appDelegate;
 }
@@ -230,9 +230,14 @@
 - (void)jumpPageForOnlineBusiness:(UIButton *)btn{
     AnnouncementOfWorkViewController * announcementOfWorkViewController = [[AnnouncementOfWorkViewController alloc]init];
     
-    NSMutableArray * picArr = [[NSMutableArray alloc]initWithObjects:@"syfw",@"etfw",@"zjbl",@"jypx",@"jtcl",@"gwyl",@"cyzs",@"xfqy",@"flsfsm",@"jyqz",@"tdzf",@"ylbx",@"hyfw",@"ggsy",@"jrfw",@"shbz",@"jtsq",@"lnsh",@"shqz",@"cxly",@"byfw",@"cxly",@"byfw",nil];
-    NSMutableArray * titleArr = [[NSMutableArray alloc]initWithObjects:@"生育服务",@"儿童服务",@"证件办理",@"教育培训",@"交通车辆",@"娱乐购物", @"餐饮住宿",@"消费权益",@"法律司法",@"就业求职",@"土地住房",@"医疗保险",@"婚姻服务",@"公用事业",@"金融服务",@"社会保障",@"家庭社区",@"老年生活",@"社会求助",@"出行旅游",@"兵役服务",@"殡葬服务",@"便民服务",nil];
-    ForTheCitizensViewController * forTheCitizensViewController = [[ForTheCitizensViewController alloc]initWithNibName:nil bundle:nil WithPicArray:picArr andTitleArray:titleArr];
+    NSMutableArray * picArrForCitizens = [[NSMutableArray alloc]initWithObjects:@"syfw",@"etfw",@"zjbl",@"jypx",@"jtcl",@"gwyl",@"cyzs",@"xfqy",@"flsfsm",@"jyqz",@"tdzf",@"ylbx",@"hyfw",@"ggsy",@"jrfw",@"shbz",@"jtsq",@"lnsh",@"shqz",@"cxly",@"byfw",@"bzfw",@"bmfw",nil];
+    NSMutableArray * titleArrForCitizens = [[NSMutableArray alloc]initWithObjects:@"生育服务",@"儿童服务",@"证件办理",@"教育培训",@"交通车辆",@"娱乐购物", @"餐饮住宿",@"消费权益",@"法律司法",@"就业求职",@"土地住房",@"医疗保险",@"婚姻服务",@"公用事业",@"金融服务",@"社会保障",@"家庭社区",@"老年生活",@"社会求助",@"出行旅游",@"兵役服务",@"殡葬服务",@"便民服务",nil];
+    
+    NSMutableArray * picArrForEnterprise = [[NSMutableArray alloc]initWithObjects:@"slzy",@"rlzy",@"ldbz",@"njbl",@"hblh",@"gcjs",@"flsf",@"dwmy",@"cssw",@"tdfc",@"zljd",@"aqfh",@"jygl",@"jrbx",@"xwcb",@"zscq",@"pcsb",@"zhqt",nil];
+    NSMutableArray * titleArrForEnterprise = [[NSMutableArray alloc]initWithObjects:@"设立准营",@"人力资源",@"劳动保障",@"年检办理",@"环保绿化",@"工程建设", @"法律司法",@"对外贸易",@"财税事物",@"土地房产",@"质量监督",@"安全防护",@"教育管理",@"金融保险",@"新闻出版",@"知识产权",@"破产申办",@"综合其他",nil];
+    NSMutableArray * picArrForGreenChannel = [[NSMutableArray alloc]initWithObjects:@"nm",@"xs",@"et",@"fn",@"cjr",@"tzz",nil];
+    NSMutableArray * titleArrForGreenChannel = [[NSMutableArray alloc]initWithObjects:@"农民",@"学生",@"儿童",@"妇女",@"残疾人",@"投资者", nil];
+    ForCitizensAndEnterpriseAndGreenChannelViewController * forTheCitizensViewController = [ForCitizensAndEnterpriseAndGreenChannelViewController alloc];
     switch (btn.tag) {
         case 1:
             appDelegate.title = @"公告公示";
@@ -240,18 +245,19 @@
             break;
         case 2:
             appDelegate.title = @"面向市民";
+            forTheCitizensViewController = [forTheCitizensViewController initWithNibName:nil bundle:nil WithPicArray:picArrForCitizens andTitleArray:titleArrForCitizens];
             [self.navigationController pushViewController:forTheCitizensViewController animated:YES];
             break;
-//        case 3:
-//            appDelegate.title = @"工作会议";
-//            newsViewController = [newsViewController init];
-//            [self.navigationController pushViewController:newsViewController animated:YES];
-//            break;
-//        case 4:
-//            appDelegate.title = @"部门动态";
-//            newsViewController = [newsViewController init];
-//            [self.navigationController pushViewController:newsViewController animated:YES];
-//            break;
+        case 3:
+            appDelegate.title = @"面向企业";
+            forTheCitizensViewController = [forTheCitizensViewController initWithNibName:nil bundle:nil WithPicArray:picArrForEnterprise andTitleArray:titleArrForEnterprise];
+            [self.navigationController pushViewController:forTheCitizensViewController animated:YES];
+            break;
+        case 4:
+            appDelegate.title = @"绿色通道";
+            forTheCitizensViewController = [forTheCitizensViewController initWithNibName:nil bundle:nil WithPicArray:picArrForGreenChannel andTitleArray:titleArrForGreenChannel];
+            [self.navigationController pushViewController:forTheCitizensViewController animated:YES];
+            break;
 //        case 5:
 //            appDelegate.title = @"区县快讯";
 //            newsViewController = [newsViewController init];

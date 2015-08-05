@@ -6,10 +6,10 @@
 //  Copyright (c) 2015年 IOS-developer. All rights reserved.
 //
 
-#import "ForTheCitizensViewController.h"
+#import "ForCitizensAndEnterpriseAndGreenChannelViewController.h"
 #import "AppDelegate.h"
-#import "DetailCellViewController.h"
-@interface ForTheCitizensViewController (){
+#import "DetailCustomCellViewController.h"
+@interface ForCitizensAndEnterpriseAndGreenChannelViewController (){
     AppDelegate * appDelegate;
     NSArray * titleNameArray;
 }
@@ -17,7 +17,7 @@
 
 @end
 
-@implementation ForTheCitizensViewController
+@implementation ForCitizensAndEnterpriseAndGreenChannelViewController
 @synthesize titleLabel;
 #define INTERVALX (UISCREENWIDTH/40)
 #define INTERVALY (UISCREENHEIGHT/50)
@@ -39,7 +39,7 @@
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
-        
+        self.titleLabel.text = appDelegate.title;
         
         [self buildThePageWithPicArray:picArray andTitleArray:titleArray];
     }
@@ -201,7 +201,7 @@
 
 -(void)jumpPageForCitizens:(UIButton *)btn{
     appDelegate.sonTitle = [titleNameArray objectAtIndex:(btn.tag-1)];
-    DetailCellViewController * detailCellViewController = [[DetailCellViewController alloc]init];
+    DetailCustomCellViewController * detailCellViewController = [[DetailCustomCellViewController alloc]init];
     [self.navigationController pushViewController:detailCellViewController animated:YES];
     
 }
@@ -219,8 +219,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    self.titleLabel.text = @"面向市民";
-    appDelegate.title = @"面向市民";
+//    self.titleLabel.text = @"面向市民";
+//    appDelegate.title = @"面向市民";
 }
 
 /*

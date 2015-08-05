@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ForTheCitizensViewController : UIViewController
+@interface ForCitizensAndEnterpriseAndGreenChannelViewController : UIViewController
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithPicArray:(NSMutableArray *)picArray andTitleArray:(NSMutableArray *)titleArray;
 @property (strong,nonatomic)UILabel * titleLabel;
 

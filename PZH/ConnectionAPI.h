@@ -29,6 +29,12 @@
 - (void)getAnnouncementOfWork;      //公告公示详情
 - (void)getWorkOnlineListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;        //面向市民  面向企业 list
 - (void)getWorkOnlineContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title;  //接口已改动  目前废弃  调用getPassage...
+- (void)getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title;//面向市民  面向企业的常见问题  相关政策
+- (void)getCommonProblemsAndPoliciesAndRegulationsContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title;//面向市民  面向企业的常见问题  相关政策
+- (void)getStatisticsOfWork;//办件统计
+- (void)getOnlineBusinessSearchResultWithString:(NSString *)string;     //在线办事查询
+- (void)getHotBusinessListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;     //热点办事列表
+- (void)getHotBusinessContentWithTitle:(NSString *)title;
 @property (strong, nonatomic) NSMutableData *webData;
 @property (strong, nonatomic) NSMutableString *soapResults;
 @property (strong, nonatomic) NSXMLParser *xmlParser;
@@ -43,6 +49,13 @@
 @property (nonatomic) BOOL elementFoundForOpenGovernmentAffairsArrayList;
 @property (nonatomic) BOOL elementFoundForPassageContent;   //调用公共服务content接口
 @property (nonatomic) BOOL elementFoundForPassageList;   //调用公共服务list接口
+@property (nonatomic) BOOL elementFoundForCommonProblemsAndPoliciesAndRegulationsList;   //调用常见问题 相关政策
+@property (nonatomic) BOOL elementFoundForCommonProblemsAndPoliciesAndRegulationsContent;   //调用常见问题 相关政策
+@property (nonatomic) BOOL elementFoundForStatisticsOfWork;   //调用常见问题 相关政策
+@property (nonatomic) BOOL elementFoundForOnlineBusinessSearchResult;   //在线办事查询结果
+@property (nonatomic) BOOL elementFoundForHotBusinessList;   //热点办事列表
+@property (nonatomic) BOOL elementFoundForHotBusinessContent;   //热点办事内容
+
 
 @property (strong, nonatomic) NSString *matchingElementForMenuContent;
 @property (strong, nonatomic) NSString *matchingElementForPZHPic;
@@ -55,7 +68,12 @@
 @property (strong, nonatomic) NSString *matchingElementForOpenGovernmentAffairsArrayList;
 @property (strong, nonatomic) NSString *matchingElementForPassageContent;
 @property (strong, nonatomic) NSString *matchingElementForPassageList;
-
+@property (strong, nonatomic) NSString *matchingElementForCommonProblemsAndPoliciesAndRegulationsList;
+@property (strong, nonatomic) NSString *matchingElementForCommonProblemsAndPoliciesAndRegulationsContent;
+@property (strong, nonatomic) NSString *matchingElementForStatisticsOfWork;
+@property (strong, nonatomic) NSString *matchingElementForOnlineBusinessSearchResult;
+@property (strong, nonatomic) NSString *matchingElementForHotBusinessList;
+@property (strong, nonatomic) NSString *matchingElementForHotBusinessContent;
 
 
 @property (strong, nonatomic) NSURLConnection *conn;

@@ -6,15 +6,13 @@
 //  Copyright (c) 2015年 IOS-developer. All rights reserved.
 //
 
-#import "DetailCellViewController.h"
+#import "DetailCustomCellViewController.h"
 #import "DJRefresh.h"
 #import "DJRefreshProgressView.h"
-#import "AppDelegate.h"
-#import "HYSegmentedControl.h"
 #import "DetailWebViewController.h"
 #import "CustomBtnTableViewCell.h"
-#import "GMDCircleLoader.h"
-@interface DetailCellViewController ()<DJRefreshDelegate,UITableViewDelegate,UITableViewDataSource>{
+#import "DetailTableViewController.h"
+@interface DetailCustomCellViewController ()<DJRefreshDelegate,UITableViewDelegate,UITableViewDataSource>{
     AppDelegate * appDelegate;
     DJRefreshDirection directionForNow;
     int countForView;//此页面第一次出现时自动下拉刷新
@@ -28,9 +26,9 @@
 @property (nonatomic,strong) UITableView *tableView;
 @end
 
-@implementation DetailCellViewController
+@implementation DetailCustomCellViewController
 @synthesize titleLabel,seg,segArray,tempArray;
-#define NUMBEROFTITLEFORPAGES 10   //每页10条记录
+#define NUMBEROFTITLEFORPAGES 5   //每页5条记录
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -66,6 +64,13 @@
     return self;
 }
 
+- (void)createSegmentedControl
+{
+    self.seg = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:self.segArray delegate:self] ;
+    self.seg.frame = CGRectMake(0, NAVIGATIONHIGHT, self.view.frame.size.width, HYSegmentedControl_Height);
+    [self.view addSubview:self.seg];
+}
+
 - (void)PassageListResult:(NSNotification *)note{
     if (directionForNow == DJRefreshDirectionTop) {
         [self.dataList removeAllObjects];
@@ -93,17 +98,10 @@
     [self addDataWithDirection:directionForNow];
 }
 
-
-- (void)createSegmentedControl
-{
-    self.seg = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:self.segArray delegate:self] ;
-    self.seg.frame = CGRectMake(0, NAVIGATIONHIGHT, self.view.frame.size.width, HYSegmentedControl_Height);
-    [self.view addSubview:self.seg];
-}
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    //self.titleLabel.text = appDelegate.title;
+    //appDelegate.title = @"面向市民";
+    self.titleLabel.text = appDelegate.title;
     
     if (countForView == 0) {                                //因为写在viewWillAppear里面  所以只在第一次出现时自动请求更新
         self.automaticallyAdjustsScrollViewInsets=NO;
@@ -170,7 +168,15 @@
     if ([[self.dataList objectAtIndex:0]isKindOfClass:[NSMutableDictionary class]]) {
         cell.titleLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
     }
-    
+    cell.guideBtn.tag = cell.commonProblemsBtn.tag =cell.policiesAndRegulationsBtn.tag =cell.formDownloadBtn.tag = indexPath.row;
+    [cell.guideBtn addTarget:self action:@selector(guideBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.commonProblemsBtn addTarget:self action:@selector(commonProblemsBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.policiesAndRegulationsBtn addTarget:self action:@selector(policiesAndRegulationsBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.formDownloadBtn addTarget:self action:@selector(formDownloadBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+    if ([appDelegate.title isEqual:@"绿色通道"]) {
+        cell.commonProblemsBtn.hidden =YES;
+        cell.policiesAndRegulationsBtn.hidden = YES;
+    }
     return cell;
 }
 
@@ -190,7 +196,58 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([appDelegate.title isEqual:@"绿色通道"]) {
+        return 67.0;
+    }
     return 100.0;
+}
+//办事指南调用方法
+- (void)guideBtnPushViewController:(UIButton*)btn{
+    if (isLoading) {
+        return;
+    }
+    NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:appDelegate.sonTitle, nil];
+    DetailWebViewController * detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
+    NSString * currentPassageTitle = [[self.dataList objectAtIndex:btn.tag]objectForKey:@"title"];
+    NSString * createTime = [[self.dataList objectAtIndex:btn.tag]objectForKey:@"time"];;
+    
+    [appDelegate.conAPI getPassageContentWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andTitle:currentPassageTitle andCreateTime:createTime];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+    [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+//常见问题
+- (void)commonProblemsBtnPushViewController:(UIButton*)btn{
+    if (isLoading) {
+        return;
+    }
+    appDelegate.grandsonTitle = @"常见问题";
+    DetailTableViewController * detailViewController = [[DetailTableViewController alloc] init];
+    [appDelegate.conAPI getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:appDelegate.parentTitle andChannelNext:appDelegate.grandsonTitle andTitle:appDelegate.sonTitle];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+
+    [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+//常见问题
+- (void)policiesAndRegulationsBtnPushViewController:(UIButton*)btn{
+    if (isLoading) {
+        return;
+    }
+    appDelegate.grandsonTitle = @"相关政策法规";
+    DetailTableViewController * detailViewController = [[DetailTableViewController alloc] init];
+    [appDelegate.conAPI getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:appDelegate.parentTitle andChannelNext:appDelegate.grandsonTitle andTitle:appDelegate.sonTitle];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+    [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+#warning    等服务端提供表格下载
+
+- (void)formDownloadBtnPushViewController:(UIButton*)btn{
+    if (isLoading) {
+        return;
+    }
+    //appDelegate.conAPI getPassageContentWithChannelName:<#(NSString *)#> andChannelNext:<#(NSString *)#> andTitle:<#(NSString *)#> andCreateTime:<#(NSString *)#>
 }
 
 - (void)didReceiveMemoryWarning {

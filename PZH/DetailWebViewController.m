@@ -53,6 +53,8 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fault) name:@"fault" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"PassageContentResult" object:nil];//带标签的文章
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"LoadTopNewsContentResult" object:nil];//头条新闻
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"GetMXQY_ContentResult" object:nil];//常见问题、相关政策
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"GetRDBS_URLResult" object:nil];//热点办事
         }
     return self;
 }
@@ -116,6 +118,8 @@
         aLabel.text = [arr objectAtIndex:5];
         htmlString = [arr objectAtIndex:6];
         [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+    }else if(arr.count == 1){
+        htmlString = [arr objectAtIndex:0];             
     }
     
     if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {                             //  政府会议是外链   现对外链判断  如果是外链重新加载

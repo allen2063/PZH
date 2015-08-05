@@ -7,7 +7,10 @@
 //
 
 #import "AnnouncementOfWorkViewController.h"
-#import "AppDelegate.h"
+#import "StatisticsOfWorkViewController.h"
+#import "OnlineBusinessSearchViewController.h"
+#import "DetailTableViewController.h"
+#import "HotBusinessViewController.h"
 @interface AnnouncementOfWorkViewController (){
     AppDelegate * appDelegate;
 }
@@ -91,7 +94,7 @@
         
         UILabel * statisticsOfWorkLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, BLOCKWIDTH, BLOCKHEIGHT/4)];
         statisticsOfWorkLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*4/5);
-        statisticsOfWorkLabel.text = @"办事统计";
+        statisticsOfWorkLabel.text = @"办件统计";
         statisticsOfWorkLabel.font = [UIFont systemFontOfSize:14];
         statisticsOfWorkLabel.textAlignment = NSTextAlignmentCenter;
         
@@ -130,77 +133,40 @@
 
 -(void)jumpPageForEconomy:(UIButton *)btn{
     //DetailWebViewController * detailViewController = [DetailWebViewController alloc];
-//    switch (btn.tag) {
+    StatisticsOfWorkViewController * statisticsOfWorkViewController = [StatisticsOfWorkViewController alloc];
+    OnlineBusinessSearchViewController * onlineBusinessSearchViewController = [OnlineBusinessSearchViewController alloc];
+    HotBusinessViewController * detailTableViewController = [HotBusinessViewController alloc];
+    switch (btn.tag) {
+#warning    等服务端改用webview显示办事公告详情
+
 //        case 1:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"经济综述";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
+//            appDelegate.sonTitle = @"办件统计";
+//            [self.navigationController pushViewController:statisticsOfWorkViewController animated:YES];
+//            //[appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
 //            break;
-//        case 2:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"农业";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 3:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"工业";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 4:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"建筑业";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 5:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"房地产业";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 6:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"运输邮电";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 7:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"财政税收";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 8:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"固定资产投资";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 9:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"金融保险业";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 10:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"收入与消费";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//        case 11:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyArray];
-//            appDelegate.title = @"旅游";
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            [appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
-//            
-//        default:
-//            break;
-//    }
+        case 2:
+            appDelegate.sonTitle = @"在线办事";
+            onlineBusinessSearchViewController = [onlineBusinessSearchViewController init];             //为了statisticsOfWorkViewController读进去sontitle  只能复制后再初始化
+            [self.navigationController pushViewController:onlineBusinessSearchViewController animated:YES];
+            break;
+        case 3:
+            appDelegate.sonTitle = @"办件统计";
+            statisticsOfWorkViewController = [statisticsOfWorkViewController init];             //为了statisticsOfWorkViewController读进去sontitle  只能复制后再初始化
+            [appDelegate.conAPI getStatisticsOfWork];
+            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            [self.navigationController pushViewController:statisticsOfWorkViewController animated:YES];
+            break;
+        case 4:
+            appDelegate.sonTitle = @"热点办事";
+            detailTableViewController = [detailTableViewController init];             //为了statisticsOfWorkViewController读进去sontitle  只能复制后再初始化
+            //[appDelegate.conAPI getHotBusinessListWithPageSize:<#(NSString *)#> andCurPage:<#(NSString *)#>];
+            //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            [self.navigationController pushViewController:detailTableViewController animated:YES];
+            break;
+            
+        default:
+            break;
+    }
     
 }
 
@@ -208,7 +174,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    //没数据。。。。
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = item;
 }
 
 - (void)viewWillAppear:(BOOL)animated{

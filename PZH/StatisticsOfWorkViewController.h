@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface StatisticsOfWorkViewController : UIViewController
+@property (strong,nonatomic)UILabel * titleLabel;
+@property (strong,nonatomic)NSMutableArray * segArray;
 
 @end

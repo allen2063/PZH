@@ -20,6 +20,8 @@
 @property (strong, nonatomic) NSString * title;
 @property (strong, nonatomic) NSString * parentTitle;
 @property (strong, nonatomic) NSString * sonTitle;
+@property (strong, nonatomic) NSString * grandsonTitle;
+
 
 @property (nonatomic) NSInteger touchedSegBtnTag;
 @property (nonatomic) int currentPageNumber;
