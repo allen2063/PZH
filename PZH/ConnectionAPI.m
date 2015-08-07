@@ -18,9 +18,9 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent,elementFoundForPassageList,elementFoundForCommonProblemsAndPoliciesAndRegulationsList,elementFoundForCommonProblemsAndPoliciesAndRegulationsContent,elementFoundForStatisticsOfWork,elementFoundForOnlineBusinessSearchResult,elementFoundForHotBusinessList,elementFoundForHotBusinessContent;
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent,elementFoundForPassageList,elementFoundForCommonProblemsAndPoliciesAndRegulationsList,elementFoundForCommonProblemsAndPoliciesAndRegulationsContent,elementFoundForStatisticsOfWork,elementFoundForOnlineBusinessSearchResult,elementFoundForHotBusinessList,elementFoundForHotBusinessContent,elementFoundForAnnouncementOfWorkList,elementFoundForBUMENDONGTAIContent;
 
-@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent,matchingElementForPassageList,matchingElementForCommonProblemsAndPoliciesAndRegulationsList,matchingElementForCommonProblemsAndPoliciesAndRegulationsContent,matchingElementForStatisticsOfWork,matchingElementForOnlineBusinessSearchResult,matchingElementForHotBusinessList,matchingElementForHotBusinessContent;
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent,matchingElementForPassageList,matchingElementForCommonProblemsAndPoliciesAndRegulationsList,matchingElementForCommonProblemsAndPoliciesAndRegulationsContent,matchingElementForStatisticsOfWork,matchingElementForOnlineBusinessSearchResult,matchingElementForHotBusinessList,matchingElementForHotBusinessContent,matchingElementForAnnouncementOfWorkList,matchingElementForBUMENDONGTAIContent;
 //@synthesize soapResults1;
 //@synthesize elementFound1;
 //@synthesize matchingElement2;       //isentender
@@ -51,7 +51,8 @@
     matchingElementForOnlineBusinessSearchResult= @"OnLineSelectResult"; //在线办事查询
     matchingElementForHotBusinessList= @"GetRDBS_ListResult"; //热点办事列表
     matchingElementForHotBusinessContent= @"GetRDBS_URLResult"; //热点办事内容
-
+    matchingElementForAnnouncementOfWorkList = @"GetBSGG_ListResult";  //办事公告列表
+    matchingElementForBUMENDONGTAIContent = @"GetBuMenDSY_ContentResult";
     return self;
 }
 
@@ -257,7 +258,11 @@
     [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title andArgument4Name:@"createTime" andArgument4Value:createTime];
 }
 
-- (void)getAnnouncementOfWork{
+- (void)getBUMENDONGTAIContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title andCreateTime:(NSString *)createTime{
+    [self withInterface:@"GetBuMenDSY_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"Title" andArgument3Value:title andArgument4Name:@"createTime" andArgument4Value:createTime];
+}
+
+- (void)getAnnouncementOfWorkList{
     [self withInterface:@"GetBSGG_List"];
 }
 
@@ -439,11 +444,23 @@
         }
         self.elementFoundForHotBusinessContent = YES;
     }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfWorkList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForAnnouncementOfWorkList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForBUMENDONGTAIContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForBUMENDONGTAIContent = YES;
+    }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent||self.elementFoundForPassageList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent||self.elementFoundForStatisticsOfWork||self.elementFoundForOnlineBusinessSearchResult||self.elementFoundForHotBusinessList||self.elementFoundForHotBusinessContent) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent||self.elementFoundForPassageList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent||self.elementFoundForStatisticsOfWork||self.elementFoundForOnlineBusinessSearchResult||self.elementFoundForHotBusinessList||self.elementFoundForHotBusinessContent||self.elementFoundForAnnouncementOfWorkList||self.elementFoundForBUMENDONGTAIContent) {
         [self.soapResults appendString: string];
     }
 }
@@ -559,6 +576,18 @@
     else if ([elementName isEqualToString:self.matchingElementForHotBusinessContent]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GetRDBS_URLResult" object:self userInfo:d];
         self.elementFoundForHotBusinessContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfWorkList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetBSGG_ListResult" object:self userInfo:d];
+        self.elementFoundForAnnouncementOfWorkList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForBUMENDONGTAIContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetBuMenDSY_ContentResult" object:self userInfo:d];
+        self.elementFoundForBUMENDONGTAIContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }

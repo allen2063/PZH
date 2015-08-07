@@ -26,7 +26,8 @@
 - (void)getAnnouncementOfPublicContentWithTitle:(NSString *)title;      //公告公示详情
 - (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;       //领导活动、工作会议、部门动态列表
 - (void)getPassageContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title andCreateTime:(NSString *)createTime;        //领导活动等详情页面
-- (void)getAnnouncementOfWork;      //公告公示详情
+- (void)getBUMENDONGTAIContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title andCreateTime:(NSString *)createTime;        //bu部门动态页面
+- (void)getAnnouncementOfWorkList;      //公告公示详情
 - (void)getWorkOnlineListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;        //面向市民  面向企业 list
 - (void)getWorkOnlineContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title;  //接口已改动  目前废弃  调用getPassage...
 - (void)getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title;//面向市民  面向企业的常见问题  相关政策
@@ -35,6 +36,7 @@
 - (void)getOnlineBusinessSearchResultWithString:(NSString *)string;     //在线办事查询
 - (void)getHotBusinessListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage;     //热点办事列表
 - (void)getHotBusinessContentWithTitle:(NSString *)title;
+
 @property (strong, nonatomic) NSMutableData *webData;
 @property (strong, nonatomic) NSMutableString *soapResults;
 @property (strong, nonatomic) NSXMLParser *xmlParser;
@@ -55,6 +57,8 @@
 @property (nonatomic) BOOL elementFoundForOnlineBusinessSearchResult;   //在线办事查询结果
 @property (nonatomic) BOOL elementFoundForHotBusinessList;   //热点办事列表
 @property (nonatomic) BOOL elementFoundForHotBusinessContent;   //热点办事内容
+@property (nonatomic) BOOL elementFoundForAnnouncementOfWorkList;   //办事公示
+@property (nonatomic) BOOL elementFoundForBUMENDONGTAIContent;   //部门动态
 
 
 @property (strong, nonatomic) NSString *matchingElementForMenuContent;
@@ -74,6 +78,8 @@
 @property (strong, nonatomic) NSString *matchingElementForOnlineBusinessSearchResult;
 @property (strong, nonatomic) NSString *matchingElementForHotBusinessList;
 @property (strong, nonatomic) NSString *matchingElementForHotBusinessContent;
+@property (strong, nonatomic) NSString *matchingElementForAnnouncementOfWorkList;
+@property (strong, nonatomic) NSString *matchingElementForBUMENDONGTAIContent;
 
 
 @property (strong, nonatomic) NSURLConnection *conn;

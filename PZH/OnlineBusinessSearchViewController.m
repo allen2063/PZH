@@ -7,7 +7,7 @@
 //
 
 #import "OnlineBusinessSearchViewController.h"
-
+#import "DetailWebViewController.h"
 @interface OnlineBusinessSearchViewController (){
     AppDelegate * appDelegate;
     UITextField * acceptedNumberTextField;
@@ -24,9 +24,12 @@
     if (self) {
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(OnLineSelectResult:) name:@"OnLineSelectResult" object:nil];
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(OnLineSelectResult:) name:@"OnLineSelectResult" object:nil];
-        
+//        UIScrollView * scrView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
+//        scrView.contentSize =  CGSizeMake( UISCREENWIDTH, UISCREENHEIGHT);
+//        scrView.backgroundColor = [UIColor whiteColor];
+//        [self.view addSubview:scrView];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -48,8 +51,8 @@
         [self.view addSubview:acceptedNumber];
         
         UILabel * IDNumber = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/13, 200, UISCREENWIDTH/3, 30)];
-        IDNumber.text = @"按身份证号码:";
-        [self.view addSubview:IDNumber];
+        IDNumber.text = @"按身份证号:";
+        //[self.view addSubview:IDNumber];
         
         acceptedNumberTextField = [[UITextField alloc]initWithFrame:CGRectMake(UISCREENWIDTH/3+25, 160, UISCREENWIDTH/2, 30)];
         acceptedNumberTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -71,11 +74,11 @@
         IDNumberTextField.returnKeyType =UIReturnKeyDone;
         IDNumberTextField.keyboardAppearance=UIKeyboardAppearanceDefault;
         IDNumberTextField.delegate = self;
-        [self.view addSubview:IDNumberTextField];
+        //[self.view addSubview:IDNumberTextField];
 
         UIButton * searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         searchBtn.frame = CGRectMake(0, 0, UISCREENWIDTH/3, 40);
-        searchBtn.center = CGPointMake(UISCREENWIDTH/2, UISCREENHEIGHT/2+50);
+        searchBtn.center = CGPointMake(UISCREENWIDTH/2, UISCREENHEIGHT/2-30);
         searchBtn.backgroundColor = UIColorFromRGBValue(0xf24300);
         //绘制圆角矩形按钮和边线
         [searchBtn.layer setMasksToBounds:YES];
@@ -99,13 +102,19 @@
 
 - (void)search{
     if (![acceptedNumberTextField.text isEqual:@""]) {
-        
+        NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:@"在线办事查询", nil];
+        DetailWebViewController* detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
+        [appDelegate.conAPI getOnlineBusinessSearchResultWithString:acceptedNumberTextField.text];
+        [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+        [self.navigationController pushViewController:detailViewController animated:YES];
     }
 }
 
-- (void)OnLineSelectResult:(NSNotification * )note{
-#warning    等服务端改用webview显示在线办事查询结果
-}
+//- (void)OnLineSelectResult:(NSNotification * )note{
+//#warning    等服务端改用webview显示在线办事查询结果
+//    UIWebView * webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, UISCREENHEIGHT/2+50, UISCREENWIDTH,UISCREENHEIGHT/2-50)];
+//    
+//}
 
 - (void)createSegmentedControl
 {
@@ -124,7 +133,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    //没数据。。。
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = item;
 }
 
 - (void)didReceiveMemoryWarning {

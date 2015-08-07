@@ -1,14 +1,14 @@
 //
-//  ForTheCitizensViewController.m
+//  PublicServiceViewController.m
 //  PZH
 //
-//  Created by ZengYifei on 15/8/4.
+//  Created by ZengYifei on 15/8/6.
 //  Copyright (c) 2015年 IOS-developer. All rights reserved.
 //
 
-#import "ForCitizensAndEnterpriseAndGreenChannelViewController.h"
-#import "DetailCustomCellViewController.h"
-@interface ForCitizensAndEnterpriseAndGreenChannelViewController (){
+#import "PublicServiceViewController.h"
+#import "FirstTableVIewViewController.h"
+@interface PublicServiceViewController (){
     AppDelegate * appDelegate;
     NSArray * titleNameArray;
 }
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation ForCitizensAndEnterpriseAndGreenChannelViewController
+@implementation PublicServiceViewController
 @synthesize titleLabel;
 #define INTERVALX (UISCREENWIDTH/40)
 #define INTERVALY (UISCREENHEIGHT/50)
@@ -44,7 +44,6 @@
     }
     return self;
 }
-
 - (void)buildThePageWithPicArray:(NSMutableArray *)picArray andTitleArray:(NSMutableArray *)titleArray{
     
     int rowInPage = (int)picArray.count / 3;                    //  每行3个图标   一共多少行
@@ -58,7 +57,7 @@
         //第一项图标
         UIButton * firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         firstBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
-        [firstBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
+        [firstBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
         firstBtn.tag = i*3+1;
         [firstBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [firstBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -80,7 +79,7 @@
         //第二项图标
         UIButton * secondBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         secondBtn.frame = CGRectMake(INTERVALX*2+BLOCKWIDTH,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
-        [secondBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
+        [secondBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
         secondBtn.tag = i*3+2;
         [secondBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [secondBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -102,7 +101,7 @@
         //第三项图标
         UIButton * thirdBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         thirdBtn.frame = CGRectMake(INTERVALX*3+BLOCKWIDTH*2,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
-        [thirdBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
+        [thirdBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
         thirdBtn.tag = i*3+3;
         [thirdBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [thirdBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -126,7 +125,7 @@
         {
             UIButton * firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             firstBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*(rowInPage+1)+BLOCKHEIGHT*rowInPage,BLOCKWIDTH,BLOCKHEIGHT);
-            [firstBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
+            [firstBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
             firstBtn.tag = rowInPage + 1;
             [firstBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
             [firstBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -150,7 +149,7 @@
         {
             UIButton * firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             firstBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*(rowInPage+1)+BLOCKHEIGHT*rowInPage,BLOCKWIDTH,BLOCKHEIGHT);
-            [firstBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
+            [firstBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
             firstBtn.tag = rowInPage + 1;
             [firstBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
             [firstBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -171,7 +170,7 @@
             
             UIButton * secondBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             secondBtn.frame = CGRectMake(INTERVALX*2+BLOCKWIDTH,NAVIGATIONHIGHT+INTERVALY*(rowInPage+1)+BLOCKHEIGHT*rowInPage,BLOCKWIDTH,BLOCKHEIGHT);
-            [secondBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
+            [secondBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
             secondBtn.tag = rowInPage + 2;
             [secondBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
             [secondBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -198,11 +197,12 @@
     
 }
 
--(void)jumpPageForCitizens:(UIButton *)btn{
-    appDelegate.sonTitle = [titleNameArray objectAtIndex:(btn.tag-1)];
-    DetailCustomCellViewController * detailCellViewController = [[DetailCustomCellViewController alloc]init];
-    [self.navigationController pushViewController:detailCellViewController animated:YES];
-    
+-(void)jumpPageForPublcService:(UIButton *)btn{
+    appDelegate.title = [titleNameArray objectAtIndex:(btn.tag-1)];
+    NSMutableArray * titleArray = [NSMutableArray arrayWithObjects:appDelegate.title, nil];
+    FirstTableVIewViewController * firstTableVIewViewController = [[FirstTableVIewViewController alloc]initWithNibName:nil bundle:nil AndTagNumber:(btn.tag-1) AndSegArray:titleArray];
+    [self.navigationController pushViewController:firstTableVIewViewController animated:YES];
+
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -211,15 +211,16 @@
     self.navigationItem.backBarButtonItem = item;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    self.titleLabel.text = @"公共服务";
+    appDelegate.title = @"公共服务";
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:YES];
-//    self.titleLabel.text = @"面向市民";
-//    appDelegate.title = @"面向市民";
 }
 
 /*

@@ -13,6 +13,7 @@
 #import "AdDataModel.h"
 #import "OpenGovernmentAffairsViewController.h"
 #import "OnlineBusinessViewController.h"
+#import "PublicServiceViewController.h"
 @interface MainViewController : UIViewController<UIWebViewDelegate>{
 }
 @property (strong,nonatomic)UIButton * intoPZHBtn;
@@ -29,5 +30,6 @@
 @property (strong,nonatomic)IntoPZHViewController * intoPZHViewController;
 @property (strong,nonatomic)OpenGovernmentAffairsViewController * openGovernmentAffairsViewController;
 @property (strong,nonatomic)OnlineBusinessViewController * onlineBusinessViewController;
+@property (strong,nonatomic)PublicServiceViewController * publicServiceViewController;
 
 @end

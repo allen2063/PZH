@@ -16,7 +16,7 @@
 @end
 
 @implementation MainViewController
-@synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView,mainNewsbodyLabel,mainNewsImgView,mainNewsTitleLabel,openGovernmentAffairsViewController,openGovernmentAffairsBtn,onlineBusinessViewController,onlineBusinessBtn;
+@synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView,mainNewsbodyLabel,mainNewsImgView,mainNewsTitleLabel,openGovernmentAffairsViewController,openGovernmentAffairsBtn,onlineBusinessViewController,onlineBusinessBtn,publicServiceBtn,publicServiceViewController;
 
 
 #define SCROllVIEWHIGHT ((self.view.bounds.size.height == 480)?  UISCREENHEIGHT*0.44:UISCREENHEIGHT*0.47) //4&4s是480
@@ -224,7 +224,11 @@
     self.intoPZHViewController = [[IntoPZHViewController alloc]init];
     self.openGovernmentAffairsViewController = [[OpenGovernmentAffairsViewController alloc]init];
     self.onlineBusinessViewController = [[OnlineBusinessViewController alloc]init];
-    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"该模块正在开发中，请稍候！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    self.publicServiceViewController = [PublicServiceViewController alloc];
+    
+    NSMutableArray * picArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"jy",@"sb",@"jy",@"yl",@"zf",@"jt",@"hysy",@"ggsy",@"zjbl.png",@"qykb",@"jyns",@"zzrd",nil];
+    NSMutableArray * titleArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"教育",@"社保",@"就业",@"医疗",@"住房",@"交通", @"婚育收养",@"公用事业",@"证件办理",@"企业开办",@"经营纳税",@"资质认定",nil];
+//    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"该模块正在开发中，请稍候！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     switch (btn.tag) {
         case 1:
             appDelegate.parentTitle = @"走进攀枝花";
@@ -241,14 +245,11 @@
             [self.navigationController pushViewController:self.onlineBusinessViewController animated:YES];
             break;
         case 4:
-            [alert show];
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-            break;
-//        case 5:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyOverview];
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-            //            [self.navigationController pushViewController:mainVc animated:YES];
+            appDelegate.parentTitle = @"公共服务";
+            self.publicServiceViewController = [self.publicServiceViewController initWithNibName:nil bundle:nil WithPicArray:picArrForPulicService andTitleArray:titleArrForPulicService];
+            [self.navigationController pushViewController:self.publicServiceViewController animated:YES];
+            //[alert show];
+
             break;
         default:
             break;

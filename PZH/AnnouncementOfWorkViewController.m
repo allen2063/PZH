@@ -11,6 +11,7 @@
 #import "OnlineBusinessSearchViewController.h"
 #import "DetailTableViewController.h"
 #import "HotBusinessViewController.h"
+#import "DetailWebViewController.h"
 @interface AnnouncementOfWorkViewController (){
     AppDelegate * appDelegate;
 }
@@ -32,7 +33,6 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -43,7 +43,7 @@
         //办事公告
         UIButton * announceOfWorkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         announceOfWorkBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY,BLOCKWIDTH,BLOCKHEIGHT);
-        [announceOfWorkBtn addTarget:self action:@selector(jumpPageForEconomy:) forControlEvents:UIControlEventTouchUpInside];
+        [announceOfWorkBtn addTarget:self action:@selector(jumpPageForAnnouncementOfWork:) forControlEvents:UIControlEventTouchUpInside];
         announceOfWorkBtn.tag = 1;
         [announceOfWorkBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [announceOfWorkBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -65,7 +65,7 @@
         //在线办事查询
         UIButton * onlineBusinessSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         onlineBusinessSearchBtn.frame = CGRectMake(INTERVALX*2+BLOCKWIDTH,NAVIGATIONHIGHT+INTERVALY,BLOCKWIDTH,BLOCKHEIGHT);
-        [onlineBusinessSearchBtn addTarget:self action:@selector(jumpPageForEconomy:) forControlEvents:UIControlEventTouchUpInside];
+        [onlineBusinessSearchBtn addTarget:self action:@selector(jumpPageForAnnouncementOfWork:) forControlEvents:UIControlEventTouchUpInside];
         onlineBusinessSearchBtn.tag = 2;
         [onlineBusinessSearchBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [onlineBusinessSearchBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -87,7 +87,7 @@
         //办事统计
         UIButton * statisticsOfWorkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         statisticsOfWorkBtn.frame = CGRectMake(INTERVALX*3+BLOCKWIDTH*2,NAVIGATIONHIGHT+INTERVALY,BLOCKWIDTH,BLOCKHEIGHT);
-        [statisticsOfWorkBtn addTarget:self action:@selector(jumpPageForEconomy:) forControlEvents:UIControlEventTouchUpInside];
+        [statisticsOfWorkBtn addTarget:self action:@selector(jumpPageForAnnouncementOfWork:) forControlEvents:UIControlEventTouchUpInside];
         statisticsOfWorkBtn.tag = 3;
         [statisticsOfWorkBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [statisticsOfWorkBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -109,7 +109,7 @@
         //热点办事事项
         UIButton * hotWorkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         hotWorkBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*2+BLOCKHEIGHT,BLOCKWIDTH,BLOCKHEIGHT);
-        [hotWorkBtn addTarget:self action:@selector(jumpPageForEconomy:) forControlEvents:UIControlEventTouchUpInside];
+        [hotWorkBtn addTarget:self action:@selector(jumpPageForAnnouncementOfWork:) forControlEvents:UIControlEventTouchUpInside];
         hotWorkBtn.tag = 4;
         [hotWorkBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
         [hotWorkBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
@@ -131,19 +131,20 @@
     return self;
 }
 
--(void)jumpPageForEconomy:(UIButton *)btn{
-    //DetailWebViewController * detailViewController = [DetailWebViewController alloc];
+-(void)jumpPageForAnnouncementOfWork:(UIButton *)btn{
+    DetailWebViewController * detailViewController = [DetailWebViewController alloc];
     StatisticsOfWorkViewController * statisticsOfWorkViewController = [StatisticsOfWorkViewController alloc];
     OnlineBusinessSearchViewController * onlineBusinessSearchViewController = [OnlineBusinessSearchViewController alloc];
     HotBusinessViewController * detailTableViewController = [HotBusinessViewController alloc];
+    NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:@"办事公告", nil];
     switch (btn.tag) {
-#warning    等服务端改用webview显示办事公告详情
-
-//        case 1:
-//            appDelegate.sonTitle = @"办件统计";
-//            [self.navigationController pushViewController:statisticsOfWorkViewController animated:YES];
-//            //[appDelegate.conAPI getMenuContentAPIWithChannelName:@"2015年" andChannelNext:appDelegate.title];
-//            break;
+        case 1:
+            appDelegate.sonTitle = @"办事公告";
+            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
+            [appDelegate.conAPI getAnnouncementOfWorkList];
+            [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            break;
         case 2:
             appDelegate.sonTitle = @"在线办事";
             onlineBusinessSearchViewController = [onlineBusinessSearchViewController init];             //为了statisticsOfWorkViewController读进去sontitle  只能复制后再初始化

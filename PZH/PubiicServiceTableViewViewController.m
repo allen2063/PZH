@@ -1,16 +1,18 @@
 //
-//  HotBusinessViewController.m
+//  PubiicServiceScrollviewViewController.m
 //  PZH
 //
-//  Created by ZengYifei on 15/8/5.
+//  Created by ZengYifei on 15/8/6.
 //  Copyright (c) 2015年 IOS-developer. All rights reserved.
 //
 
-#import "HotBusinessViewController.h"
+#import "PubiicServiceTableViewViewController.h"
 #import "DJRefresh.h"
 #import "DJRefreshProgressView.h"
 #import "DetailWebViewController.h"
-@interface HotBusinessViewController ()<DJRefreshDelegate,UITableViewDelegate,UITableViewDataSource>{
+#import "CustomBtnTableViewCell.h"
+#import "DetailTableViewController.h"
+@interface PubiicServiceTableViewViewController ()<DJRefreshDelegate,UITableViewDelegate,UITableViewDataSource>{
     AppDelegate * appDelegate;
     DJRefreshDirection directionForNow;
     int countForView;//此页面第一次出现时自动下拉刷新
@@ -22,23 +24,25 @@
 @property (nonatomic,strong)DJRefresh *refresh;
 @property (nonatomic,strong)NSMutableArray *dataList;
 @property (nonatomic,strong) UITableView *tableView;
-
 @end
 
-@implementation HotBusinessViewController
+@implementation PubiicServiceTableViewViewController
 @synthesize titleLabel,seg,segArray,tempArray;
-#define NUMBEROFTITLEFORPAGES 15   //每页15条记录
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+#define NUMBEROFTITLEFORPAGES 10   //每页10条记录
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetRDBS_ListResult:) name:@"GetRDBS_ListResult" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageListResult:) name:@"PassageListResult" object:nil];
         isLoading = NO;
         countForView = 0;
         loadNextPage = YES;
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
         
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouched:) name:@"segTouched" object:nil];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -67,13 +71,17 @@
     [self.view addSubview:self.seg];
 }
 
-- (void)GetRDBS_ListResult:(NSNotification *)note{
+- (void)PassageListResult:(NSNotification *)note{
     if (directionForNow == DJRefreshDirectionTop) {
         [self.dataList removeAllObjects];
     }
     [self.tempArray removeAllObjects];
     NSString *info =[[note userInfo] objectForKey:@"info"];
     NSMutableArray * tempArrays = (NSMutableArray *)[info componentsSeparatedByString:@";"];
+    if (tempArrays.count <1) {
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"该项数据为空！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+    }
     totalTitleForSeg = [[tempArrays objectAtIndex:0] intValue ];           //当前列表下文章的总数
     if (totalTitleForSeg <= (NUMBEROFTITLEFORPAGES * appDelegate.currentPageNumber)) {
         loadNextPage = NO;
@@ -83,7 +91,11 @@
     NSMutableDictionary * dic;
     for (int i = 0; i < tempArrays.count; i++) {
         NSArray * arr = [[tempArrays objectAtIndex:i]componentsSeparatedByString:@","];
-        dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"label", nil];
+        //        if (arr.count == 2) {
+        //            dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time", nil];
+        //        }else if (arr.count == 3){
+        dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time",[arr objectAtIndex:2],@"label", nil];
+        //        }
         [self.dataList addObject:dic];
         [self.tempArray addObject:dic];
     }
@@ -116,6 +128,7 @@
     }
 }
 
+
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction{
     directionForNow = direction;
     isLoading = YES;
@@ -123,19 +136,21 @@
     if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
     {
         appDelegate.currentPageNumber = 1;
-        [appDelegate.conAPI getHotBusinessListWithPageSize:countOfTitle andCurPage:@"1"];
+        NSLog(@"%@ %@",appDelegate.sonTitle,appDelegate.grandsonTitle);
+        [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.sonTitle andChannelNext:appDelegate.grandsonTitle andPageSize:countOfTitle andCurPage:@"1"];
     }
     else if (self.refresh.refreshingDirection==DJRefreshingDirectionBottom){
         NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageNumber];
-        [appDelegate.conAPI getHotBusinessListWithPageSize:countOfTitle andCurPage:curPage];
+        [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.sonTitle andChannelNext:appDelegate.grandsonTitle andPageSize:countOfTitle andCurPage:curPage];
     }
 }
+
 
 - (void)addDataWithDirection:(DJRefreshDirection)direction{
     [self.tableView reloadData];
     
     [_refresh finishRefreshingDirection:direction animation:YES];
-    if (!loadNextPage) {
+    if (!loadNextPage && (direction == DJRefreshDirectionBottom)) {
         UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"所有新闻加载已完成！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
     }
@@ -149,11 +164,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell" ];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
     }
     if ([[self.dataList objectAtIndex:0]isKindOfClass:[NSMutableDictionary class]]) {
         cell.textLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
-        cell.detailTextLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"label"];
+        //cell.detailTextLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"time"];
     }
     
     return cell;
@@ -164,21 +179,14 @@
     if (isLoading) {
         return;
     }
-    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"目前跳转外链有问题！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alert show];
-#warning    目前外链有问题
-
-//    NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:appDelegate.sonTitle, nil];
-//    DetailWebViewController * detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
-//    NSString * currentPassageTitle = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
-//    
-//    [appDelegate.conAPI getHotBusinessContentWithTitle:currentPassageTitle];
-//    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-//    [self.navigationController pushViewController:detailViewController animated:YES];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50.0;
+    NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:appDelegate.sonTitle, nil];
+    DetailWebViewController * detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
+    NSString * currentPassageTitle = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
+    NSString * createTime = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"time"];;
+    
+    [appDelegate.conAPI getPassageContentWithChannelName:appDelegate.sonTitle andChannelNext:appDelegate.grandsonTitle andTitle:currentPassageTitle andCreateTime:createTime];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 - (void)viewDidLoad{

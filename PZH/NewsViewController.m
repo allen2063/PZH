@@ -231,11 +231,16 @@
     NSString * createTime = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"time"];;
     if ([appDelegate.title isEqualToString: @"公告公示"]) {
         [appDelegate.conAPI getAnnouncementOfPublicContentWithTitle:[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"title"] ];
-    }else if([appDelegate.title isEqualToString: @"部门动态"]||[appDelegate.title isEqualToString: @"区县快讯"]){
+    }
+    else if ([appDelegate.title isEqualToString: @"部门动态"]){                 //新接口
+        [appDelegate.conAPI getBUMENDONGTAIContentWithChannelName:@"工作动态" andChannelNext:@"部门动态" andTitle:currentPassageTitle andCreateTime:createTime];
+    }
+    else if([appDelegate.title isEqualToString: @"部门动态"]||[appDelegate.title isEqualToString: @"区县快讯"]){
         //NSString * channelNext = [self.segArray objectAtIndex:(appDelegate.touchedSegBtnTag - 1000)];
         
         [appDelegate.conAPI getPassageContentWithChannelName:@"工作动态" andChannelNext:appDelegate.title andTitle:currentPassageTitle andCreateTime:createTime];
-    }else{
+    }
+    else{
         [appDelegate.conAPI getPassageContentWithChannelName:appDelegate.title andChannelNext:self.currentSegTitle andTitle:currentPassageTitle andCreateTime:createTime];
     }
     [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];

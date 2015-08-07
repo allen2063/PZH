@@ -230,7 +230,7 @@
 - (void)jumpPageForOnlineBusiness:(UIButton *)btn{
     AnnouncementOfWorkViewController * announcementOfWorkViewController = [[AnnouncementOfWorkViewController alloc]init];
     
-    NSMutableArray * picArrForCitizens = [[NSMutableArray alloc]initWithObjects:@"syfw",@"etfw",@"zjbl",@"jypx",@"jtcl",@"gwyl",@"cyzs",@"xfqy",@"flsfsm",@"jyqz",@"tdzf",@"ylbx",@"hyfw",@"ggsy",@"jrfw",@"shbz",@"jtsq",@"lnsh",@"shqz",@"cxly",@"byfw",@"bzfw",@"bmfw",nil];
+    NSMutableArray * picArrForCitizens = [[NSMutableArray alloc]initWithObjects:@"syfw",@"etfw",@"zjblsm",@"jypx",@"jtcl",@"gwyl",@"cyzs",@"xfqy",@"flsfsm",@"jyqz",@"tdzf",@"ylbx",@"hyfw",@"ggsy",@"jrfw",@"shbz",@"jtsq",@"lnsh",@"shqz",@"cxly",@"byfw",@"bzfw",@"bmfw",nil];
     NSMutableArray * titleArrForCitizens = [[NSMutableArray alloc]initWithObjects:@"生育服务",@"儿童服务",@"证件办理",@"教育培训",@"交通车辆",@"娱乐购物", @"餐饮住宿",@"消费权益",@"法律司法",@"就业求职",@"土地住房",@"医疗保险",@"婚姻服务",@"公用事业",@"金融服务",@"社会保障",@"家庭社区",@"老年生活",@"社会求助",@"出行旅游",@"兵役服务",@"殡葬服务",@"便民服务",nil];
     
     NSMutableArray * picArrForEnterprise = [[NSMutableArray alloc]initWithObjects:@"slzy",@"rlzy",@"ldbz",@"njbl",@"hblh",@"gcjs",@"flsf",@"dwmy",@"cssw",@"tdfc",@"zljd",@"aqfh",@"jygl",@"jrbx",@"xwcb",@"zscq",@"pcsb",@"zhqt",nil];

@@ -35,8 +35,6 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageListResult:) name:@"PassageListResult" object:nil];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetGGGS_ListResult:) name:@"GetZWGK_ListResult" object:nil];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouchedForNews:) name:@"segTouched" object:nil];
         isLoading = NO;
         countForView = 0;
         loadNextPage = YES;
@@ -100,7 +98,6 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    //appDelegate.title = @"面向市民";
     self.titleLabel.text = appDelegate.title;
     
     if (countForView == 0) {                                //因为写在viewWillAppear里面  所以只在第一次出现时自动请求更新
@@ -124,32 +121,41 @@
     }
 }
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = item;
-}
 
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction{
     directionForNow = direction;
     isLoading = YES;
     NSString * countOfTitle = [NSString stringWithFormat:@"%d",NUMBEROFTITLEFORPAGES];
-    if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
-    {
-        appDelegate.currentPageNumber = 1;
-        [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andPageSize:countOfTitle andCurPage:@"1"];
+    if ([appDelegate.parentTitle isEqualToString:@"网上办事"]) {
+        if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
+        {
+            appDelegate.currentPageNumber = 1;
+            [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andPageSize:countOfTitle andCurPage:@"1"];
+        }
+        else if (self.refresh.refreshingDirection==DJRefreshingDirectionBottom){
+            NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageNumber];
+            [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andPageSize:countOfTitle andCurPage:curPage];
+        }
     }
-    else if (self.refresh.refreshingDirection==DJRefreshingDirectionBottom){
-        NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageNumber];
-        [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andPageSize:countOfTitle andCurPage:curPage];
-    }
+//    else if ([appDelegate.parentTitle isEqualToString:@"公共服务"]){
+//        if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
+//        {
+//            appDelegate.currentPageNumber = 1;
+//            [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andPageSize:countOfTitle andCurPage:@"1"];
+//        }
+//        else if (self.refresh.refreshingDirection==DJRefreshingDirectionBottom){
+//            NSString * curPage = [NSString stringWithFormat:@"%d",++appDelegate.currentPageNumber];
+//            [appDelegate.conAPI getWorkOnlineListWithChannelName:appDelegate.title andChannelNext:appDelegate.sonTitle andPageSize:countOfTitle andCurPage:curPage];
+//        }
+//    }
+    
 }
 
 - (void)addDataWithDirection:(DJRefreshDirection)direction{
     [self.tableView reloadData];
     
     [_refresh finishRefreshingDirection:direction animation:YES];
-    if (!loadNextPage) {
+    if (!loadNextPage && (direction == DJRefreshDirectionBottom)) {
         UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"所有新闻加载已完成！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
     }
@@ -165,19 +171,31 @@
     if (cell == nil) {
         cell = [[CustomBtnTableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
     }
-    if ([[self.dataList objectAtIndex:0]isKindOfClass:[NSMutableDictionary class]]) {
-        cell.titleLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
+    if ([appDelegate.parentTitle isEqualToString:@"网上办事"]) {
+        if ([[self.dataList objectAtIndex:0]isKindOfClass:[NSMutableDictionary class]]) {
+            cell.titleLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
+        }
+        cell.guideBtn.tag = cell.commonProblemsBtn.tag =cell.policiesAndRegulationsBtn.tag =cell.formDownloadBtn.tag = indexPath.row;
+        [cell.guideBtn addTarget:self action:@selector(guideBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.commonProblemsBtn addTarget:self action:@selector(commonProblemsBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.policiesAndRegulationsBtn addTarget:self action:@selector(policiesAndRegulationsBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.formDownloadBtn addTarget:self action:@selector(formDownloadBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
+        if ([appDelegate.title isEqual:@"绿色通道"]) {
+            cell.commonProblemsBtn.hidden =YES;
+            cell.policiesAndRegulationsBtn.hidden = YES;
+        }
     }
-    cell.guideBtn.tag = cell.commonProblemsBtn.tag =cell.policiesAndRegulationsBtn.tag =cell.formDownloadBtn.tag = indexPath.row;
-    [cell.guideBtn addTarget:self action:@selector(guideBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.commonProblemsBtn addTarget:self action:@selector(commonProblemsBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.policiesAndRegulationsBtn addTarget:self action:@selector(policiesAndRegulationsBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.formDownloadBtn addTarget:self action:@selector(formDownloadBtnPushViewController:) forControlEvents:UIControlEventTouchUpInside];
-    if ([appDelegate.title isEqual:@"绿色通道"]) {
-        cell.commonProblemsBtn.hidden =YES;
-        cell.policiesAndRegulationsBtn.hidden = YES;
-    }
-    return cell;
+//    else if([appDelegate.parentTitle isEqualToString:@"公共服务"]){
+//        if ([[self.dataList objectAtIndex:0]isKindOfClass:[NSMutableDictionary class]]) {
+//            cell.textLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
+//        }
+//        cell.commonProblemsBtn.hidden =YES;
+//        cell.policiesAndRegulationsBtn.hidden = YES;
+//        cell.formDownloadBtn.hidden = YES;
+//        cell.guideBtn.hidden = YES;
+//    }
+    
+        return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -241,13 +259,24 @@
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
-#warning    等服务端提供表格下载
 
 - (void)formDownloadBtnPushViewController:(UIButton*)btn{
     if (isLoading) {
         return;
     }
-    //appDelegate.conAPI getPassageContentWithChannelName:<#(NSString *)#> andChannelNext:<#(NSString *)#> andTitle:<#(NSString *)#> andCreateTime:<#(NSString *)#>
+    appDelegate.grandsonTitle = @"表格下载";
+    //NSMutableArray * segArrays = [NSMutableArray arrayWithObjects:appDelegate.grandsonTitle, nil];
+    DetailTableViewController * detailViewController = [[DetailTableViewController alloc] init];
+    [appDelegate.conAPI getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:appDelegate.parentTitle andChannelNext:appDelegate.grandsonTitle andTitle:appDelegate.sonTitle];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+    [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = item;
 }
 
 - (void)didReceiveMemoryWarning {
