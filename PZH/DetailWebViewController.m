@@ -44,7 +44,8 @@
         
         self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height))];
         self.webView.delegate=self;
-        //self.webView.scalesPageToFit =YES;
+        //自适应大小
+        self.webView.scalesPageToFit =YES;
         self.webView.scrollView.bounces = NO;
         [self.view addSubview:self.webView];
         

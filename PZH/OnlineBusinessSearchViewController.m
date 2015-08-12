@@ -78,7 +78,7 @@
 
         UIButton * searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         searchBtn.frame = CGRectMake(0, 0, UISCREENWIDTH/3, 40);
-        searchBtn.center = CGPointMake(UISCREENWIDTH/2, UISCREENHEIGHT/2-30);
+        searchBtn.center = CGPointMake(UISCREENWIDTH/2, UISCREENHEIGHT/2-UISCREENHEIGHT/40);
         searchBtn.backgroundColor = UIColorFromRGBValue(0xf24300);
         //绘制圆角矩形按钮和边线
         [searchBtn.layer setMasksToBounds:YES];

@@ -25,7 +25,7 @@
 @end
 
 @implementation PicForPZHViewController
-@synthesize titleLabel,seg,segArray,tempArray,currentSegTitle;
+@synthesize titleLabel,seg,segArray,tempArray,currentSegTitle,picBufferDic;
 #define CELLVIEWHEIGHT 98
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -43,6 +43,7 @@
         self.navigationItem.titleView = self.titleLabel;
         self.segArray = [NSMutableArray arrayWithObjects:@"城市新貌",@"自然风光",@"美食天地",@"开发建设",@"旅游产品",@"节庆赛事",@"幸福家园", nil];
         self.tempArray = [[NSMutableArray alloc]init];
+        self.picBufferDic = [[NSMutableDictionary alloc]init];
         self.currentSegTitle = @"城市新貌";
         [self createSegmentedControl];
     }
@@ -78,6 +79,7 @@
     //多线程返回计数
     threadCount = 0;
     [self.tempArray removeAllObjects];
+    [self readFileDic];
     for (int i = 0; i<picsInPage; i++) {
         NSArray * tempArrayss = [[tempArrays objectAtIndex:i ] componentsSeparatedByString:@","];
         NSMutableArray * tempArraysss = [[NSMutableArray alloc]initWithArray:tempArrayss];
@@ -86,24 +88,69 @@
         NSLog(@"线程%d已抛出",i);
         [NSThread detachNewThreadSelector:@selector(loadData:) toTarget:self withObject:tempArraysss];
     }
+    
 }
 
 - (void) loadData:(NSMutableArray *) tempArraysss
 {
+    
     NSString * url = [(NSString*)[tempArraysss objectAtIndex:1]stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
-    UIImage* image = [[UIImage alloc] initWithData:imageData];
-    UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
-    NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img", nil];
+    NSDictionary * dic;
+    NSTimeInterval timeOut = -60*60*24;          //超时控制  如果超过这个时间则要从网络请求更新图片
+    if ([[self.picBufferDic objectForKey:url] isKindOfClass:[NSDictionary class]] ) {
+        NSDate * lastLoadingTime = [[self.picBufferDic objectForKey:url] objectForKey:@"loadDate"];
+        if (lastLoadingTime.timeIntervalSinceNow > timeOut) {     //缓存未超时
+            dic = [self.picBufferDic objectForKey:url];
+            NSLog(@"读取图片缓存,%f",lastLoadingTime.timeIntervalSinceNow);
+        }
+        else{           //超时  更新
+            NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+            UIImage* image = [[UIImage alloc] initWithData:imageData];
+            UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
+            NSDate * loadDate=[NSDate date];
+            dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
+            if ([[dic objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[dic objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //判断返回的图片是否受损
+            {
+                [self.picBufferDic setObject:dic forKey:url];
+            }
+        }
+    }
+    else{       //为空  更新
+        NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+        UIImage* image = [[UIImage alloc] initWithData:imageData];
+        UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
+        NSDate * loadDate=[NSDate date];
+        dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
+        if ([[dic objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[dic objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //判断可能返回的图片是否受损
+        {
+            [self.picBufferDic setObject:dic forKey:url];
+        }
+    }
 
     [self.tempArray addObject:dic];
     threadCount++;
     NSLog(@"come:%@ back:%@ total:%@",[tempArraysss objectAtIndex:3],[NSString stringWithFormat:@"%d",threadCount],[tempArraysss objectAtIndex:2]);
-    if([[tempArraysss objectAtIndex:2] isEqualToString:[NSString stringWithFormat:@"%d",threadCount]]){
+    if([[tempArraysss objectAtIndex:2] isEqualToString:[NSString stringWithFormat:@"%d",threadCount]]){ //核对已抛出的线程总数和已返回的线程数
         [self performSelectorOnMainThread:@selector(returnToMainThread:) withObject:self.tempArray  waitUntilDone:YES];
         NSLog(@"%d图片加在完毕",threadCount);
+        //写入对应位置
+        NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *path = [documents stringByAppendingPathComponent:@"picBufferDic.archiver"];//拓展名可以自己随便取
+        
+        BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.picBufferDic toFile:path];
+        NSLog(@"%@",writeResult ? @"写入图片缓存成功":@"写入图片缓存失败");
     }
     
+}
+
+//读取图片缓存
+-(void)readFileDic{
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"picBufferDic.archiver"];
+    if ([[NSKeyedUnarchiver unarchiveObjectWithFile:path]isKindOfClass:[NSMutableDictionary class]]) {
+        self.picBufferDic = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        //NSLog(@"%@",self.picBufferDic);
+    }
 }
 
 -(void) returnToMainThread:(NSMutableArray*) arr{
@@ -111,6 +158,7 @@
     //调用结束动画
     __weak typeof(self)weakSelf=self;
     __strong typeof(weakSelf)strongSelf=weakSelf;
+    
     
     if (directionForNow == DJRefreshDirectionTop) {
         [self.dataList removeAllObjects];
@@ -247,14 +295,16 @@
         testImgView = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"imgView"];
         testLabel.text = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
         //NSLog(@"%ld",(long)indexPath.row);
-    }else if ([[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && ![[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)]){
-        testImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"jzsb.png"]];
-        testLabel.text = @"图片加载失败";
     }
-    else if([[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[NSString class]]){
+    else if([[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[NSString class]]){            //初始化
         testImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"jz.png"]];
         testLabel.text = @"图看攀枝花";
     }
+    else if (![[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] || ![[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)]){
+        testImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"jzsb.png"]];
+        testLabel.text = @"图片加载失败";
+    }
+    
     testImgView.frame = CGRectMake(0, 0, 88, 75);
     [testBtn addSubview:testLabel];
     [testBtn addSubview:testImgView];
@@ -293,7 +343,7 @@
     [self.view addSubview:bigImgView];
     NSLog(@"bigImgSize:%@ screenSize:%@",NSStringFromCGSize(bigImgSize),NSStringFromCGSize(self.view.frame.size));
 
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelPic)];
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelSelectedPic)];
     [bigImgView addGestureRecognizer:recognizer];
     [backgroundView addGestureRecognizer:recognizer];
     
@@ -311,7 +361,7 @@
     [UIView commitAnimations];
 }
 
-- (void)cancelPic{
+- (void)cancelSelectedPic{
     UIView * backgroundView = [self.view viewWithTag:101];
     [backgroundView removeFromSuperview];
 

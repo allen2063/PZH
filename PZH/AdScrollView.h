@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, AdTitleShowStyle)
 @property (retain,nonatomic,readonly) NSArray * adTitleArray;
 @property (assign,nonatomic,readwrite) UIPageControlShowStyle  PageControlShowStyle;
 @property (assign,nonatomic,readonly) AdTitleShowStyle  adTitleStyle;
+@property (retain,nonatomic) NSMutableDictionary * mainPagePicBufferDic;
 
 - (void)setAdTitleArray:(NSArray *)adTitleArray withShowStyle:(AdTitleShowStyle)adTitleStyle;
 - (void)recountTheTimeIsPause:(BOOL)Action;
