@@ -167,9 +167,6 @@
         [self.dataList addObject:dic];
     }
     [strongSelf addDataForDirection:directionForNow];
-
-    [self.collectionView reloadData];
-
 }
 
 - (void)segTouchedForPic:(NSNotification *)note{
@@ -270,6 +267,8 @@
     else{
         self.refresh.bottomEnabled=NO;
     }
+    [self.collectionView reloadData];
+
 }
 
 
