@@ -309,7 +309,7 @@
     if (topNewsIsLoaded == YES) {
         [appDelegate.conAPI getTopNewsContentWithTitile:self.mainNewsTitleLabel.text];
         NSMutableArray * arr = [[NSMutableArray alloc]initWithObjects:@"头条新闻", nil];
-        [GMDCircleLoader setOnView:self.view withTitle:@"加载中" animated:YES];
+        [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
         DetailWebViewController * detail = [[DetailWebViewController alloc]initWithNibName:nil bundle:nil WithURL:nil andSegArray:arr];
         [self.navigationController pushViewController:detail animated:YES];
     }else NSLog(@"等待加载头条新闻");
