@@ -64,6 +64,14 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:YES];
+    if (appDelegate.writePicFinished) {
+        appDelegate.writePicFinished =NO;
+        [NSThread detachNewThreadSelector:@selector(writePic) toTarget:self withObject:nil];
+    }
+}
+
 -(void)GetYXPZH_ContentResult:(NSNotification *)note{
     NSString *htmlString = [[[note userInfo] objectForKey:@"info"]stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSMutableArray * tempArrays = (NSMutableArray *)[htmlString componentsSeparatedByString:@";"];
@@ -79,7 +87,6 @@
     //多线程返回计数
     threadCount = 0;
     [self.tempArray removeAllObjects];
-    [self readFileDic];
     for (int i = 0; i<picsInPage; i++) {
         NSArray * tempArrayss = [[tempArrays objectAtIndex:i ] componentsSeparatedByString:@","];
         NSMutableArray * tempArraysss = [[NSMutableArray alloc]initWithArray:tempArrayss];
@@ -133,14 +140,19 @@
     if([[tempArraysss objectAtIndex:2] isEqualToString:[NSString stringWithFormat:@"%d",threadCount]]){ //核对已抛出的线程总数和已返回的线程数
         [self performSelectorOnMainThread:@selector(returnToMainThread:) withObject:self.tempArray  waitUntilDone:YES];
         NSLog(@"%d图片加在完毕",threadCount);
-        //写入对应位置
-        NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        NSString *path = [documents stringByAppendingPathComponent:@"picBufferDic.archiver"];//拓展名可以自己随便取
         
-        BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.picBufferDic toFile:path];
-        NSLog(@"%@",writeResult ? @"写入图片缓存成功":@"写入图片缓存失败");
     }
     
+}
+
+- (void)writePic{
+    //写入对应位置
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"picBufferDic.archiver"];//拓展名可以自己随便取
+    
+    BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.picBufferDic toFile:path];
+    appDelegate.writePicFinished = YES;
+    NSLog(@"%@",writeResult ? @"写入图片缓存成功":@"写入图片缓存失败");
 }
 
 //读取图片缓存
@@ -180,6 +192,7 @@
     self.titleLabel.text = @"图看攀枝花";
     appDelegate.title = @"图看攀枝花";
     loadNextPage = YES;
+    [self readFileDic];
     
     self.automaticallyAdjustsScrollViewInsets=NO;
     
@@ -289,6 +302,8 @@
     testLabel.font = [UIFont systemFontOfSize:13];
     testLabel.textAlignment = NSTextAlignmentCenter;
     //(self.dataList.count == NUMBEROFPICFORPAGE)&&
+ 
+    
     if ([[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //由于网络缘故  很可能返回的图片已经受损
     {
         testImgView = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"imgView"];

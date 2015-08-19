@@ -164,17 +164,17 @@
     if (isLoading) {
         return;
     }
-    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"目前跳转外链有问题！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alert show];
-#warning    目前外链有问题
+    //UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"目前跳转外链有问题！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    //[alert show];
+//#warning    目前外链有问题
 
-//    NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:appDelegate.sonTitle, nil];
-//    DetailWebViewController * detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
-//    NSString * currentPassageTitle = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
-//    
-//    [appDelegate.conAPI getHotBusinessContentWithTitle:currentPassageTitle];
-//    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-//    [self.navigationController pushViewController:detailViewController animated:YES];
+    NSMutableArray * segLabelArray = [[NSMutableArray alloc]initWithObjects:appDelegate.sonTitle, nil];
+    DetailWebViewController * detailViewController = [[DetailWebViewController alloc] initWithNibName:nil bundle:nil WithURL:nil andSegArray:segLabelArray];
+    NSString * currentPassageTitle = [[self.dataList objectAtIndex:indexPath.row]objectForKey:@"title"];
+    
+    [appDelegate.conAPI getHotBusinessContentWithTitle:currentPassageTitle];
+    [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

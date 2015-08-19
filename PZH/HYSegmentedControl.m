@@ -115,7 +115,7 @@
         
         if(titles.count == 1){                          //单个seg时只作为标签显示  无需响应点击  并去掉下划线
             btn.userInteractionEnabled = NO;            //不响应点击
-            btn.frame = CGRectMake(0, .0f, width4btn+20, HYSegmentedControl_Height);     //调整长度便于显示
+            btn.frame = CGRectMake(0, .0f, width4btn+140, HYSegmentedControl_Height);     //调整长度便于显示
             btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;         //靠左显示
             btn.contentEdgeInsets = UIEdgeInsetsMake(0,10, 0, 0);                           //文字顶边框了  保持10的距离
             [_bottomLineView removeFromSuperview];          //去掉下划线

@@ -21,6 +21,7 @@
 @property (strong, nonatomic) NSString * parentTitle;
 @property (strong, nonatomic) NSString * sonTitle;
 @property (strong, nonatomic) NSString * grandsonTitle;
+@property BOOL writePicFinished;
 
 
 @property (nonatomic) NSInteger touchedSegBtnTag;

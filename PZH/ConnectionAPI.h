@@ -9,11 +9,14 @@
 #import <Foundation/Foundation.h>
 @interface ConnectionAPI : NSObject<NSXMLParserDelegate, NSURLConnectionDelegate>{
     //UIAlertView * alerts;
-
+    float timeout;
+    BOOL isback;
     BOOL isfault;
-    int count;
+    int requestCount;
     NSNotificationCenter *nc;
     NSMutableDictionary * UserInfo;
+    NSString * urlToServer;
+    UIAlertView * alerts;
 }
 
 - (void)getTopNews;                     //获取首页热点新闻的图片、标题、内容

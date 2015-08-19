@@ -10,7 +10,6 @@
 #import "AppDelegate.h"
 @implementation ConnectionAPI
 
-
 @synthesize webData;
 @synthesize soapResults;
 @synthesize xmlParser;
@@ -33,7 +32,11 @@
 
 - (id)init{
     self = [super init];
-    count = 0;
+    urlToServer = @"http://118.121.221.10/WS_PZH.asmx";
+    alerts = [[UIAlertView alloc]init];
+    isback =NO;
+    requestCount = 0;
+    timeout = 5;
     matchingElementForMenuContent = @"GetMenuContentResult";
     matchingElementForPZHPic = @"GetYXPZH_ContentResult";
     matchingElementForPZHVideo = @"GetSPPZH_ContentResult";
@@ -80,6 +83,12 @@
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
     
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+    
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
         webData = [NSMutableData data];
@@ -101,7 +110,7 @@
                          "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,interface];
     
     NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSString * ur = urlToServer;
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
@@ -111,12 +120,17 @@
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
     
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+    
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
         webData = [NSMutableData data];
     }else NSLog(@"con为假  %@",webData);
 }
-
 
 - (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value{
     NSString *soapMsg = [NSString stringWithFormat:
@@ -134,7 +148,7 @@
                          "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,interface];
     
     NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSString * ur = urlToServer;
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
@@ -144,6 +158,12 @@
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
     
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
         webData = [NSMutableData data];
@@ -167,7 +187,7 @@
                          "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,argument3Name,argument3Value,argument3Name,interface];
     
     NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSString * ur = urlToServer;//[NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
@@ -176,6 +196,12 @@
     [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
     
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
@@ -201,7 +227,7 @@
                          "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,argument3Name,argument3Value,argument3Name,argument4Name,argument4Value,argument4Name,interface];
     
     NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSString * ur = urlToServer;//[NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
@@ -211,6 +237,12 @@
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
     
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
         webData = [NSMutableData data];
@@ -315,7 +347,37 @@
 -(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *) error {
     self.conn = nil;
     self.webData = nil;
+    NSLog(@"!!!!!!!!!!!!%@",error);
+    //alerts = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+
+    if (alerts.visible != YES) {
+        alerts = [alerts initWithTitle:@"错误" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+         [alerts show];
+    }
+   
+    NSDictionary * d = [[NSDictionary alloc]initWithObjectsAndKeys:error,@"error" ,nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:d];
 }
+
+
+//时间超时定义
+-(void) handleTimer:(NSTimer *)timer
+{
+    int threadInfo = 0;
+    //[[timer userInfo] isKindOfClass:[NSDictionary class]]?NSLog(@"yes"):NSLog(@"no");
+    if ([[timer userInfo] isKindOfClass:[NSDictionary class]]) {
+        threadInfo =[[[timer userInfo]objectForKey:@"threadInfo"] intValue];
+    }
+    if(!isback &&(threadInfo == requestCount)){  //时间到后未返回或者当前的线程标识不是设置计时器的线程标识 也就是说只有状态为未返回并且当前进程就是设置计时器的进程时成立
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:nil];
+        //alerts = [[UIAlertView alloc]initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        if (alerts.visible != YES) {
+            alerts = [alerts initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alerts show];
+        }
+    }
+}
+
 
 // 完成接收数据时调用
 -(void) connectionDidFinishLoading:(NSURLConnection *) connection {
@@ -591,6 +653,8 @@
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }
+    isback =YES;
+    //requestCount--;
 }
 
 // 解析整个文件结束后
@@ -600,6 +664,8 @@
     }
     if (isfault) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:nil];
+        alerts = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alerts show];
     }
 }
 
@@ -608,6 +674,7 @@
     if (self.soapResults) {
         self.soapResults = nil;
     }
+    //NSLog(@"????????????%@",parseError);
 }
 
 #pragma mark - readFileArray

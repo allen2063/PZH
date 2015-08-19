@@ -86,9 +86,8 @@
 
 - (void)fault{
     [GMDCircleLoader hideFromView:self.view animated:YES];
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alert show];
-    
+//        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//        [alert show];
 }
 
 - (void)MenuContentResults:(NSNotification *)note{
@@ -112,7 +111,9 @@
 //            arr = (NSMutableArray *)[[arr objectAtIndex:1] componentsSeparatedByString:@"\">"];
 //            htmlString = [arr objectAtIndex:0];
 //        }
-        
+        if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {
+            [self loadOutsideLink:htmlString];
+        }else
         [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
     }else if(arr.count == 7){
         [self addLabelForType:6];
@@ -134,19 +135,24 @@
     else if(arr.count == 1){   //  办事公告
         htmlString = [arr objectAtIndex:0];
         if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {                             //  政府会议是外链   现对外链判断  如果是外链重新加载
-            isOutsideLink = YES;
-            NSURL *url = [[NSURL alloc] initWithString:htmlString];
-            [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
-            self.webView.scalesPageToFit =YES;
-            [self.overheadInformationSumImgView removeFromSuperview];
-            self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
-        }
+            [self loadOutsideLink:htmlString];
+        }else{
         [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
         self.webView.scalesPageToFit =YES;
         [self.overheadInformationSumImgView removeFromSuperview];
-        self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
+            self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
+        }
     }
-    
+}
+
+- (void)loadOutsideLink:(NSString *)htmlString{
+    isOutsideLink = YES;
+
+    NSURL *url = [[NSURL alloc] initWithString:htmlString];                 //加载外链
+    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+    self.webView.scalesPageToFit =YES;
+    [self.overheadInformationSumImgView removeFromSuperview];
+    self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
     
 }
 
@@ -164,9 +170,9 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     UIAlertView *alterview = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    if (!isOutsideLink) {
+    //if (!isOutsideLink) {
         [alterview show];
-    }
+    //}
 }
 
 - (void)viewDidLoad {

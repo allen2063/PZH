@@ -111,7 +111,7 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
     
     NSDate * lastUpdateTime = [self.mainPagePicBufferDic objectForKey:@"loadTime"];
     NSTimeInterval timeOut = -60*60*24;
-    if (lastUpdateTime.timeIntervalSinceNow < timeOut ) {       //超时更新缓存
+    if ((lastUpdateTime.timeIntervalSinceNow < timeOut) && (leftImage != NULL)&&(rightImage != NULL)&&(centerImage != NULL)  ) {       //超时更新缓存   无网时三个image会为空  需要判断
         _leftImageView.image =leftImage;
         _centerImageView.image =centerImage;
         _rightImageView.image =rightImage;
