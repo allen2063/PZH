@@ -70,6 +70,7 @@
         self.mainNewsBodyLabel = [[UILabel alloc]initWithFrame:CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*10, UISCREENWIDTH*2/3-INTERVALX, MAINNEWSHIGHT-INTERVALY*12)];
         self.mainNewsBodyLabel.text = @"习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!";
         self.mainNewsBodyLabel.tag = 102;
+        
 //        bodyLabel.font = [UIFont systemFontOfSize:13];
 //        bodyLabel.textAlignment = NSTextAlignmentLeft;
 //        //bodyLabel.backgroundColor = [UIColor yellowColor];
