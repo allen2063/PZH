@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>E64C2985-7794-4FE5-8CCF-293BEB78F9A7</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>PZH</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>1F79ED4CE81D54B5DD71C0EC84F6EAE2CAF85EBE</key>
 		<string>https://github.com/allen2063/PZH.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>PZH.xcodeproj/project.xcworkspace</string>
+	<string>PZH.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>1F79ED4CE81D54B5DD71C0EC84F6EAE2CAF85EBE</key>

@@ -89,10 +89,10 @@
 //        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
 //        [alert show];
 }
-
+//走进攀枝花详情
 - (void)MenuContentResults:(NSNotification *)note{
-    NSString *info = [[note userInfo] objectForKey:@"info"];
-    [self.webView loadHTMLString:info baseURL:[NSURL URLWithString:info]];
+    NSString *htmlString = [[note userInfo] objectForKey:@"info"];
+    [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
 }
 
 - (void)PassageContentResult:(NSNotification *)note{
@@ -153,7 +153,6 @@
     self.webView.scalesPageToFit =YES;
     [self.overheadInformationSumImgView removeFromSuperview];
     self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
-    
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
