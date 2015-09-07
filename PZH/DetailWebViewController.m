@@ -45,7 +45,7 @@
         self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height))];
         self.webView.delegate=self;
         //自适应大小
-        self.webView.scalesPageToFit =YES;
+        self.webView.scalesPageToFit =NO;
         self.webView.scrollView.bounces = NO;
         [self.view addSubview:self.webView];
         
@@ -91,14 +91,16 @@
 }
 //走进攀枝花详情
 - (void)MenuContentResults:(NSNotification *)note{
-    NSString *htmlString = [[note userInfo] objectForKey:@"info"];
+    NSMutableString *htmlString = [NSMutableString stringWithFormat:@"%@", [[note userInfo] objectForKey:@"info"]];
+    //插入图片大小标签
+    htmlString = [self adjustPicForScreen:htmlString];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
 }
 
 - (void)PassageContentResult:(NSNotification *)note{
     NSString *info = [[note userInfo] objectForKey:@"info"];
     NSMutableArray * arr = (NSMutableArray *)[info componentsSeparatedByString:@";."];
-    NSString *htmlString;
+    NSMutableString *htmlString;
     if (arr.count ==3) {
         UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:7];           //  tag7是发布时间
         aLabel.text = [arr objectAtIndex:0];
@@ -111,10 +113,12 @@
 //            arr = (NSMutableArray *)[[arr objectAtIndex:1] componentsSeparatedByString:@"\">"];
 //            htmlString = [arr objectAtIndex:0];
 //        }
-        if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {
+        if ([htmlString length] > 5 &&[[htmlString substringToIndex:4]isEqualToString:@"http"]) {
             [self loadOutsideLink:htmlString];
         }else
-        [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+            //插入图片大小标签
+            htmlString = [self adjustPicForScreen:htmlString];
+            [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
     }else if(arr.count == 7){
         [self addLabelForType:6];
         UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:1];           //  tag7是发布时间
@@ -130,6 +134,8 @@
         aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:6];                     //  tag8是来源
         aLabel.text = [arr objectAtIndex:5];
         htmlString = [arr objectAtIndex:6];
+        //插入图片大小标签
+        htmlString = [self adjustPicForScreen:htmlString];
         [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
     }
     else if(arr.count == 1){   //  办事公告
@@ -137,9 +143,11 @@
         if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {                             //  政府会议是外链   现对外链判断  如果是外链重新加载
             [self loadOutsideLink:htmlString];
         }else{
-        [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
-        self.webView.scalesPageToFit =YES;
-        [self.overheadInformationSumImgView removeFromSuperview];
+            //插入图片大小标签
+            htmlString = [self adjustPicForScreen:htmlString];
+            [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+            self.webView.scalesPageToFit =YES;
+            [self.overheadInformationSumImgView removeFromSuperview];
             self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
         }
     }
@@ -178,6 +186,61 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+
+//在HTML代码中找到图片标签(<img) 并在后面添加图片的长宽标签(@" width=\"100%\" height=\"auto\" ")适应屏幕
+- (NSMutableString *)adjustPicForScreen:(NSMutableString *)htmlString{
+    htmlString = [[NSMutableString alloc]initWithString:htmlString];
+    if ([htmlString rangeOfString:@"<img"].length>0) {
+        NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        int countOfArray = 0;
+        int index = 0;
+        NSString * insertString =@" width=\"100%\" height=\"auto\" ";
+        while ([tempString rangeOfString:@"<img"].length) {
+            [tempArray addObject:[NSString stringWithFormat:@"%d",
+                                  (int)([tempString rangeOfString:@"<img"].location+[tempString rangeOfString:@"<img"].length)]];
+            tempString = [tempString substringFromIndex:[tempString rangeOfString:@"<img"].location+[tempString rangeOfString:@"<img"].length];
+            index = index + [[tempArray objectAtIndex:countOfArray]intValue];
+            [htmlString insertString:insertString atIndex:index];
+            index = index + (int)[insertString length];
+            countOfArray++;
+            //            NSLog(@"tempString:%@  length:%d",tempString,[tempString length]);
+            //            NSLog(@"htmlString auto %@   length:%d",htmlString,[htmlString length]);
+        }
+    }
+    
+    if ([htmlString rangeOfString:@"jpg\""].length>0) {
+        NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        int countOfArray = 0;
+        int index = 0;
+        NSString * insertString =@" width=\"100%\" height=\"auto\" ";
+        while ([tempString rangeOfString:@"jpg\""].length) {
+            [tempArray addObject:[NSString stringWithFormat:@"%d",
+                                  (int)([tempString rangeOfString:@"jpg\""].location+[tempString rangeOfString:@"jpg\""].length)]];
+            tempString = [tempString substringFromIndex:[tempString rangeOfString:@"jpg\""].location+[tempString rangeOfString:@"jpg\""].length];
+            index = index + [[tempArray objectAtIndex:countOfArray]intValue];
+            [htmlString insertString:insertString atIndex:index];
+            index = index + (int)[insertString length];
+            countOfArray++;
+            //            NSLog(@"tempString:%@  length:%d",tempString,[tempString length]);
+            //            NSLog(@"htmlString auto %@   length:%d",htmlString,[htmlString length]);
+        }
+    }
+    
+    //第三方库TFHpple解析html并获得图片标签
+    //    参见博客：http://www.cnblogs.com/YouXianMing/p/3731866.html    及github工程：https://github.com/topfunky/hpple
+    //    NSData  * data      = [htmlString dataUsingEncoding:NSASCIIStringEncoding];
+    //    TFHpple * doc       = [[TFHpple alloc] initWithHTMLData:data];
+    //    NSArray * elements  = [doc searchWithXPathQuery:@"//img"];
+    //    NSMutableArray * newLabel = [[NSMutableArray alloc]init];
+    //    for (TFHppleElement * element in elements) {
+    //        NSLog(@"%@",element.raw);
+    //    }
+    
+    return  htmlString;
+}
+
 
 - (void)addLabelForType:(int)type{
     //政务公开等详情图上的标签
