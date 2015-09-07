@@ -27,7 +27,6 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         
-        appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -62,6 +61,9 @@
     // Do any additional setup after loading the view.
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = item;
+    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{

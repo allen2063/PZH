@@ -13,7 +13,6 @@
 @interface HotBusinessViewController ()<DJRefreshDelegate,UITableViewDelegate,UITableViewDataSource>{
     AppDelegate * appDelegate;
     DJRefreshDirection directionForNow;
-    int countForView;//此页面第一次出现时自动下拉刷新
     int totalTitleForSeg;        //此seg里面共有多少文章
     BOOL isLoading;              //  加载状态
     BOOL loadNextPage ;
@@ -37,7 +36,6 @@
         self.view.frame = [[UIScreen mainScreen] bounds];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetRDBS_ListResult:) name:@"GetRDBS_ListResult" object:nil];
         isLoading = NO;
-        countForView = 0;
         loadNextPage = YES;
         shouldUpdateCacheForTitle = NO;
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
@@ -59,7 +57,6 @@
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = item;
     
-    self.automaticallyAdjustsScrollViewInsets=NO;
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 
     self.segArray = [NSMutableArray arrayWithObjects:appDelegate.sonTitle, nil];
@@ -69,7 +66,6 @@
     if (self.cachaDic == nil) {
         self.cachaDic = [[NSMutableDictionary alloc]init];
     }
-   // NSLog(@"paren:%@  title%@   son%@",appDelegate.parentTitle,appDelegate.title,appDelegate.sonTitle);
     if ([[self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]] isKindOfClass:[NSArray class]]) {
         _dataList = [self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]];
         //如果读取的数据大于每页请求数
@@ -120,7 +116,7 @@
     }
     
     NSString * serverMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",tempArray]];
-    NSString * cacheMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]]];
+    NSString * cacheMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",[self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]]]];
     
     if(shouldUpdateCacheForTitle && ![serverMD5 isEqualToString:cacheMD5]){
         [self.cachaDic setObject:tempArray forKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]];
@@ -135,7 +131,6 @@
     for (id dic in tempArray) {
         [_dataList addObject:dic];
     }
-
     [self addDataWithDirection:directionForNow];
 }
 
@@ -143,11 +138,6 @@
     [super viewWillAppear:YES];
     //appDelegate.title = @"面向市民";
     self.titleLabel.text = appDelegate.title;
-    
-    if (countForView == 0) {                                //因为写在viewWillAppear里面  所以只在第一次出现时自动请求更新
-        
-        countForView ++;
-    }
 }
 
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction{

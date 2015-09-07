@@ -17,7 +17,6 @@
 @interface NewsViewController ()<DJRefreshDelegate,UITableViewDelegate,UITableViewDataSource>{
     AppDelegate * appDelegate;
     DJRefreshDirection directionForNow;
-    int countForView;//此页面第一次出现时自动下拉刷新
     int totalTitleForSeg;        //此seg里面共有多少文章
     BOOL isLoading;              //  加载状态
     BOOL shouldUpdateCacheForTitle;
@@ -41,7 +40,6 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(GetGGGS_ListResult:) name:@"GetZWGK_ListResult" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouchedForNews:) name:@"segTouched" object:nil];
         isLoading = NO;
-        countForView = 0;
         shouldUpdateCacheForTitle = NO;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouched:) name:@"segTouched" object:nil];
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
@@ -165,11 +163,6 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.titleLabel.text = appDelegate.title;
-    
-    if (countForView == 0) {
-      
-        countForView ++;
-    }
 }
 
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction{

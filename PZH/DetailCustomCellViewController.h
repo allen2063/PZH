@@ -16,5 +16,4 @@ typedef NS_ENUM(NSInteger, eRefreshType){
 @property (nonatomic,assign)eRefreshType type;
 @property (strong,nonatomic)UILabel * titleLabel;
 @property (strong,nonatomic)NSMutableArray * segArray;
-@property (strong,nonatomic)NSMutableArray * tempArray;
 @end
