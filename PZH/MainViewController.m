@@ -7,15 +7,16 @@
 //
 
 #import "MainViewController.h"
-
+#import "DetailWebViewController.h"
 @interface MainViewController (){
     AppDelegate * appDelegate;
+    BOOL topNewsIsLoaded;
 }
 
 @end
 
 @implementation MainViewController
-@synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView;
+@synthesize intoPZHBtn,titleLabel,intoPZHViewController,scrollView,mainNewsBodyLabel,mainNewsImgView,mainNewsTitleLabel,openGovernmentAffairsViewController,openGovernmentAffairsBtn,onlineBusinessViewController,onlineBusinessBtn,publicServiceBtn,publicServiceViewController,topNewsBufferDic;
 
 
 #define SCROllVIEWHIGHT ((self.view.bounds.size.height == 480)?  UISCREENHEIGHT*0.44:UISCREENHEIGHT*0.47) //4&4s是480
@@ -31,22 +32,23 @@
         self.view.backgroundColor = UIColorFromRGBValue(0xececec);
         CGRect bounds = [[UIScreen mainScreen] bounds];
         self.view.frame = bounds;
-        self.intoPZHViewController = [[IntoPZHViewController alloc]init];
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResult:) name:@"GetMenuContentResult" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(LoadTopNewsResult:) name:@"LoadTopNewsResult" object:nil];
         
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        //appDelegate.title = @"攀枝花公众信息网";
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
-        
-        //首页展示新闻
+        self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
+
+        //首页头条新闻
+        topNewsIsLoaded = NO;
+        self.topNewsBufferDic = [[NSMutableDictionary alloc]init];
         self.mainNewsBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.mainNewsBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+SCROllVIEWHIGHT,UISCREENWIDTH,MAINNEWSHIGHT);
-        [self.mainNewsBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
+        [self.mainNewsBtn addTarget:self action:@selector(jumpPageForTopNews) forControlEvents:UIControlEventTouchUpInside];
         self.mainNewsBtn.tag = 5;
         [self.mainNewsBtn setBackgroundImage:[UIImage imageNamed:@"xw_bj.png"] forState:UIControlStateNormal];
         [self.mainNewsBtn setBackgroundImage:[UIImage imageNamed:@"dj_bj.png"] forState:UIControlStateSelected];
@@ -54,17 +56,21 @@
         //UIImageView * mainNewsBackgroundImgVIew = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"xw_bj.png"]];
         //mainNewsBackgroundImgVIew.frame = self.mainNewsBtn.bounds;
         
-        UIImageView * mainNewsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ph.png"]];
+        self.mainNewsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ph.png"]];
         mainNewsImgView.frame = CGRectMake(INTERVALX*1, INTERVALY*2, UISCREENWIDTH/3-2*INTERVALX, MAINNEWSHIGHT-INTERVALY*4);
+        mainNewsImgView.tag = 100;
         
-        UILabel * newsTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*2, UISCREENWIDTH*2/3-INTERVALX, INTERVALY*6)];
-        newsTitleLabel.text = @"习近平：坚定不移打赢禁毒战!!";
-        newsTitleLabel.font = [UIFont systemFontOfSize:15];
-        newsTitleLabel.textAlignment = NSTextAlignmentLeft;
+        self.mainNewsTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*2, UISCREENWIDTH*2/3-INTERVALX, INTERVALY*6)];
+        self.mainNewsTitleLabel.text = @"习近平：坚定不移打赢禁毒战!!";
+        self.mainNewsTitleLabel.font = [UIFont systemFontOfSize:15];   //boldSystemFontOfSize 加粗
+        self.mainNewsTitleLabel.textAlignment = NSTextAlignmentLeft;
         //titleLabel.backgroundColor = [UIColor yellowColor];
+        self.mainNewsTitleLabel.tag = 101;
         
-        UILabel * bodyLabel = [[UILabel alloc]initWithFrame:CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*10, UISCREENWIDTH*2/3-INTERVALX, MAINNEWSHIGHT-INTERVALY*12)];
-        bodyLabel.text = @"习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!";
+        self.mainNewsBodyLabel = [[UILabel alloc]initWithFrame:CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*10, UISCREENWIDTH*2/3-INTERVALX, MAINNEWSHIGHT-INTERVALY*12)];
+        self.mainNewsBodyLabel.text = @"习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!习近平：坚定不移打赢禁毒战!";
+        self.mainNewsBodyLabel.tag = 102;
+        
 //        bodyLabel.font = [UIFont systemFontOfSize:13];
 //        bodyLabel.textAlignment = NSTextAlignmentLeft;
 //        //bodyLabel.backgroundColor = [UIColor yellowColor];
@@ -76,20 +82,20 @@
 //        bodyLabel.frame = CGRectMake(mainNewsImgView.frame.size.width+INTERVALX*2, INTERVALY*10, UISCREENWIDTH*2/3-INTERVALX, labelsize1.height);
 //        bodyLabel.font =font1;
         
-        [bodyLabel setBackgroundColor:[UIColor clearColor]];
-        [bodyLabel setTextColor:UIColorFromRGBValue(0x676767)];
-        [bodyLabel setNumberOfLines:0];
-        bodyLabel.font = [UIFont systemFontOfSize:13];;
+        [self.mainNewsBodyLabel setBackgroundColor:[UIColor clearColor]];
+        [self.mainNewsBodyLabel setTextColor:UIColorFromRGBValue(0x676767)];
+        [self.mainNewsBodyLabel setNumberOfLines:0];
+        self.mainNewsBodyLabel.font = [UIFont systemFontOfSize:13];;
         
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:bodyLabel.text];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.mainNewsBodyLabel.text];
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         [paragraphStyle setLineSpacing:2];//调整行间距
-        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [bodyLabel.text length])];
-        bodyLabel.attributedText = attributedString;
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [self.mainNewsBodyLabel.text length])];
+        self.mainNewsBodyLabel.attributedText = attributedString;
         
-        [self.mainNewsBtn addSubview:bodyLabel];
-        [self.mainNewsBtn addSubview:newsTitleLabel];
-        [self.mainNewsBtn addSubview:mainNewsImgView];
+        [self.mainNewsBtn addSubview:self.mainNewsBodyLabel];
+        [self.mainNewsBtn addSubview:self.mainNewsTitleLabel];
+        [self.mainNewsBtn addSubview:self.mainNewsImgView];
         [self.view addSubview:self.mainNewsBtn];
         
         //走进攀枝花
@@ -106,7 +112,7 @@
         intoPZHLabel.font = [UIFont systemFontOfSize:14];
         intoPZHLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * intoPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t1.png"]];
+        UIImageView * intoPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zjpzh.png"]];
         intoPZHImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
         intoPZHImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
 
@@ -128,7 +134,7 @@
         openGovernmentAffairsLabel.font = [UIFont systemFontOfSize:14];
         openGovernmentAffairsLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * openGovernmentAffairsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t2.png"]];
+        UIImageView * openGovernmentAffairsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zwgk.png"]];
         openGovernmentAffairsImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
         openGovernmentAffairsImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
         
@@ -150,7 +156,7 @@
         onlineBusinessLabel.font = [UIFont systemFontOfSize:14];
         onlineBusinessLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * onlineBusinessImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t3.png"]];
+        UIImageView * onlineBusinessImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"wsbs.png"]];
         onlineBusinessImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
         onlineBusinessImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
         
@@ -168,17 +174,19 @@
         
         UILabel * publicServiceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, UISCREENWIDTH/4, UISCREENHEIGHT/15)];
         publicServiceLabel.center = CGPointMake(MAINBTNWIDTH/5*3, MAINBTNHIGHT/2);
-        publicServiceLabel.text = @"网上办事";
+        publicServiceLabel.text = @"公共服务";
         publicServiceLabel.font = [UIFont systemFontOfSize:14];
         publicServiceLabel.textAlignment = NSTextAlignmentLeft;
         
-        UIImageView * publicServiceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"t4.png"]];
+        UIImageView * publicServiceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ggfw.png"]];
         publicServiceImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
         publicServiceImgView.center = CGPointMake(MAINBTNWIDTH/5, MAINBTNHIGHT/2);
         
         [self.publicServiceBtn addSubview:publicServiceLabel];
         [self.publicServiceBtn addSubview:publicServiceImgView];
         [self.view addSubview:self.publicServiceBtn];
+        
+
     }
     return  self;
 }
@@ -188,14 +196,6 @@
     // Do any additional setup after loading the view.
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = item;
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    
-//    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, UISCREENWIDTH, 20)];
-//    statusBarView.backgroundColor=[UIColor redColor];
-//    [self.view addSubview:statusBarView];
-    //[[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:242/255.0 green:67/255.0 blue:0/255.0 alpha:1]];
-
-    //[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
     [self createScrollView];
 }
 
@@ -204,6 +204,15 @@
     appDelegate.title = @"攀枝花公众信息网";
     self.titleLabel.text = appDelegate.title;
     [self.scrollView recountTheTimeIsPause:NO];   //避免页面跳转时scrollView错位
+    
+      [self readFileDic];
+    if ([self.topNewsBufferDic isKindOfClass:[NSMutableDictionary class]] &&(self.topNewsBufferDic.count !=0) ) {
+        topNewsIsLoaded = YES;
+        self.mainNewsImgView.image = [self.topNewsBufferDic objectForKey:@"topNewsImage"];
+        self.mainNewsTitleLabel.text = [self.topNewsBufferDic objectForKey:@"topNewsTitle"];
+        self.mainNewsBodyLabel.text = [self.topNewsBufferDic objectForKey:@"topNewsBody"];
+        topNewsIsLoaded = YES;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -211,33 +220,100 @@
     [self.scrollView recountTheTimeIsPause:YES];   //避免页面跳转时scrollView错位
 }
 
--(void)jumpPageForMainView:(UIButton *)btn{
+- (void)LoadTopNewsResult:(NSNotification *)note{
+  
+    NSArray * topNewsInfoArray = [(NSString *)[[note userInfo] objectForKey:@"info"]componentsSeparatedByString:@";."];
+    NSData * topNewsimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[topNewsInfoArray objectAtIndex:0]]];
+    UIImage* topNewsImage = [[UIImage alloc] initWithData:topNewsimageData];
+    NSString * topNewsTitle = [topNewsInfoArray objectAtIndex:1];
+    NSString * topNewsBody = [topNewsInfoArray objectAtIndex:2];
+    if ([self.topNewsBufferDic isKindOfClass:[NSMutableDictionary class]] &&(self.topNewsBufferDic.count !=0) ) {
+       
+        if (![[self.topNewsBufferDic objectForKey:@"topNewsTitle"]isEqualToString:topNewsTitle]) {          //热点新闻标题变化  则更新缓存
+            [self.topNewsBufferDic setObject:topNewsImage forKey:@"topNewsImage"];
+            [self.topNewsBufferDic setObject:topNewsTitle forKey:@"topNewsTitle"];
+            [self.topNewsBufferDic setObject:topNewsBody forKey:@"topNewsBody"];
+            //写入对应位置
+            NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+            NSString *path = [documents stringByAppendingPathComponent:@"topNewsBufferDic.archiver"];//拓展名可以自己随便取
+            BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.topNewsBufferDic toFile:path];
+            NSLog(@"%@",writeResult ? @"热点新闻写入成功":@"热点新闻写入失败");
+            //更新首页热点新闻
+            self.mainNewsImgView.image = topNewsImage;
+            self.mainNewsTitleLabel.text = topNewsTitle;
+            self.mainNewsBodyLabel.text = topNewsBody;
+        }
+    }
+    else{
+        self.mainNewsImgView.image = topNewsImage;
+        self.mainNewsTitleLabel.text = topNewsTitle;
+        self.mainNewsBodyLabel.text = topNewsBody;
+        topNewsIsLoaded = YES;
+        //载入缓存
+        [self.topNewsBufferDic setObject:topNewsImage forKey:@"topNewsImage"];
+        [self.topNewsBufferDic setObject:topNewsTitle forKey:@"topNewsTitle"];
+        [self.topNewsBufferDic setObject:topNewsBody forKey:@"topNewsBody"];
+        //写入对应位置
+        NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *path = [documents stringByAppendingPathComponent:@"topNewsBufferDic.archiver"];//拓展名可以自己随便取
+        BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.topNewsBufferDic toFile:path];
+        NSLog(@"%@",writeResult ? @"热点新闻写入成功":@"热点新闻写入失败");
+    }
+}
 
+//读取热点新闻缓存
+-(void)readFileDic{
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"topNewsBufferDic.archiver"];
+    if ([[NSKeyedUnarchiver unarchiveObjectWithFile:path]isKindOfClass:[NSMutableDictionary class]]) {
+        self.topNewsBufferDic = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    }
+}
+
+- (void)jumpPageForMainView:(UIButton *)btn{
+    self.intoPZHViewController = [[IntoPZHViewController alloc]init];
+    self.openGovernmentAffairsViewController = [[OpenGovernmentAffairsViewController alloc]init];
+    self.onlineBusinessViewController = [[OnlineBusinessViewController alloc]init];
+    self.publicServiceViewController = [PublicServiceViewController alloc];
+    
+    NSMutableArray * picArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"jy",@"sb",@"jy",@"yl",@"zf",@"jt",@"hysy",@"ggsy",@"zjbl.png",@"qykb",@"jyns",@"zzrd",nil];
+    NSMutableArray * titleArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"教育",@"社保",@"就业",@"医疗",@"住房",@"交通", @"婚育收养",@"公用事业",@"证件办理",@"企业开办",@"经营纳税",@"资质认定",nil];
+//    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:nil message:@"该模块正在开发中，请稍候！" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     switch (btn.tag) {
         case 1:
+            appDelegate.parentTitle = @"走进攀枝花";
             [self.navigationController pushViewController:self.intoPZHViewController animated:YES];
             //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://www.panzhihua.gov.cn/images/zjpzh/yxpzh/sppzh/xxp/2323.wmv"]];
             break;
-//        case 2:
-//            [self.navigationController pushViewController:videoForPZH animated:YES];
-//            //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
-//            break;
-//        case 3:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.cityOverview];
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            break;
-//        case 4:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.naturalOverview];
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-//            break;
-//        case 5:
-//            detailViewController = [detailViewController initWithNibName:nil bundle:nil WithURL:nil andSegArray:self.economyOverview];
-//            [self.navigationController pushViewController:detailViewController animated:YES];
-            //            [self.navigationController pushViewController:mainVc animated:YES];
+        case 2:
+            appDelegate.parentTitle = @"政务公开";
+            [self.navigationController pushViewController:self.openGovernmentAffairsViewController animated:YES];
+            //[appDelegate playStreamFromURL:[NSURL URLWithString:@"http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4"]];
+            break;
+        case 3:
+            appDelegate.parentTitle = @"网上办事";
+            [self.navigationController pushViewController:self.onlineBusinessViewController animated:YES];
+            break;
+        case 4:
+            appDelegate.parentTitle = @"公共服务";
+            self.publicServiceViewController = [self.publicServiceViewController initWithNibName:nil bundle:nil WithPicArray:picArrForPulicService andTitleArray:titleArrForPulicService];
+            [self.navigationController pushViewController:self.publicServiceViewController animated:YES];
+            //[alert show];
+
             break;
         default:
             break;
     }
+}
+
+- (void)jumpPageForTopNews{
+    if (topNewsIsLoaded == YES) {
+        [appDelegate.conAPI getTopNewsContentWithTitile:self.mainNewsTitleLabel.text];
+        NSMutableArray * arr = [[NSMutableArray alloc]initWithObjects:@"头条新闻", nil];
+        [GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
+        DetailWebViewController * detail = [[DetailWebViewController alloc]initWithNibName:nil bundle:nil WithURL:nil andSegArray:arr];
+        [self.navigationController pushViewController:detail animated:YES];
+    }else NSLog(@"等待加载头条新闻");
 }
 
 
@@ -247,7 +323,7 @@
     self.scrollView = [[AdScrollView alloc]initWithFrame:CGRectMake(0, NAVIGATIONHIGHT, UISCREENWIDTH, SCROllVIEWHIGHT)];
     AdDataModel * dataModel = [AdDataModel adDataModelWithImageNameAndAdTitleArray];
     //如果滚动视图的父视图由导航控制器控制,必须要设置该属性(ps,猜测这是为了正常显示,导航控制器内部设置了UIEdgeInsetsMake(64, 0, 0, 0))
-    self.scrollView.contentInset = UIEdgeInsetsMake(-NAVIGATIONHIGHT, 0, 0, 0);
+    //self.scrollView.contentInset = UIEdgeInsetsMake(-NAVIGATIONHIGHT, 0, 0, 0);
     
     NSLog(@"%@",dataModel.adTitleArray);
     self.scrollView.imageNameArray = dataModel.imageNameArray;

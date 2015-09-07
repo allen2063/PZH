@@ -50,15 +50,14 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
     self = [super initWithFrame:frame];
     if (self) {
         self.bounces = NO;
-        
+        self.mainPagePicBufferDic = [[NSMutableDictionary alloc]init];
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.pagingEnabled = YES;
         self.contentOffset = CGPointMake(UISCREENWIDTHS, 0);
         self.contentSize = CGSizeMake(UISCREENWIDTHS * 3, UISCREENHEIGHTS);
         self.delegate = self;
-        
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MainPagePicResult:) name:@"LoadMainPagePicResult" object:nil];
         
         _leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTHS, UISCREENHEIGHTS)];
         [self addSubview:_leftImageView];
@@ -74,14 +73,90 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
     return self;
 }
 
+- (void)MainPagePicResult:(NSNotification *)note{
+    
+    NSString * imgUrl =  [[note userInfo] objectForKey:@"info"];
+    NSMutableArray * imgUrlArray = (NSMutableArray *)[imgUrl componentsSeparatedByString:@";"];
+    [imgUrlArray removeLastObject];
+    
+    [NSThread detachNewThreadSelector:@selector(loadImg:) toTarget:self withObject:imgUrlArray];
+}
+
+- (void)loadImg:(NSMutableArray *)imgUrlArray{
+    
+    NSData * leftimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[imgUrlArray objectAtIndex:0]]];
+    UIImage* leftImage = [[UIImage alloc] initWithData:leftimageData];
+    NSData * centerimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[imgUrlArray objectAtIndex:1]]];
+    UIImage* centerImage = [[UIImage alloc] initWithData:centerimageData];
+    NSData * rightimageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[imgUrlArray objectAtIndex:2]]];
+    UIImage* rightImage = [[UIImage alloc] initWithData:rightimageData];
+    
+    //初始化更新缓存
+    if ([self.mainPagePicBufferDic isKindOfClass:[NSMutableDictionary class]]&&(self.mainPagePicBufferDic.count == 0)) {
+        _leftImageView.image =leftImage;
+        _centerImageView.image =centerImage;
+        _rightImageView.image =rightImage;
+        NSDate * loadTime = [NSDate date];
+        [self.mainPagePicBufferDic setObject:leftImage forKey:@"leftImage"];
+        [self.mainPagePicBufferDic setObject:centerImage forKey:@"centerImage"];
+        [self.mainPagePicBufferDic setObject:rightImage forKey:@"rightImage"];
+        [self.mainPagePicBufferDic setObject:loadTime forKey:@"loadTime"];
+        //写入对应位置
+        NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *path = [documents stringByAppendingPathComponent:@"mainPagePicBufferDic.archiver"];//拓展名可以自己随便取
+        
+        BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.mainPagePicBufferDic toFile:path];
+        NSLog(@"%@",writeResult ? @"写入主页图片成功":@"写入主页图片失败");
+    }
+    
+    NSDate * lastUpdateTime = [self.mainPagePicBufferDic objectForKey:@"loadTime"];
+    NSTimeInterval timeOut = -60*60*24;
+    if ((lastUpdateTime.timeIntervalSinceNow < timeOut) && (leftImage != NULL)&&(rightImage != NULL)&&(centerImage != NULL)  ) {       //超时更新缓存   无网时三个image会为空  需要判断
+        _leftImageView.image =leftImage;
+        _centerImageView.image =centerImage;
+        _rightImageView.image =rightImage;
+        NSDate * loadTime = [NSDate date];
+        [self.mainPagePicBufferDic setObject:leftImage forKey:@"leftImage"];
+        [self.mainPagePicBufferDic setObject:centerImage forKey:@"centerImage"];
+        [self.mainPagePicBufferDic setObject:rightImage forKey:@"rightImage"];
+        [self.mainPagePicBufferDic setObject:loadTime forKey:@"loadTime"];
+        //写入对应位置
+        NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *path = [documents stringByAppendingPathComponent:@"mainPagePicBufferDic.archiver"];//拓展名可以自己随便取
+        
+        BOOL writeResult =[NSKeyedArchiver archiveRootObject:self.mainPagePicBufferDic toFile:path];
+        NSLog(@"%@",writeResult ? @"写入主页图片成功":@"写入主页图片失败");
+        
+    }
+}
+
+//读取图片缓存
+-(void)readFileDic{
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"mainPagePicBufferDic.archiver"];
+    if ([[NSKeyedUnarchiver unarchiveObjectWithFile:path]isKindOfClass:[NSMutableDictionary class]]) {
+        self.mainPagePicBufferDic = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    }
+}
+
 #pragma mark - 设置广告所使用的图片(名字)
 - (void)setImageNameArray:(NSArray *)imageNameArray
 {
     _imageNameArray = imageNameArray;
-
-    _leftImageView.image = [UIImage imageNamed:_imageNameArray[0]];
-    _centerImageView.image = [UIImage imageNamed:_imageNameArray[1]];
-    _rightImageView.image = [UIImage imageNamed:_imageNameArray[2]];
+    [self readFileDic];
+    if ([self.mainPagePicBufferDic isKindOfClass:[NSMutableDictionary class]]&&(self.mainPagePicBufferDic.count == 4)) {
+        UIImage* leftImage = [self.mainPagePicBufferDic objectForKey:@"leftImage"];
+        UIImage* centerImage = [self.mainPagePicBufferDic objectForKey:@"centerImage"];
+        UIImage* rightImage = [self.mainPagePicBufferDic objectForKey:@"rightImage"];
+        
+        _leftImageView.image =leftImage;
+        _centerImageView.image =centerImage;
+        _rightImageView.image =rightImage;
+    }else{
+        _leftImageView.image = [UIImage imageNamed:_imageNameArray[0]];
+        _centerImageView.image = [UIImage imageNamed:_imageNameArray[1]];
+        _rightImageView.image = [UIImage imageNamed:_imageNameArray[2]];
+    }
 }
 
 #pragma mark - 设置每个对应广告对应的广告语
@@ -144,16 +219,16 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
     
     if (PageControlShowStyle == UIPageControlShowStyleLeft)
     {
-        _pageControl.frame = CGRectMake(10, HIGHT+UISCREENHEIGHTS - 20, 20*_pageControl.numberOfPages, 20);
+        _pageControl.frame = CGRectMake(10, HIGHT+UISCREENHEIGHTS - 20 + NAVIGATIONHIGHT, 20*_pageControl.numberOfPages, 20);
     }
     else if (PageControlShowStyle == UIPageControlShowStyleCenter)
     {
         _pageControl.frame = CGRectMake(0, 0, 20*_pageControl.numberOfPages, 20);
-        _pageControl.center = CGPointMake(UISCREENWIDTHS/2.0, HIGHT+UISCREENHEIGHTS - 10);
+        _pageControl.center = CGPointMake(UISCREENWIDTHS/2.0, HIGHT+UISCREENHEIGHTS - 10+ NAVIGATIONHIGHT);
     }
     else
     {
-        _pageControl.frame = CGRectMake( UISCREENWIDTHS - 20*_pageControl.numberOfPages, HIGHT+UISCREENHEIGHTS - 20, 20*_pageControl.numberOfPages, 20);
+        _pageControl.frame = CGRectMake( UISCREENWIDTHS - 20*_pageControl.numberOfPages, HIGHT+UISCREENHEIGHTS - 20+ NAVIGATIONHIGHT, 20*_pageControl.numberOfPages, 20);
     }
     _pageControl.currentPage = 0;
     

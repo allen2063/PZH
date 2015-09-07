@@ -13,5 +13,8 @@
 @property (strong,nonatomic)HYSegmentedControl * seg;
 @property (strong,nonatomic)UILabel * titleLabel;
 @property (strong,nonatomic)NSString * urlString;
+@property (strong,nonatomic)UIButton * videoBtn;
+@property (strong,nonatomic)NSString * currentSegTitle;
+
 @end
 

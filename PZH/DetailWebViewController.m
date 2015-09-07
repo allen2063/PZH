@@ -8,12 +8,15 @@
 
 #import "DetailWebViewController.h"
 #import "GMDCircleLoader.h"
-@interface DetailWebViewController ()
+@interface DetailWebViewController (){
+    BOOL isOutsideLink;
+}
 
 @end
 
 @implementation DetailWebViewController
 @synthesize webView,seg,segArray,appDelegate,titleLabel;
+#define OVERHEADINFORMATIONCELLLABELHEIGHT 15
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithURL:(NSURL *)url andSegArray:(NSMutableArray *)segArrays
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,7 +30,7 @@
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
-        
+        isOutsideLink = NO;
         self.segArray = segArrays;//[[NSMutableArray alloc]initWithArray:segArrays];
         //[self.segArray addObjectsFromArray:[NSMutableArray arrayWithObjects:@"1",@"2",@"3",@"4", nil]];
 //        self.seg = [[UISegmentedControl alloc]initWithItems:self.segArray];
@@ -41,14 +44,21 @@
         
         self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height))];
         self.webView.delegate=self;
-        //self.webView.scalesPageToFit =YES;
+        //自适应大小
+        self.webView.scalesPageToFit =NO;
         self.webView.scrollView.bounces = NO;
         [self.view addSubview:self.webView];
         
         self.appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetMenuContentResult" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(MenuContentResults:) name:@"GetWebResult" object:nil];//走进攀枝花
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fault) name:@"fault" object:nil];
-
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"PassageContentResult" object:nil];//带标签的文章
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"LoadTopNewsContentResult" object:nil];//头条新闻
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"GetMXQY_ContentResult" object:nil];//常见问题、相关政策
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"GetRDBS_URLResult" object:nil];//热点办事
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"GetBSGG_ListResult" object:nil];//热点办事
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"OnLineSelectResult" object:nil];//在线办事查询详情GetBuMenDSY_ContentResult
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(PassageContentResult:) name:@"GetBuMenDSY_ContentResult" object:nil];//部门动态新接口
         }
     return self;
 }
@@ -64,107 +74,93 @@
     [super viewWillAppear:YES];
     
     self.titleLabel.text = appDelegate.title;
+    if (![appDelegate.parentTitle isEqualToString:@"走进攀枝花"]) {
+        [self addLabelForType:2];
+    }
+//    NSString * htmlString =@"http://www.panzhihua.gov.cn/images/wsbs/bgxz/2012/1/18/bd6ec976-c5bc-4983-b2c3-c20894f29fa1.doc";
+//    [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
     //self.title = [self.segArray objectAtIndex:0];
     //[GMDCircleLoader setOnView:self.view withTitle:@"加载中..." animated:YES];
-
-//    NSLayoutConstraint *constraintTopForSeg = [
-//                                      NSLayoutConstraint
-//                                      constraintWithItem:self.seg
-//                                      attribute:NSLayoutAttributeTop
-//                                      relatedBy:NSLayoutRelationEqual
-//                                      toItem:self.view
-//                                      attribute:NSLayoutAttributeTop
-//                                      multiplier:1.0f
-//                                      constant:64
-//                                      ];
-//    
-//    NSLayoutConstraint *constraintWidthForSeg = [
-//                                            NSLayoutConstraint
-//                                            constraintWithItem:self.seg
-//                                            attribute:NSLayoutAttributeWidth
-//                                            relatedBy:NSLayoutRelationEqual
-//                                            toItem:self.view
-//                                            attribute:NSLayoutAttributeWidth
-//                                            multiplier:1.0f
-//                                            constant:00.0f
-//                                            ];
-//    
-//    NSLayoutConstraint *constraintHighForSeg = [
-//                                          NSLayoutConstraint
-//                                          constraintWithItem:self.seg
-//                                          attribute:NSLayoutAttributeHeight
-//                                          relatedBy:NSLayoutRelationEqual
-//                                          toItem:self.view
-//                                          attribute:NSLayoutAttributeHeight
-//                                          multiplier:0.06
-//                                          constant:00.0f
-//                                          ];
-//    
-//    NSLayoutConstraint *constraintXForSeg = [
-//                                                NSLayoutConstraint
-//                                                constraintWithItem:self.seg
-//                                                attribute:NSLayoutAttributeCenterX
-//                                                relatedBy:NSLayoutRelationEqual
-//                                                toItem:self.view
-//                                                attribute:NSLayoutAttributeCenterX
-//                                                multiplier:1
-//                                                constant:00.0f
-//                                                ];
-//    [self.view addConstraint:constraintTopForSeg];
-//    [self.view addConstraint:constraintWidthForSeg];
-//    [self.view addConstraint:constraintHighForSeg];
-//    [self.view addConstraint:constraintXForSeg];
     
-//    NSLayoutConstraint *constraintBottomForWeb = [
-//                                               NSLayoutConstraint
-//                                               constraintWithItem:self.webView
-//                                               attribute:NSLayoutAttributeBottom
-//                                               relatedBy:NSLayoutRelationEqual
-//                                               toItem:self.view
-//                                               attribute:NSLayoutAttributeBottom
-//                                               multiplier:1.0f
-//                                               constant:0
-//                                               ];
-//    
-//    NSLayoutConstraint *constraintTopForWeb = [
-//                                                  NSLayoutConstraint
-//                                                  constraintWithItem:self.webView
-//                                                  attribute:NSLayoutAttributeTop
-//                                                  relatedBy:NSLayoutRelationEqual
-//                                                  toItem:self.view
-//                                                  attribute:NSLayoutAttributeBottom
-//                                                  multiplier:1.0f
-//                                                  constant:120
-//                                                  ];
-//    
-//    NSLayoutConstraint *constraintWidthForWeb = [
-//                                                 NSLayoutConstraint
-//                                                 constraintWithItem:self.webView
-//                                                 attribute:NSLayoutAttributeWidth
-//                                                 relatedBy:NSLayoutRelationEqual
-//                                                 toItem:self.view
-//                                                 attribute:NSLayoutAttributeWidth
-//                                                 multiplier:1.0f
-//                                                 constant:00.0f
-//                                                 ];
-//    
-//    [self.view addConstraint:constraintTopForWeb];
-//    [self.view addConstraint:constraintWidthForWeb];
-//    [self.view addConstraint:constraintBottomForWeb];
-    
-    //NSLog(@"%@,%@,%@",NSStringFromCGSize(self.seg.intrinsicContentSize),self.seg.hasAmbiguousLayout?@"YES":@"NO",NSStringFromCGSize(self.webView.intrinsicContentSize));
 }
 
 - (void)fault{
     [GMDCircleLoader hideFromView:self.view animated:YES];
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alert show];
-    
+//        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//        [alert show];
+}
+//走进攀枝花详情
+- (void)MenuContentResults:(NSNotification *)note{
+    NSMutableString *htmlString = [NSMutableString stringWithFormat:@"%@", [[note userInfo] objectForKey:@"info"]];
+    //插入图片大小标签
+    htmlString = [self adjustPicForScreen:htmlString];
+    [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
 }
 
-- (void)MenuContentResults:(NSNotification *)note{
-    NSString *htmlString = [[note userInfo] objectForKey:@"1"];
-    [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+- (void)PassageContentResult:(NSNotification *)note{
+    NSString *info = [[note userInfo] objectForKey:@"info"];
+    NSMutableArray * arr = (NSMutableArray *)[info componentsSeparatedByString:@";."];
+    NSMutableString *htmlString;
+    if (arr.count ==3) {
+        UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:7];           //  tag7是发布时间
+        aLabel.text = [arr objectAtIndex:0];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:8];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:1];
+        htmlString = [arr objectAtIndex:2];
+        
+//        if ([appDelegate.sonTitle isEqualToString:@"表格下载"]) {                                   //表格下载时展示下载链接
+//            NSMutableArray * arr = (NSMutableArray *)[htmlString componentsSeparatedByString:@"href=\""];
+//            arr = (NSMutableArray *)[[arr objectAtIndex:1] componentsSeparatedByString:@"\">"];
+//            htmlString = [arr objectAtIndex:0];
+//        }
+        if ([htmlString length] > 5 &&[[htmlString substringToIndex:4]isEqualToString:@"http"]) {
+            [self loadOutsideLink:htmlString];
+        }else
+            //插入图片大小标签
+            htmlString = [self adjustPicForScreen:htmlString];
+            [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+    }else if(arr.count == 7){
+        [self addLabelForType:6];
+        UILabel * aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:1];           //  tag7是发布时间
+        aLabel.text = [arr objectAtIndex:0];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:2];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:1];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:3];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:2];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:4];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:3];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:5];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:4];
+        aLabel = (UILabel *)[self.overheadInformationSumImgView viewWithTag:6];                     //  tag8是来源
+        aLabel.text = [arr objectAtIndex:5];
+        htmlString = [arr objectAtIndex:6];
+        //插入图片大小标签
+        htmlString = [self adjustPicForScreen:htmlString];
+        [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+    }
+    else if(arr.count == 1){   //  办事公告
+        htmlString = [arr objectAtIndex:0];
+        if ([[htmlString substringToIndex:4]isEqualToString:@"http"]) {                             //  政府会议是外链   现对外链判断  如果是外链重新加载
+            [self loadOutsideLink:htmlString];
+        }else{
+            //插入图片大小标签
+            htmlString = [self adjustPicForScreen:htmlString];
+            [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:htmlString]];
+            self.webView.scalesPageToFit =YES;
+            [self.overheadInformationSumImgView removeFromSuperview];
+            self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
+        }
+    }
+}
+
+- (void)loadOutsideLink:(NSString *)htmlString{
+    isOutsideLink = YES;
+
+    NSURL *url = [[NSURL alloc] initWithString:htmlString];                 //加载外链
+    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+    self.webView.scalesPageToFit =YES;
+    [self.overheadInformationSumImgView removeFromSuperview];
+    self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height, self.view.frame.size.width, self.view.frame.size.height-(NAVIGATIONHIGHT+HYSegmentedControl_Height));
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
@@ -181,12 +177,183 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     UIAlertView *alterview = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    [alterview show];
+    //if (!isOutsideLink) {
+        [alterview show];
+    //}
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+//在HTML代码中找到图片标签(<img) 并在后面添加图片的长宽标签(@" width=\"100%\" height=\"auto\" ")适应屏幕
+- (NSMutableString *)adjustPicForScreen:(NSMutableString *)htmlString{
+    htmlString = [[NSMutableString alloc]initWithString:htmlString];
+    if ([htmlString rangeOfString:@"<img"].length>0) {
+        NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        int countOfArray = 0;
+        int index = 0;
+        NSString * insertString =@" width=\"100%\" height=\"auto\" ";
+        while ([tempString rangeOfString:@"<img"].length) {
+            [tempArray addObject:[NSString stringWithFormat:@"%d",
+                                  (int)([tempString rangeOfString:@"<img"].location+[tempString rangeOfString:@"<img"].length)]];
+            tempString = [tempString substringFromIndex:[tempString rangeOfString:@"<img"].location+[tempString rangeOfString:@"<img"].length];
+            index = index + [[tempArray objectAtIndex:countOfArray]intValue];
+            [htmlString insertString:insertString atIndex:index];
+            index = index + (int)[insertString length];
+            countOfArray++;
+            //            NSLog(@"tempString:%@  length:%d",tempString,[tempString length]);
+            //            NSLog(@"htmlString auto %@   length:%d",htmlString,[htmlString length]);
+        }
+    }
+    
+    if ([htmlString rangeOfString:@"jpg\""].length>0) {
+        NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        int countOfArray = 0;
+        int index = 0;
+        NSString * insertString =@" width=\"100%\" height=\"auto\" ";
+        while ([tempString rangeOfString:@"jpg\""].length) {
+            [tempArray addObject:[NSString stringWithFormat:@"%d",
+                                  (int)([tempString rangeOfString:@"jpg\""].location+[tempString rangeOfString:@"jpg\""].length)]];
+            tempString = [tempString substringFromIndex:[tempString rangeOfString:@"jpg\""].location+[tempString rangeOfString:@"jpg\""].length];
+            index = index + [[tempArray objectAtIndex:countOfArray]intValue];
+            [htmlString insertString:insertString atIndex:index];
+            index = index + (int)[insertString length];
+            countOfArray++;
+            //            NSLog(@"tempString:%@  length:%d",tempString,[tempString length]);
+            //            NSLog(@"htmlString auto %@   length:%d",htmlString,[htmlString length]);
+        }
+    }
+    
+    //第三方库TFHpple解析html并获得图片标签
+    //    参见博客：http://www.cnblogs.com/YouXianMing/p/3731866.html    及github工程：https://github.com/topfunky/hpple
+    //    NSData  * data      = [htmlString dataUsingEncoding:NSASCIIStringEncoding];
+    //    TFHpple * doc       = [[TFHpple alloc] initWithHTMLData:data];
+    //    NSArray * elements  = [doc searchWithXPathQuery:@"//img"];
+    //    NSMutableArray * newLabel = [[NSMutableArray alloc]init];
+    //    for (TFHppleElement * element in elements) {
+    //        NSLog(@"%@",element.raw);
+    //    }
+    
+    return  htmlString;
+}
+
+
+- (void)addLabelForType:(int)type{
+    //政务公开等详情图上的标签
+    self.overheadInformationSumImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bg.png"]];
+    [self.overheadInformationSumImgView removeFromSuperview];
+    [self.view addSubview:self.overheadInformationSumImgView];
+    if(type == 6){
+        self.overheadInformationSumImgView.frame = CGRectMake(0,NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, OVERHEADINFORMATIONCELLLABELHEIGHT*5);
+        
+        UILabel *  overheadInformationCellNameLabel1= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT/2, 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel1.text = @"索引号:";
+        overheadInformationCellNameLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel1.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel1];
+        
+        UILabel *  overheadInformationCellNameLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2 + 10, OVERHEADINFORMATIONCELLLABELHEIGHT/2 , 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel2.text = @"发布日期:";
+        overheadInformationCellNameLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel2.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel2];
+        
+        UILabel *  overheadInformationCellNameLabel3= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT*1.5, 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel3.text = @"主题分类:";
+        overheadInformationCellNameLabel3.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel3.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel3];
+        
+        UILabel *  overheadInformationCellNameLabel4= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+10, 1.5*OVERHEADINFORMATIONCELLLABELHEIGHT , 30, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel4.text = @"文号:";
+        overheadInformationCellNameLabel4.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel4.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel4];
+        
+        UILabel *  overheadInformationCellNameLabel5= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT*2.5, 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel5.text = @"发布机构:";
+        overheadInformationCellNameLabel5.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel5.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel5];
+        
+        UILabel *  overheadInformationCellNameLabel6= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT*3.5, 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel6.text = @"关键词:";
+        overheadInformationCellNameLabel6.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel6.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel6];
+        
+        UILabel *  overheadInformationCellValueLabel1= [[UILabel alloc]initWithFrame:CGRectMake(55,OVERHEADINFORMATIONCELLLABELHEIGHT/2,UISCREENWIDTH/2 - 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel1.tag = 1;
+        overheadInformationCellValueLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel1.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel1];
+        
+        UILabel *  overheadInformationCellValueLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+70, OVERHEADINFORMATIONCELLLABELHEIGHT/2 ,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel2.tag = 2;
+        overheadInformationCellValueLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel2.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel2];
+        
+        UILabel *  overheadInformationCellValueLabel3= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT*1.5,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel3.tag = 3;
+        overheadInformationCellValueLabel3.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel3.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel3];
+        
+        UILabel *  overheadInformationCellValueLabel4= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+40, 1.5*OVERHEADINFORMATIONCELLLABELHEIGHT ,UISCREENWIDTH/2 - 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel4.tag = 4;
+        overheadInformationCellValueLabel4.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel4.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel4];
+        
+        UILabel *  overheadInformationCellValueLabel5= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT*2.5,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel5.tag = 5;
+        overheadInformationCellValueLabel5.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel5.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel5];
+        
+        UILabel *  overheadInformationCellValueLabel6= [[UILabel alloc]initWithFrame:CGRectMake(55,OVERHEADINFORMATIONCELLLABELHEIGHT*3.5,UISCREENWIDTH/2 - 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel6.tag = 6;
+        overheadInformationCellValueLabel6.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel6.textAlignment = NSTextAlignmentLeft;
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel6];
+    }
+    else if (type == 2){
+        self.overheadInformationSumImgView.frame = CGRectMake(0,NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, OVERHEADINFORMATIONCELLLABELHEIGHT*2);
+        UILabel *  overheadInformationCellNameLabel1= [[UILabel alloc]initWithFrame:CGRectMake(10,OVERHEADINFORMATIONCELLLABELHEIGHT/2, 60, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel1.text = @"发布日期:";
+        overheadInformationCellNameLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel1.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel1.backgroundColor = [UIColor clearColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel1];
+        
+        UILabel *  overheadInformationCellNameLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2 + 10, OVERHEADINFORMATIONCELLLABELHEIGHT/2 , 30, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellNameLabel2.text = @"来源:";
+        overheadInformationCellNameLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellNameLabel2.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellNameLabel2.backgroundColor = [UIColor clearColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellNameLabel2];
+        
+        UILabel *  overheadInformationCellValueLabel1= [[UILabel alloc]initWithFrame:CGRectMake(70,OVERHEADINFORMATIONCELLLABELHEIGHT/2,UISCREENWIDTH/2 - 75, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel1.tag = 7;
+        overheadInformationCellValueLabel1.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel1.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel1.backgroundColor = [UIColor clearColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel1];
+        
+        UILabel *  overheadInformationCellValueLabel2= [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/2+40, OVERHEADINFORMATIONCELLLABELHEIGHT/2 ,UISCREENWIDTH/2 - 45, OVERHEADINFORMATIONCELLLABELHEIGHT)];
+        overheadInformationCellValueLabel2.tag = 8;
+        overheadInformationCellValueLabel2.font = [UIFont systemFontOfSize:12];
+        overheadInformationCellValueLabel2.textAlignment = NSTextAlignmentLeft;
+        overheadInformationCellValueLabel2.backgroundColor = [UIColor clearColor];
+        [self.overheadInformationSumImgView addSubview:overheadInformationCellValueLabel2];
+    }
+    self.webView.frame = CGRectMake(0,NAVIGATIONHIGHT+HYSegmentedControl_Height+self.overheadInformationSumImgView.frame.size.height, UISCREENWIDTH, UISCREENHEIGHT-(NAVIGATIONHIGHT+HYSegmentedControl_Height+self.overheadInformationSumImgView.frame.size.height));
+
 }
 
 - (void)didReceiveMemoryWarning {

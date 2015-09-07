@@ -14,7 +14,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize videoPlayer,superVideoPlayer,title,touchedSegBtn,currentPageForPic;
+@synthesize videoPlayer,superVideoPlayer,title,parentTitle,touchedSegBtnTag,currentPageNumber,sonTitle,grandsonTitle,writePicFinished;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -24,6 +24,10 @@
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];    //导航栏按钮颜色
 
     self.title = [[NSString alloc]init];
+    self.parentTitle = [[NSString alloc]init];
+    self.sonTitle = [[NSString alloc]init];
+    self.grandsonTitle = [[NSString alloc]init];
+    self.writePicFinished = YES;
     //self.titleLabel.text = @"攀枝花公众信息网";
     MainViewController * mainViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
     self.conAPI = [[ConnectionAPI alloc]init];
@@ -32,6 +36,10 @@
     UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.rootViewController = navCon;
     //mainViewController.navigationItem.titleView = titleLabel;
+    AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.conAPI getTopNews];
+    [appDelegate.conAPI getMainPagePic];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

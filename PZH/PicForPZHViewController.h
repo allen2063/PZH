@@ -15,5 +15,6 @@
 @property (strong,nonatomic)NSMutableArray * segArray;
 @property (strong,nonatomic)NSMutableArray * tempArray;
 @property (strong,nonatomic)NSString * currentSegTitle;
+@property (strong,nonatomic)NSMutableDictionary * picBufferDic;
 
 @end

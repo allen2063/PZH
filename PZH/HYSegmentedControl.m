@@ -54,7 +54,7 @@
         //  array4btn
         //
         _array4Btn = [[NSMutableArray alloc] initWithCapacity:[titles count]];
-        
+        NSLog(@"titlse count %lu",(unsigned long)titles.count);
         //
         //  set button
         //
@@ -74,10 +74,10 @@
 //            _scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);      //解决父视图偏移。。。蛋疼了好久
 //        }
 
-        
+        UIButton *btn ;
         for (int i = 0; i<[titles count]; i++) {
             
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(i*width4btn, .0f, width4btn, HYSegmentedControl_Height);
             [btn setTitleColor:UIColorFromRGBValue(0x676767) forState:UIControlStateNormal];
             btn.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -108,8 +108,19 @@
         //  bottom lineView
         //
         _bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(5.0f, HYSegmentedControl_Height-1, width4btn-10.0f, 1.0f)];
+        //_bottomLineView.tag = 101;                  //  便于在特定情况下隐藏下划线
         _bottomLineView.backgroundColor = UIColorFromRGBValue(0x676767);
         [_scrollView addSubview:_bottomLineView];
+        
+        
+        if(titles.count == 1){                          //单个seg时只作为标签显示  无需响应点击  并去掉下划线
+            btn.userInteractionEnabled = NO;            //不响应点击
+            btn.frame = CGRectMake(0, .0f, width4btn+140, HYSegmentedControl_Height);     //调整长度便于显示
+            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;         //靠左显示
+            btn.contentEdgeInsets = UIEdgeInsetsMake(0,10, 0, 0);                           //文字顶边框了  保持10的距离
+            [_bottomLineView removeFromSuperview];          //去掉下划线
+            
+        }
         
         [self addSubview:_scrollView];
     }
@@ -168,6 +179,7 @@
 
 - (void)updateWebViewWithTouchedBtn:(UIButton *)btn{
     NSLog(@"touchedBtn.tag:%ld",(long)btn.tag);
+    appDelegate.touchedSegBtnTag = btn.tag;
     if ([appDelegate.title isEqualToString:@"市情概况"] ) {
             return;//市情概况不需要点击
 //        if([btn.currentTitle rangeOfString:@"20"].length !=0){       //国民经济需要调换过来
@@ -186,7 +198,7 @@
     }
     else if([appDelegate.title isEqualToString:@"视频攀枝花"]){        //视频攀枝花页面
         //appDelegate.touchedSegBtn = btn.tag;
-        [appDelegate.conAPI getVideoForPZHAPIWihtChannelName:appDelegate.title andChannelNext:btn.currentTitle];
+        [appDelegate.conAPI getVideoForPZHAPIWithChannelName:appDelegate.title andChannelNext:btn.currentTitle];
         [GMDCircleLoader setOnView:self.superview withTitle:@"加载中..." animated:YES];
     }
     else if([appDelegate.title isEqualToString:@"图看攀枝花"]){        //图看攀枝花页面
@@ -194,10 +206,12 @@
 //        NSString * countOfPic = [NSString stringWithFormat:@"%d",NUMBEROFPICFORPAGE];
 //        [appDelegate.conAPI getPicForPZHAPIWithChannelName:@"图看攀枝花" andHannelNext:btn.currentTitle andPageSize:countOfPic andCurPage:@"1"];
 //        appDelegate.currentPageForPic = 1;
-        NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];
-        
+//        NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];         //切换seg后调用对应页面类内部方法
     }
+    NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:btn.currentTitle forKey:@"title"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"segTouched" object:self userInfo:d];         //切换seg后调用对应页面类内部方法
+
 }
 
 //#warning ////// index 从 0 开始

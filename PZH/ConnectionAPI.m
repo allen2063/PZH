@@ -8,8 +8,10 @@
 
 #import "ConnectionAPI.h"
 #import "AppDelegate.h"
-@implementation ConnectionAPI
+//md5
+#import <CommonCrypto/CommonDigest.h>
 
+@implementation ConnectionAPI
 
 @synthesize webData;
 @synthesize soapResults;
@@ -18,31 +20,49 @@
 @synthesize getXMLResults;
 @synthesize resultDic;
 @synthesize resultArray;
-@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo;
-@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo;
-@synthesize matchingElementForLoadMainPagePic;
-@synthesize soapResults1;
-@synthesize elementFound1;
-@synthesize matchingElement2;       //isentender
-@synthesize soapResults2;
-@synthesize elementFound2;
-@synthesize matchingElement3;       //isextender
-@synthesize elementFound3;
-@synthesize matchingElement4;       //SessionID
+@synthesize elementFoundForMenuContent,elementFoundForPZHPic,elementFoundForPZHVideo,elementFoundForLoadMainPagePic,elementFoundForLoadTopNews,elementFoundForLoadTopNewsContent,elementFoundForAnnouncementOfPublicArrayList,elementFoundForAnnouncementOfPublicContent,elementFoundForOpenGovernmentAffairsArrayList,elementFoundForPassageContent,elementFoundForPassageList,elementFoundForCommonProblemsAndPoliciesAndRegulationsList,elementFoundForCommonProblemsAndPoliciesAndRegulationsContent,elementFoundForStatisticsOfWork,elementFoundForOnlineBusinessSearchResult,elementFoundForHotBusinessList,elementFoundForHotBusinessContent,elementFoundForAnnouncementOfWorkList,elementFoundForBUMENDONGTAIContent;
+
+@synthesize matchingElementForMenuContent,matchingElementForPZHPic,matchingElementForPZHVideo,matchingElementForLoadMainPagePic,matchingElementForLoadTopNews,matchingElementForLoadTopNewsContent,matchingElementForAnnouncementOfPublicArrayList,matchingElementForAnnouncementOfPublicContent,matchingElementForOpenGovernmentAffairsArrayList,matchingElementForPassageContent,matchingElementForPassageList,matchingElementForCommonProblemsAndPoliciesAndRegulationsList,matchingElementForCommonProblemsAndPoliciesAndRegulationsContent,matchingElementForStatisticsOfWork,matchingElementForOnlineBusinessSearchResult,matchingElementForHotBusinessList,matchingElementForHotBusinessContent,matchingElementForAnnouncementOfWorkList,matchingElementForBUMENDONGTAIContent;
+//@synthesize soapResults1;
+//@synthesize elementFound1;
+//@synthesize matchingElement2;       //isentender
+//@synthesize soapResults2;
+//@synthesize elementFound2;
+//@synthesize matchingElement3;       //isextender
+//@synthesize elementFound3;
+//@synthesize matchingElement4;       //SessionID
 
 
 - (id)init{
     self = [super init];
-    count = 0;
+    urlToServer = @"http://118.121.221.10/WS_PZH.asmx";
+    alerts = [[UIAlertView alloc]init];
+    isback =NO;
+    requestCount = 0;
+    timeout = 20;
     matchingElementForMenuContent = @"GetMenuContentResult";
     matchingElementForPZHPic = @"GetYXPZH_ContentResult";
     matchingElementForPZHVideo = @"GetSPPZH_ContentResult";
-    matchingElementForLoadMainPagePic = @"LoadMainPagePicResult";
+    matchingElementForLoadMainPagePic = @"LoadMainPagePicResult";   ///
+    matchingElementForLoadTopNews = @"LoadTopNewsResult";     ///
+    matchingElementForLoadTopNewsContent = @"LoadTopNewsContentResult";
+    matchingElementForAnnouncementOfPublicArrayList = @"GetGGGS_ListResult";
+    matchingElementForAnnouncementOfPublicContent = @"GetGGGS_ContentResult";
+    matchingElementForOpenGovernmentAffairsArrayList = @"GetZWGK_ListResult";//根据接口  貌似政务公开里面领导活动 工作会议 部门动态 区县快讯的list都用同一个接口
+    matchingElementForPassageContent = @"GetGGFW_ContentResult";//所有文章详情都是用此接口
+    matchingElementForPassageList = @"GetGGFW_ListResult";//所有文章列表都是用此接口
+    matchingElementForCommonProblemsAndPoliciesAndRegulationsList = @"GetMXQY_ListResult";  //常见问题等
+    matchingElementForCommonProblemsAndPoliciesAndRegulationsContent = @"GetMXQY_ContentResult";  //常见问题等
+    matchingElementForStatisticsOfWork= @"GetBJTJ_SUMResult"; //办件统计
+    matchingElementForOnlineBusinessSearchResult= @"OnLineSelectResult"; //在线办事查询
+    matchingElementForHotBusinessList= @"GetRDBS_ListResult"; //热点办事列表
+    matchingElementForHotBusinessContent= @"GetRDBS_URLResult"; //热点办事内容
+    matchingElementForAnnouncementOfWorkList = @"GetBSGG_ListResult";  //办事公告列表
+    matchingElementForBUMENDONGTAIContent = @"GetBuMenDSY_ContentResult";
     return self;
 }
 
-- (void)test{
-    
+- (void)withInterface:(NSString *)interface{
     NSString *soapMsg = [NSString stringWithFormat:
                          @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                          "<soap12:Envelope "
@@ -50,22 +70,27 @@
                          "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
                          "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
                          "<soap12:Body>"
-                         "<GetMenuContent xmlns=\"http://tempuri.org/\">"
-                         "<channelId>%@</channelId>"
-                         "</GetMenuContent>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "</%@>"
                          "</soap12:Body>"
-                         "</soap12:Envelope>",  @"01fb7c1b-b3d2-486e-af9d-eb64126184b9"];
-
+                         "</soap12:Envelope>",interface,interface];
+    
     NSLog(@"%@",soapMsg);
     NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetMenuContent" forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
     [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
     
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
@@ -73,137 +98,240 @@
     }else NSLog(@"con为假  %@",webData);
 }
 
-- (void)test2{
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value {
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "</%@>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,interface];
     
-    NSString * soapMsg12 = [NSString stringWithFormat:
-                            @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-                            "<soap:Envelope \r\n"
-                            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \r\n"
-                            "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\r\n "
-                            "xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n"
-                            "<soap:Body>\r\n"
-                            "<LoadMainPagePic  xmlns=\"http://tempuri.org/\">\r\n"
-                            "</LoadMainPagePic >\r\n"
-                            "</soap:Body>\r\n"
-                            "</soap:Envelope>\r\n"];
-    NSLog(@"%@",soapMsg12);
-    
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSLog(@"%@",soapMsg);
+    NSString * ur = urlToServer;
     NSURL * url = [NSURL URLWithString:ur] ;
     NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg12 length]];
-    [req addValue: @"http://tempuri.org/LoadMainPagePic" forHTTPHeaderField:@"SOAPAction"];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
     [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg12 dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
     
     conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
     if(conn){
         webData = [NSMutableData data];
     }else NSLog(@"con为假  %@",webData);
 }
+
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "</%@>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,interface];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = urlToServer;
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value andArgument3Name:(NSString *)argument3Name andArgument3Value:(NSString *)argument3Value{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "</%@>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,argument3Name,argument3Value,argument3Name,interface];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = urlToServer;//[NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+    
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
+- (void)withInterface:(NSString *)interface andArgument1Name:(NSString *)argument1Name andArgument1Value:(NSString *)argument1Value andArgument2Name:(NSString *)argument2Name andArgument2Value:(NSString *)argument2Value andArgument3Name:(NSString *)argument3Name andArgument3Value:(NSString *)argument3Value andArgument4Name:(NSString *)argument4Name andArgument4Value:(NSString *)argument4Value{
+    NSString *soapMsg = [NSString stringWithFormat:
+                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                         "<soap12:Envelope "
+                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+                         "<soap12:Body>"
+                         "<%@ xmlns=\"http://tempuri.org/\">"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "<%@>%@</%@>"
+                         "</%@>"
+                         "</soap12:Body>"
+                         "</soap12:Envelope>",interface,argument1Name,argument1Value,argument1Name,argument2Name,argument2Value,argument2Name,argument3Name,argument3Value,argument3Name,argument4Name,argument4Value,argument4Name,interface];
+    
+    NSLog(@"%@",soapMsg);
+    NSString * ur = urlToServer;//[NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
+    NSURL * url = [NSURL URLWithString:ur] ;
+    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
+    [req addValue: [NSString stringWithFormat: @"http://tempuri.org/%@",interface] forHTTPHeaderField:@"SOAPAction"];
+    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //自定义时间超时
+    requestCount ++;
+    NSDictionary * threadInfo = [[NSDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",requestCount],@"threadInfo", nil];
+    [NSTimer scheduledTimerWithTimeInterval:timeout target: self selector: @selector(handleTimer:) userInfo:threadInfo repeats:NO];
+    isback =NO;
+
+    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
+    if(conn){
+        webData = [NSMutableData data];
+    }else NSLog(@"con为假  %@",webData);
+}
+
+- (void)getMainPagePic{
+    [self withInterface:@"LoadMainPagePic"];
+}
+
+- (void)getTopNews{
+    [self withInterface:@"LoadTopNews"];
+}
+
+- (void)getTopNewsContentWithTitile:(NSString *)title{
+    [self withInterface:@"LoadTopNewsContent" andArgument1Name:@"title" andArgument1Value:title];
+}
+
 
 - (void)getMenuContentAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
-    
-    NSString *soapMsg = [NSString stringWithFormat:
-                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                         "<soap12:Envelope "
-                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
-                         "<soap12:Body>"
-                         "<GetMenuContent xmlns=\"http://tempuri.org/\">"
-                         "<channelName>%@</channelName>"
-                         "<channelNext>%@</channelNext>"
-                         "</GetMenuContent>"
-                         "</soap12:Body>"
-                         "</soap12:Envelope>",  channelName,channelNext];
-    
-    NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
-    NSURL * url = [NSURL URLWithString:ur] ;
-    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetMenuContent" forHTTPHeaderField:@"SOAPAction"];
-    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
-    if(conn){
-        webData = [NSMutableData data];
-    }else NSLog(@"con为假  %@",webData);
+    [self withInterface:@"GetMenuContent" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext];
 }
 
-- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andHannelNext:(NSString *)hannelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
-    NSString *soapMsg = [NSString stringWithFormat:
-                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                         "<soap12:Envelope "
-                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
-                         "<soap12:Body>"
-                         "<GetYXPZH_Content xmlns=\"http://tempuri.org/\">"
-                         "<channelName>%@</channelName>"
-                         "<channelNext>%@</channelNext>"
-                         "<PageSize>%@</PageSize>"
-                         "<CurPage>%@</CurPage>"
-                         "</GetYXPZH_Content>"
-                         "</soap12:Body>"
-                         "</soap12:Envelope>",  channelName,hannelNext,pageSize,curPage];
-    
-    NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
-    NSURL * url = [NSURL URLWithString:ur] ;
-    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetYXPZH_Content" forHTTPHeaderField:@"SOAPAction"];
-    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
-    if(conn){
-        webData = [NSMutableData data];
-    }else NSLog(@"con为假  %@",webData);
+- (void)getPicForPZHAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetYXPZH_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
 }
 
-- (void)getVideoForPZHAPIWihtChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
-    NSString *soapMsg = [NSString stringWithFormat:
-                         @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                         "<soap12:Envelope "
-                         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-                         "xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
-                         "<soap12:Body>"
-                         "<GetSPPZH_Content xmlns=\"http://tempuri.org/\">"
-                         "<channelName>%@</channelName>"
-                         "<channelNext>%@</channelNext>"
-                         "</GetSPPZH_Content>"
-                         "</soap12:Body>"
-                         "</soap12:Envelope>",  channelName,channelNext];
-    
-    NSLog(@"%@",soapMsg);
-    NSString * ur = [NSString stringWithFormat:@"http://222.86.191.71:8010/WS_PZH.asmx"];
-    NSURL * url = [NSURL URLWithString:ur] ;
-    NSMutableURLRequest * req = [NSMutableURLRequest requestWithURL:url];
-    NSString *msgLength = [NSString stringWithFormat:@"%lu", (unsigned long)[soapMsg length]];
-    [req addValue: @"http://tempuri.org/GetSPPZH_Content" forHTTPHeaderField:@"SOAPAction"];
-    [req addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [req addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[soapMsg dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    conn = [[NSURLConnection alloc]initWithRequest:req delegate:self];
-    if(conn){
-        webData = [NSMutableData data];
-    }else NSLog(@"con为假  %@",webData);
+- (void)getVideoForPZHAPIWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext{
+    [self withInterface:@"GetSPPZH_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext];
 }
 
+- (void)getAnnouncementOfPublicArrayListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetGGGS_List" andArgument1Name:@"PageSize" andArgument1Value:pageSize andArgument2Name:@"CurPage" andArgument2Value:curPage];
+}
 
+- (void)getAnnouncementOfPublicContentWithTitle:(NSString *)title{
+    [self withInterface:@"GetGGGS_Content" andArgument1Name:@"strTitle" andArgument1Value:title];
+}
+
+- (void)getLeaderLeadersActivitiesAndWorkConferenceAndDynamicOfDepartmentAndCountyNewsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetZWGK_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
+}
+
+- (void)getPassageContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title andCreateTime:(NSString *)createTime{
+    [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title andArgument4Name:@"createTime" andArgument4Value:createTime];
+}
+
+- (void)getBUMENDONGTAIContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title andCreateTime:(NSString *)createTime{
+    [self withInterface:@"GetBuMenDSY_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"Title" andArgument3Value:title andArgument4Name:@"createTime" andArgument4Value:createTime];
+}
+
+- (void)getAnnouncementOfWorkList{
+    [self withInterface:@"GetBSGG_List"];
+}
+
+- (void)getWorkOnlineListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetGGFW_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"PageSize" andArgument3Value:pageSize andArgument4Name:@"CurPage" andArgument4Value:curPage];
+}
+
+- (void)getWorkOnlineContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetGGFW_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
+}
+
+- (void)getCommonProblemsAndPoliciesAndRegulationsListWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetMXQY_List" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
+}
+
+- (void)getCommonProblemsAndPoliciesAndRegulationsContentWithChannelName:(NSString *)channelName andChannelNext:(NSString *)channelNext andTitle:(NSString *)title{
+    [self withInterface:@"GetMXQY_Content" andArgument1Name:@"channelName" andArgument1Value:channelName andArgument2Name:@"channelNext" andArgument2Value:channelNext andArgument3Name:@"title" andArgument3Value:title ];
+}
+
+- (void)getStatisticsOfWork{
+    [self withInterface:@"GetBJTJ_SUM"];
+}
+
+- (void)getOnlineBusinessSearchResultWithString:(NSString *)string{
+    [self withInterface:@"OnLineSelect" andArgument1Name:@"GscProjectCodeId" andArgument1Value:string];
+}
+
+- (void)getHotBusinessListWithPageSize:(NSString *)pageSize andCurPage:(NSString *)curPage{
+    [self withInterface:@"GetRDBS_List" andArgument1Name:@"PageSize" andArgument1Value:pageSize andArgument2Name:@"CurPage" andArgument2Value:curPage];
+}
+
+- (void)getHotBusinessContentWithTitle:(NSString *)title{
+    [self withInterface:@"GetRDBS_URL" andArgument1Name:@"Title" andArgument1Value:title];
+}
 //连接
 
 #pragma mark URL Connection Data Delegate Methods
@@ -222,7 +350,37 @@
 -(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *) error {
     self.conn = nil;
     self.webData = nil;
+    NSLog(@"!!!!!!!!!!!!%@",error);
+    //alerts = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+
+    if (alerts.visible != YES) {
+        alerts = [alerts initWithTitle:@"错误" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+         [alerts show];
+    }
+   
+    NSDictionary * d = [[NSDictionary alloc]initWithObjectsAndKeys:error,@"error" ,nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:d];
 }
+
+
+//时间超时定义
+-(void) handleTimer:(NSTimer *)timer
+{
+    int threadInfo = 0;
+    //[[timer userInfo] isKindOfClass:[NSDictionary class]]?NSLog(@"yes"):NSLog(@"no");
+    if ([[timer userInfo] isKindOfClass:[NSDictionary class]]) {
+        threadInfo =[[[timer userInfo]objectForKey:@"threadInfo"] intValue];
+    }
+    if(!isback &&(threadInfo == requestCount)){  //时间到后未返回或者当前的线程标识不是设置计时器的线程标识 也就是说只有状态为未返回并且当前进程就是设置计时器的进程时成立
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:nil];
+        //alerts = [[UIAlertView alloc]initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        if (alerts.visible != YES) {
+            alerts = [alerts initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alerts show];
+        }
+    }
+}
+
 
 // 完成接收数据时调用
 -(void) connectionDidFinishLoading:(NSURLConnection *) connection {
@@ -267,11 +425,107 @@
         }
         self.elementFoundForPZHVideo = YES;
     }
+    else if ([elementName isEqualToString:self.matchingElementForLoadMainPagePic]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadMainPagePic = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNewsContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadTopNewsContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNews]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForLoadTopNews = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfPublicArrayList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForAnnouncementOfPublicArrayList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfPublicContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForAnnouncementOfPublicContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForOpenGovernmentAffairsArrayList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForOpenGovernmentAffairsArrayList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPassageContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForPassageContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPassageList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForPassageList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForStatisticsOfWork]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForStatisticsOfWork = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForOnlineBusinessSearchResult]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForOnlineBusinessSearchResult = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForHotBusinessList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForHotBusinessContent = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfWorkList]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForAnnouncementOfWorkList = YES;
+    }
+    else if ([elementName isEqualToString:self.matchingElementForBUMENDONGTAIContent]) {
+        if (!self.soapResults) {
+            self.soapResults = [[NSMutableString alloc] init];
+        }
+        self.elementFoundForBUMENDONGTAIContent = YES;
+    }
 }
 
 // 追加找到的元素值，一个元素值可能要分几次追加
 -(void)parser:(NSXMLParser *) parser foundCharacters:(NSString *)string {
-    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent) {
+    if (self.elementFoundForPZHPic||self.elementFoundForPZHVideo||self.elementFoundForMenuContent||self.elementFoundForLoadMainPagePic||self.elementFoundForLoadTopNews||self.elementFoundForLoadTopNewsContent||self.elementFoundForAnnouncementOfPublicArrayList||self.elementFoundForAnnouncementOfPublicContent||self.elementFoundForOpenGovernmentAffairsArrayList||self.elementFoundForPassageContent||self.elementFoundForPassageList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList||self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent||self.elementFoundForStatisticsOfWork||self.elementFoundForOnlineBusinessSearchResult||self.elementFoundForHotBusinessList||self.elementFoundForHotBusinessContent||self.elementFoundForAnnouncementOfWorkList||self.elementFoundForBUMENDONGTAIContent) {
         [self.soapResults appendString: string];
     }
 }
@@ -281,9 +535,15 @@
     if (isfault) {
         return;
     }
-    NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:soapResults forKey:@"1"];
+    NSMutableDictionary *d;
+    if (self.soapResults != nil) {
+        d = [[NSMutableDictionary alloc]initWithObjectsAndKeys:self.soapResults,@"info", nil];
+        //d = [NSMutableDictionary dictionaryWithObject:self.soapResults forKey:@"info"];
+        NSLog(@"");
+    }
+    else  NSLog(@"插入字典数据为空 ");
     if ([elementName isEqualToString:self.matchingElementForMenuContent]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMenuContentResult" object:self userInfo:d];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetWebResult" object:self userInfo:d];
         self.elementFoundForMenuContent = FALSE;
         // 强制放弃解析
         [self.xmlParser abortParsing];
@@ -300,6 +560,104 @@
         // 强制放弃解析
         [self.xmlParser abortParsing];
     }
+    else if ([elementName isEqualToString:self.matchingElementForLoadMainPagePic]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadMainPagePicResult" object:self userInfo:d];
+        self.elementFoundForLoadMainPagePic = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNews]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadTopNewsResult" object:self userInfo:d];
+        self.elementFoundForLoadTopNews = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForLoadTopNewsContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadTopNewsContentResult" object:self userInfo:d];
+        self.elementFoundForLoadTopNewsContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfPublicArrayList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetGGGS_ListResult" object:self userInfo:d];
+        self.elementFoundForAnnouncementOfPublicArrayList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfPublicContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageContentResult" object:self userInfo:d];
+        self.elementFoundForAnnouncementOfPublicContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForOpenGovernmentAffairsArrayList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetZWGK_ListResult" object:self userInfo:d];
+        self.elementFoundForOpenGovernmentAffairsArrayList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPassageContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageContentResult" object:self userInfo:d];
+        self.elementFoundForPassageContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForPassageList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PassageListResult" object:self userInfo:d];
+        self.elementFoundForPassageList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMXQY_ListResult" object:self userInfo:d];
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForCommonProblemsAndPoliciesAndRegulationsContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetMXQY_ContentResult" object:self userInfo:d];
+        self.elementFoundForCommonProblemsAndPoliciesAndRegulationsContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForStatisticsOfWork]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetBJTJ_SUMResult" object:self userInfo:d];
+        self.elementFoundForStatisticsOfWork = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForOnlineBusinessSearchResult]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"OnLineSelectResult" object:self userInfo:d];
+        self.elementFoundForOnlineBusinessSearchResult = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetRDBS_ListResult" object:self userInfo:d];
+        self.elementFoundForHotBusinessList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForHotBusinessContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetRDBS_URLResult" object:self userInfo:d];
+        self.elementFoundForHotBusinessContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForAnnouncementOfWorkList]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetBSGG_ListResult" object:self userInfo:d];
+        self.elementFoundForAnnouncementOfWorkList = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    else if ([elementName isEqualToString:self.matchingElementForBUMENDONGTAIContent]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GetBuMenDSY_ContentResult" object:self userInfo:d];
+        self.elementFoundForBUMENDONGTAIContent = FALSE;
+        // 强制放弃解析
+        [self.xmlParser abortParsing];
+    }
+    isback =YES;
+    //requestCount--;
 }
 
 // 解析整个文件结束后
@@ -309,6 +667,8 @@
     }
     if (isfault) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:nil];
+        alerts = [[UIAlertView alloc]initWithTitle:@"错误" message:@"访问出错" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alerts show];
     }
 }
 
@@ -317,28 +677,41 @@
     if (self.soapResults) {
         self.soapResults = nil;
     }
+    //NSLog(@"????????????%@",parseError);
 }
 
 #pragma mark - readFileArray
 
 //读取热点业务
--(NSArray *)readFileArray
-{
-    NSLog(@"To read hotBusi........\n");
-    //filePath 表示程序目录下指定文件
-    NSString *filePath = [self documentsPath:@"hotBusi.txt"];
-    //从filePath 这个指定的文件里读
-    NSArray * collectBusiArray = [NSArray arrayWithContentsOfFile:filePath];
-    //NSLog(@"%@",[collectBusiArray objectAtIndex:0] );
-    return collectBusiArray;
+//读取缓存
++(NSMutableDictionary *)readFileDic{
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"cacheDic.archiver"];
+    if ([[NSKeyedUnarchiver unarchiveObjectWithFile:path]isKindOfClass:[NSMutableDictionary class]]) {
+        NSLog( @"read file successfully!");
+        return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    }else{
+        NSLog( @"ERROR FROM READ FILE");
+        return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    }
 }
 
--(NSString *)documentsPath:(NSString *)fileName {
++(NSString *)documentsPath:(NSString *)fileName {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     return [documentsDirectory stringByAppendingPathComponent:fileName];
 }
 
-
+#pragma md5
++ (NSString *)md5:(NSString *)str
+{
+    const char *original_str = [str UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(original_str, (CC_LONG)strlen(original_str), result);
+    NSMutableString *hash = [NSMutableString string];
+    for (int i = 0; i < 16; i++)
+        [hash appendFormat:@"%02X", result[i]];
+    return [hash lowercaseString];
+}
 
 @end
