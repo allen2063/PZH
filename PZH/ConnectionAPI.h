@@ -19,6 +19,9 @@
     UIAlertView * alerts;
 }
 
++(NSMutableDictionary *)readFileDic;
++ (NSString *)md5:(NSString *)str;  //md5加密
+
 - (void)getTopNews;                     //获取首页热点新闻的图片、标题、内容
 - (void)getTopNewsContentWithTitile:(NSString *)title;              //点击热点新闻后加载热点新闻详情
 - (void)getMainPagePic;                 //获取首页三张滚动图片

@@ -8,6 +8,9 @@
 
 #import "ConnectionAPI.h"
 #import "AppDelegate.h"
+//md5
+#import <CommonCrypto/CommonDigest.h>
+
 @implementation ConnectionAPI
 
 @synthesize webData;
@@ -680,23 +683,35 @@
 #pragma mark - readFileArray
 
 //读取热点业务
--(NSArray *)readFileArray
-{
-    NSLog(@"To read hotBusi........\n");
-    //filePath 表示程序目录下指定文件
-    NSString *filePath = [self documentsPath:@"hotBusi.txt"];
-    //从filePath 这个指定的文件里读
-    NSArray * collectBusiArray = [NSArray arrayWithContentsOfFile:filePath];
-    //NSLog(@"%@",[collectBusiArray objectAtIndex:0] );
-    return collectBusiArray;
+//读取缓存
++(NSMutableDictionary *)readFileDic{
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"cacheDic.archiver"];
+    if ([[NSKeyedUnarchiver unarchiveObjectWithFile:path]isKindOfClass:[NSMutableDictionary class]]) {
+        NSLog( @"read file successfully!");
+        return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    }else{
+        NSLog( @"ERROR FROM READ FILE");
+        return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    }
 }
 
--(NSString *)documentsPath:(NSString *)fileName {
++(NSString *)documentsPath:(NSString *)fileName {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     return [documentsDirectory stringByAppendingPathComponent:fileName];
 }
 
-
+#pragma md5
++ (NSString *)md5:(NSString *)str
+{
+    const char *original_str = [str UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(original_str, (CC_LONG)strlen(original_str), result);
+    NSMutableString *hash = [NSMutableString string];
+    for (int i = 0; i < 16; i++)
+        [hash appendFormat:@"%02X", result[i]];
+    return [hash lowercaseString];
+}
 
 @end

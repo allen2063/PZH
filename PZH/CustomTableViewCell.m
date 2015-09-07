@@ -27,7 +27,7 @@
         self.titleLabel.numberOfLines = 2;
         [self addSubview:self.titleLabel];
 
-        self.accessoryTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, self.frame.size.height*2/3, self.frame.size.width/2, self.frame.size.height/3)];
+        self.accessoryTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, self.frame.size.height*2/3, self.frame.size.width/2+20, self.frame.size.height/3)];
         self.accessoryTextLabel.backgroundColor = [UIColor clearColor];
         self.accessoryTextLabel.font = [UIFont systemFontOfSize:14];
         self.accessoryTextLabel.textColor = UIColorFromRGBValue(0x9e9e9e);
