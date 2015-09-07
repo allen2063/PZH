@@ -42,6 +42,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouchedForNews:) name:@"segTouched" object:nil];
         isLoading = NO;
         countForView = 0;
+        shouldUpdateCacheForTitle = NO;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(segTouched:) name:@"segTouched" object:nil];
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -54,70 +55,6 @@
         [self createSegmentedControl];
     }
     return self;
-}
-
-- (void)GetGGGS_ListResult:(NSNotification *)note{
-    
-    NSString *info =[[note userInfo] objectForKey:@"info"];
-    NSMutableArray * tempArrays = (NSMutableArray *)[info componentsSeparatedByString:@";"];
-    totalTitleForSeg = [[tempArrays objectAtIndex:0] intValue];           //当前列表下文章的总数
-    [tempArrays removeObjectAtIndex:0];
-    [tempArrays removeLastObject];
-    NSMutableArray * tempArray = [[NSMutableArray alloc]init];
-    NSMutableDictionary * dic;
-    for (int i = 0; i < tempArrays.count; i++) {
-        NSArray * arr = [[tempArrays objectAtIndex:i]componentsSeparatedByString:@","];
-        if (arr.count == 2) {
-            dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time", nil];
-        }else if (arr.count == 3){
-            dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time",[arr objectAtIndex:2],@"label", nil];
-        }
-        [tempArray addObject:dic];
-    }
-    
-    NSString * serverMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",tempArray]];
-    NSString * cacheMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",[self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,self.currentSegTitle]]]];
-    
-    if(shouldUpdateCacheForTitle && ![serverMD5 isEqualToString:cacheMD5]){
-        [self.cachaDic setObject:tempArray forKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,self.currentSegTitle]];
-        [NSThread detachNewThreadSelector:@selector(writeFileDic:) toTarget:self withObject:self.cachaDic];
-        shouldUpdateCacheForTitle = NO;
-        NSLog(@"Title缓存已更新");
-    }
-    //temparry ->_datalist;
-    if (directionForNow == DJRefreshDirectionTop) {
-        [_dataList removeAllObjects];
-    }
-    for (id dic in tempArray) {
-        [_dataList addObject:dic];
-    }
-    
-    [self addDataWithDirection:directionForNow];
-    
-}
-
-
-- (void)segTouchedForNews:(NSNotification *)note{
-    //调用动画效果  并更新列表
-    self.currentSegTitle = [[note userInfo] objectForKey:@"title"];
-    [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:NO];
-}
-
-- (void)createSegmentedControl
-{
-    self.seg = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:self.segArray delegate:self] ;
-    self.seg.frame = CGRectMake(0, NAVIGATIONHIGHT, self.view.frame.size.width, HYSegmentedControl_Height);
-    [self.view addSubview:self.seg];
-}
-
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:YES];
-    self.titleLabel.text = appDelegate.title;
-    
-    if (countForView == 0) {
-      
-        countForView ++;
-    }
 }
 
 - (void)viewDidLoad{
@@ -155,7 +92,7 @@
             [_dataList removeLastObject];
         }
     }else _dataList=[[NSMutableArray alloc] init];
-
+    
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, UISCREENHEIGHT - NAVIGATIONHIGHT - HYSegmentedControl_Height)];
     self.tableView.delegate=self;
@@ -171,6 +108,68 @@
     }
     
     [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:YES];
+}
+
+- (void)GetGGGS_ListResult:(NSNotification *)note{
+    
+    NSString *info =[[note userInfo] objectForKey:@"info"];
+    NSMutableArray * tempArrays = (NSMutableArray *)[info componentsSeparatedByString:@";"];
+    totalTitleForSeg = [[tempArrays objectAtIndex:0] intValue];           //当前列表下文章的总数
+    [tempArrays removeObjectAtIndex:0];
+    [tempArrays removeLastObject];
+    NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+    NSMutableDictionary * dic;
+    for (int i = 0; i < tempArrays.count; i++) {
+        NSArray * arr = [[tempArrays objectAtIndex:i]componentsSeparatedByString:@","];
+        if (arr.count == 2) {
+            dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time", nil];
+        }else if (arr.count == 3){
+            dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"time",[arr objectAtIndex:2],@"label", nil];
+        }
+        [tempArray addObject:dic];
+    }
+    
+    NSString * serverMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",tempArray]];
+    NSString * cacheMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",[self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,self.currentSegTitle]]]];
+    
+    if(shouldUpdateCacheForTitle && ![serverMD5 isEqualToString:cacheMD5]){
+        [self.cachaDic setObject:tempArray forKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,self.currentSegTitle]];
+        [NSThread detachNewThreadSelector:@selector(writeFileDic:) toTarget:self withObject:self.cachaDic];
+        shouldUpdateCacheForTitle = NO;
+        NSLog(@"Title缓存已更新");
+    }
+    //temparry ->_datalist;
+    if (directionForNow == DJRefreshDirectionTop) {
+        [_dataList removeAllObjects];
+    }
+    for (id dic in tempArray) {
+        [_dataList addObject:dic];
+    }
+    [self addDataWithDirection:directionForNow];
+}
+
+
+- (void)segTouchedForNews:(NSNotification *)note{
+    //调用动画效果  并更新列表
+    self.currentSegTitle = [[note userInfo] objectForKey:@"title"];
+    [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:NO];
+}
+
+- (void)createSegmentedControl
+{
+    self.seg = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:self.segArray delegate:self] ;
+    self.seg.frame = CGRectMake(0, NAVIGATIONHIGHT, self.view.frame.size.width, HYSegmentedControl_Height);
+    [self.view addSubview:self.seg];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    self.titleLabel.text = appDelegate.title;
+    
+    if (countForView == 0) {
+      
+        countForView ++;
+    }
 }
 
 - (void)refresh:(DJRefresh *)refresh didEngageRefreshDirection:(DJRefreshDirection)direction{

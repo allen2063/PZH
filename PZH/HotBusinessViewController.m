@@ -17,16 +17,18 @@
     int totalTitleForSeg;        //此seg里面共有多少文章
     BOOL isLoading;              //  加载状态
     BOOL loadNextPage ;
+    BOOL shouldUpdateCacheForTitle;
 }
 @property (strong,nonatomic)HYSegmentedControl * seg;
 @property (nonatomic,strong)DJRefresh *refresh;
 @property (nonatomic,strong)NSMutableArray *dataList;
 @property (nonatomic,strong) UITableView *tableView;
+@property (nonatomic,strong)NSMutableDictionary * cachaDic;
 
 @end
 
 @implementation HotBusinessViewController
-@synthesize titleLabel,seg,segArray,tempArray;
+@synthesize titleLabel,seg,segArray;
 #define NUMBEROFTITLEFORPAGES 15   //每页15条记录
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -37,9 +39,9 @@
         isLoading = NO;
         countForView = 0;
         loadNextPage = YES;
+        shouldUpdateCacheForTitle = NO;
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
         
-        appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -47,17 +49,49 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
         self.titleLabel.text = appDelegate.title;
-        self.segArray = [NSMutableArray arrayWithObjects:appDelegate.sonTitle, nil];
-        _dataList=[[NSMutableArray alloc] initWithObjects:@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
-        
-        self.tempArray = [[NSMutableArray alloc]init];
         [self createSegmentedControl];
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, UISCREENHEIGHT - NAVIGATIONHIGHT - HYSegmentedControl_Height)];
-        self.tableView.delegate=self;
-        self.tableView.dataSource=self;
-        [self.view addSubview:self.tableView];
     }
     return self;
+}
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = item;
+    
+    self.automaticallyAdjustsScrollViewInsets=NO;
+    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+    self.segArray = [NSMutableArray arrayWithObjects:appDelegate.sonTitle, nil];
+    
+    //读取缓存数据
+    self.cachaDic = [ConnectionAPI readFileDic];
+    if (self.cachaDic == nil) {
+        self.cachaDic = [[NSMutableDictionary alloc]init];
+    }
+   // NSLog(@"paren:%@  title%@   son%@",appDelegate.parentTitle,appDelegate.title,appDelegate.sonTitle);
+    if ([[self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]] isKindOfClass:[NSArray class]]) {
+        _dataList = [self.cachaDic objectForKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]];
+        //如果读取的数据大于每页请求数
+        while (_dataList.count >NUMBEROFTITLEFORPAGE) {
+            [_dataList removeLastObject];
+        }
+    }else _dataList=[[NSMutableArray alloc] init];
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, UISCREENHEIGHT - NAVIGATIONHIGHT - HYSegmentedControl_Height)];
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    [self.view addSubview:self.tableView];
+    
+    _refresh=[[DJRefresh alloc] initWithScrollView:self.tableView delegate:self];
+    _refresh.topEnabled=YES;
+    _refresh.bottomEnabled=YES;
+    
+    if (_type==eRefreshTypeProgress) {
+        [_refresh registerClassForTopView:[DJRefreshProgressView class]];
+    }
+    
+    [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:YES];
 }
 
 - (void)createSegmentedControl
@@ -68,10 +102,7 @@
 }
 
 - (void)GetRDBS_ListResult:(NSNotification *)note{
-    if (directionForNow == DJRefreshDirectionTop) {
-        [self.dataList removeAllObjects];
-    }
-    [self.tempArray removeAllObjects];
+
     NSString *info =[[note userInfo] objectForKey:@"info"];
     NSMutableArray * tempArrays = (NSMutableArray *)[info componentsSeparatedByString:@";"];
     totalTitleForSeg = [[tempArrays objectAtIndex:0] intValue ];           //当前列表下文章的总数
@@ -80,13 +111,31 @@
     }
     [tempArrays removeObjectAtIndex:0];
     [tempArrays removeLastObject];
+    NSMutableArray * tempArray = [[NSMutableArray alloc]init];
     NSMutableDictionary * dic;
     for (int i = 0; i < tempArrays.count; i++) {
         NSArray * arr = [[tempArrays objectAtIndex:i]componentsSeparatedByString:@","];
         dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[arr objectAtIndex:0],@"title",[arr objectAtIndex:1],@"label", nil];
-        [self.dataList addObject:dic];
-        [self.tempArray addObject:dic];
+        [tempArray addObject:dic];
     }
+    
+    NSString * serverMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",tempArray]];
+    NSString * cacheMD5 = [ConnectionAPI md5:[NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]]];
+    
+    if(shouldUpdateCacheForTitle && ![serverMD5 isEqualToString:cacheMD5]){
+        [self.cachaDic setObject:tempArray forKey:[NSString stringWithFormat:@"%@%@",appDelegate.title,appDelegate.sonTitle]];
+        [NSThread detachNewThreadSelector:@selector(writeFileDic:) toTarget:self withObject:self.cachaDic];
+        shouldUpdateCacheForTitle = NO;
+        NSLog(@"Title缓存已更新");
+    }
+    //temparry ->_datalist;
+    if (directionForNow == DJRefreshDirectionTop) {
+        [_dataList removeAllObjects];
+    }
+    for (id dic in tempArray) {
+        [_dataList addObject:dic];
+    }
+
     [self addDataWithDirection:directionForNow];
 }
 
@@ -96,22 +145,7 @@
     self.titleLabel.text = appDelegate.title;
     
     if (countForView == 0) {                                //因为写在viewWillAppear里面  所以只在第一次出现时自动请求更新
-        self.automaticallyAdjustsScrollViewInsets=NO;
         
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, UISCREENHEIGHT - NAVIGATIONHIGHT - HYSegmentedControl_Height)];
-        self.tableView.delegate=self;
-        self.tableView.dataSource=self;
-        [self.view addSubview:self.tableView];
-        
-        _refresh=[[DJRefresh alloc] initWithScrollView:self.tableView delegate:self];
-        _refresh.topEnabled=YES;
-        _refresh.bottomEnabled=YES;
-        
-        if (_type==eRefreshTypeProgress) {
-            [_refresh registerClassForTopView:[DJRefreshProgressView class]];
-        }
-        
-        [_refresh startRefreshingDirection:DJRefreshDirectionTop animation:YES];
         countForView ++;
     }
 }
@@ -122,6 +156,8 @@
     NSString * countOfTitle = [NSString stringWithFormat:@"%d",NUMBEROFTITLEFORPAGES];
     if (self.refresh.refreshingDirection==DJRefreshingDirectionTop)
     {
+        //下拉更新时将第一页数据缓存
+        shouldUpdateCacheForTitle = YES;
         appDelegate.currentPageNumber = 1;
         [appDelegate.conAPI getHotBusinessListWithPageSize:countOfTitle andCurPage:@"1"];
     }
@@ -181,10 +217,14 @@
     return 50.0;
 }
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = item;
+#pragma mark - 写入缓存
+- (void)writeFileDic:(NSMutableDictionary *)dic{
+    //写入对应位置
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *path = [documents stringByAppendingPathComponent:@"cacheDic.archiver"];//拓展名可以自己随便取
+    
+    BOOL writeResult =[NSKeyedArchiver archiveRootObject:dic toFile:path];
+    NSLog(@"%@",writeResult ? @"写入缓存成功table":@"写入缓存失败table");
 }
 
 - (void)didReceiveMemoryWarning {
