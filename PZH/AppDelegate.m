@@ -19,7 +19,7 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGBValue(0xf24300)];
+    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGBValue(0x268eeb)];  //0xf24300
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];    //导航栏按钮颜色
 
