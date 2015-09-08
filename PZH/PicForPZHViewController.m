@@ -104,22 +104,44 @@
     NSString * url = [(NSString*)[tempArraysss objectAtIndex:1]stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSDictionary * dic;
     NSTimeInterval timeOut = -60*60*24;          //超时控制  如果超过这个时间则要从网络请求更新图片
+//    if ([[self.picBufferDic objectForKey:url] isKindOfClass:[NSDictionary class]] ) {
+//        NSDate * lastLoadingTime = [[self.picBufferDic objectForKey:url] objectForKey:@"loadDate"];
+//        if (lastLoadingTime.timeIntervalSinceNow > timeOut) {     //缓存未超时
+//            dic = [self.picBufferDic objectForKey:url];
+//            NSLog(@"读取图片缓存,%f",lastLoadingTime.timeIntervalSinceNow);
+//        }
+//        else{           //超时  更新
+//            NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+//            UIImage* image = [[UIImage alloc] initWithData:imageData];
+//            UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
+//            NSDate * loadDate=[NSDate date];
+//            dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
+//            if ([[dic objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[dic objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //判断返回的图片是否受损
+//            {
+//                [self.picBufferDic setObject:dic forKey:url];
+//            }
+//        }
+//    }
+//    else{       //为空  更新
+//        NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+//        UIImage* image = [[UIImage alloc] initWithData:imageData];
+//        UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
+//        NSDate * loadDate=[NSDate date];
+//        dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
+//        if ([[dic objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[dic objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //判断可能返回的图片是否受损
+//        {
+//            [self.picBufferDic setObject:dic forKey:url];
+//        }
+//    }
+    //检测缓存中是否有此图片
     if ([[self.picBufferDic objectForKey:url] isKindOfClass:[NSDictionary class]] ) {
         NSDate * lastLoadingTime = [[self.picBufferDic objectForKey:url] objectForKey:@"loadDate"];
-        if (lastLoadingTime.timeIntervalSinceNow > timeOut) {     //缓存未超时
-            dic = [self.picBufferDic objectForKey:url];
-            NSLog(@"读取图片缓存,%f",lastLoadingTime.timeIntervalSinceNow);
-        }
-        else{           //超时  更新
-            NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
-            UIImage* image = [[UIImage alloc] initWithData:imageData];
-            UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
-            NSDate * loadDate=[NSDate date];
-            dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
-            if ([[dic objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[dic objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //判断返回的图片是否受损
-            {
-                [self.picBufferDic setObject:dic forKey:url];
-            }
+        dic = [self.picBufferDic objectForKey:url];
+        NSLog(@"读取图片缓存,%f",lastLoadingTime.timeIntervalSinceNow);
+        //超时  更新
+        if ([[dic objectForKey:@"imgView"] isKindOfClass:[UIImageView class]] && [[dic objectForKey:@"imgView"] respondsToSelector:@selector(setFrame:)])  //判断返回的图片是否受损
+        {
+            [self.picBufferDic setObject:dic forKey:url];
         }
     }
     else{       //为空  更新
@@ -133,6 +155,7 @@
             [self.picBufferDic setObject:dic forKey:url];
         }
     }
+
 
     [self.tempArray addObject:dic];
     threadCount++;

@@ -36,9 +36,9 @@
     UINavigationController * navCon = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.rootViewController = navCon;
     //mainViewController.navigationItem.titleView = titleLabel;
-    AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.conAPI getTopNews];
-    [appDelegate.conAPI getMainPagePic];
+//    AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate.conAPI getTopNews];
+//    [appDelegate.conAPI getMainPagePic];
     
     [self.window makeKeyAndVisible];
     return YES;
