@@ -18,10 +18,15 @@
 
 @implementation PublicServiceViewController
 @synthesize titleLabel;
-#define INTERVALX (UISCREENWIDTH/40)
-#define INTERVALY (UISCREENHEIGHT/50)
-#define BLOCKWIDTH ((UISCREENWIDTH-INTERVALX*4)/3)
-#define BLOCKHEIGHT ((UISCREENHEIGHT-NAVIGATIONHIGHT-INTERVALY*5)/5)
+#define INTERVALX (UISCREENWIDTH*1/25)
+#define INTERVALY INTERVALX
+#define FONT 14
+#define TYPE3BTNWIDTH ((UISCREENWIDTH - INTERVALX*4)/3)
+#define TYPE3BTNHEIGHT (UISCREENHEIGHT/6.5)
+
+
+#define BLOCKWIDTH TYPE3BTNWIDTH
+#define BLOCKHEIGHT TYPE3BTNWIDTH
 #define ICONWIDTH (UISCREENWIDTH/3-INTEVALX*4)
 #define ICONHEIGHT ((UISCREENHEIGHT-NAVIGATIONHIGHT)/5-INTEVALY)
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil WithPicArray:(NSMutableArray *)picArray andTitleArray:(NSMutableArray *)titleArray
@@ -59,23 +64,28 @@
     int rowInPage = (int)picArray.count / 3;                    //  每行3个图标   一共多少行
     int leftInPage = picArray.count % 3;                    //最后剩几个
     self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
-    UIScrollView * scrView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-    scrView.contentSize =  CGSizeMake( UISCREENWIDTH, NAVIGATIONHIGHT+BLOCKHEIGHT*(rowInPage+ (leftInPage == 0 ? 0 : 1))+INTERVALY*(rowInPage+ (leftInPage == 0 ? 0 : 1)+1));
-    scrView.backgroundColor = [UIColor whiteColor];
+    UIScrollView * scrView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTH,UISCREENHEIGHT - NAVIGATIONHIGHT*1.4)];
+    //scrView.contentSize =  CGSizeMake( UISCREENWIDTH, NAVIGATIONHIGHT+BLOCKHEIGHT*(rowInPage+ (leftInPage == 0 ? 0 : 1))+INTERVALY*(rowInPage+ (leftInPage == 0 ? 0 : 1)+1));
+    scrView.backgroundColor = [UIColor clearColor];
+    [scrView setShowsVerticalScrollIndicator:NO];
+    scrView.bounces = NO;
     [self.view addSubview:scrView];
+
+    
     for (int i = 0; i < rowInPage; i++) {
         //第一项图标
         UIButton * firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         firstBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
         [firstBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
         firstBtn.tag = i*3+1;
-        [firstBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
-        [firstBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [firstBtn setBackgroundImage:[UIImage imageNamed:@"tb_3"] forState:UIControlStateNormal];
+        [firstBtn setBackgroundImage:[UIImage imageNamed:@"tb_3dj"] forState:UIControlStateHighlighted];
         
         UILabel * firstLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, BLOCKWIDTH, BLOCKHEIGHT/4)];
-        firstLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*4/5);
+        firstLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*6/7);
         firstLabel.text = [titleArray objectAtIndex:i*3];
-        firstLabel.font = [UIFont systemFontOfSize:14];
+        firstLabel.textColor = [UIColor whiteColor];
+        firstLabel.font = [UIFont systemFontOfSize:FONT];
         firstLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * firstImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:[picArray objectAtIndex:i*3]]];
@@ -91,13 +101,14 @@
         secondBtn.frame = CGRectMake(INTERVALX*2+BLOCKWIDTH,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
         [secondBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
         secondBtn.tag = i*3+2;
-        [secondBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
-        [secondBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [secondBtn setBackgroundImage:[UIImage imageNamed:@"tb_3"] forState:UIControlStateNormal];
+        [secondBtn setBackgroundImage:[UIImage imageNamed:@"tb_3dj"] forState:UIControlStateHighlighted];
         
         UILabel * secondLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, BLOCKWIDTH, BLOCKHEIGHT/4)];
-        secondLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*4/5);
+        secondLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*6/7);
         secondLabel.text = [titleArray objectAtIndex:i*3+1];
-        secondLabel.font = [UIFont systemFontOfSize:14];
+        secondLabel.textColor = [UIColor whiteColor];
+        secondLabel.font = [UIFont boldSystemFontOfSize:FONT];
         secondLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * secondImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:[picArray objectAtIndex:i*3+1]]];
@@ -113,13 +124,14 @@
         thirdBtn.frame = CGRectMake(INTERVALX*3+BLOCKWIDTH*2,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
         [thirdBtn addTarget:self action:@selector(jumpPageForPublcService:) forControlEvents:UIControlEventTouchUpInside];
         thirdBtn.tag = i*3+3;
-        [thirdBtn setBackgroundImage:[UIImage imageNamed:@"iconBackground.png"] forState:UIControlStateNormal];
-        [thirdBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [thirdBtn setBackgroundImage:[UIImage imageNamed:@"tb_3"] forState:UIControlStateNormal];
+        [thirdBtn setBackgroundImage:[UIImage imageNamed:@"tb_3dj"] forState:UIControlStateHighlighted];
         
         UILabel * thirdLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, BLOCKWIDTH, BLOCKHEIGHT/4)];
-        thirdLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*4/5);
+        thirdLabel.center = CGPointMake(BLOCKWIDTH/2, BLOCKHEIGHT*6/7);
         thirdLabel.text = [titleArray objectAtIndex:i*3+2];
-        thirdLabel.font = [UIFont systemFontOfSize:14];
+        thirdLabel.textColor = [UIColor whiteColor];
+        thirdLabel.font = [UIFont boldSystemFontOfSize:FONT];
         thirdLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * thirdImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:[picArray objectAtIndex:i*3+2]]];
@@ -128,8 +140,7 @@
         
         [thirdBtn addSubview:thirdLabel];
         [thirdBtn addSubview:thirdImgView];
-        [scrView addSubview:thirdBtn];
-    }
+        [scrView addSubview:thirdBtn];    }
     switch (leftInPage) {
         case 1:
         {
