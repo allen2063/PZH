@@ -45,7 +45,6 @@
         self.navigationItem.titleView = self.titleLabel;
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
         
-
         UIImageView * backgroundImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
         backgroundImageView.image = [UIImage imageNamed:@"bj"];
         [self.view addSubview:backgroundImageView];
@@ -67,11 +66,11 @@
         intoPZHLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
         intoPZHLabel.text = @"走进攀枝花";
         intoPZHLabel.textColor = [UIColor whiteColor];
-        intoPZHLabel.font = [UIFont systemFontOfSize:FONT];
+        intoPZHLabel.font = [UIFont boldSystemFontOfSize:FONT];
         intoPZHLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * intoPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zjpzh.png"]];
-        intoPZHImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        intoPZHImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         intoPZHImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
 
         [self.intoPZHBtn addSubview:intoPZHLabel];
@@ -90,11 +89,11 @@
         openGovernmentAffairsLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
         openGovernmentAffairsLabel.text = @"政务公开";
         openGovernmentAffairsLabel.textColor = [UIColor whiteColor];
-        openGovernmentAffairsLabel.font = [UIFont systemFontOfSize:FONT];
+        openGovernmentAffairsLabel.font = [UIFont boldSystemFontOfSize:FONT];
         openGovernmentAffairsLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * openGovernmentAffairsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zwgk.png"]];
-        openGovernmentAffairsImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        openGovernmentAffairsImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         openGovernmentAffairsImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
         
         [self.openGovernmentAffairsBtn addSubview:openGovernmentAffairsLabel];
@@ -113,11 +112,11 @@
         onlineBusinessLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
         onlineBusinessLabel.text = @"网上办事";
         onlineBusinessLabel.textColor = [UIColor whiteColor];
-        onlineBusinessLabel.font = [UIFont systemFontOfSize:FONT];
+        onlineBusinessLabel.font = [UIFont boldSystemFontOfSize:FONT];
         onlineBusinessLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * onlineBusinessImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"wsbs.png"]];
-        onlineBusinessImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        onlineBusinessImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         onlineBusinessImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
         
         [self.onlineBusinessBtn addSubview:onlineBusinessLabel];
@@ -136,11 +135,11 @@
         publicServiceLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
         publicServiceLabel.text = @"公共服务";
         publicServiceLabel.textColor = [UIColor whiteColor];
-        publicServiceLabel.font = [UIFont systemFontOfSize:FONT];
+        publicServiceLabel.font = [UIFont boldSystemFontOfSize:FONT];
         publicServiceLabel.textAlignment = NSTextAlignmentCenter;
         
         UIImageView * publicServiceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ggfw.png"]];
-        publicServiceImgView.frame = CGRectMake(0,0, UISCREENHEIGHT/15, UISCREENHEIGHT/15);
+        publicServiceImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         publicServiceImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
         
         [self.publicServiceBtn addSubview:publicServiceLabel];

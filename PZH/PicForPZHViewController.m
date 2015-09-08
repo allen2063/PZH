@@ -103,7 +103,7 @@
     
     NSString * url = [(NSString*)[tempArraysss objectAtIndex:1]stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSDictionary * dic;
-    NSTimeInterval timeOut = -60*60*24;          //超时控制  如果超过这个时间则要从网络请求更新图片
+//    NSTimeInterval timeOut = -60*60*24;          //超时控制  如果超过这个时间则要从网络请求更新图片
 //    if ([[self.picBufferDic objectForKey:url] isKindOfClass:[NSDictionary class]] ) {
 //        NSDate * lastLoadingTime = [[self.picBufferDic objectForKey:url] objectForKey:@"loadDate"];
 //        if (lastLoadingTime.timeIntervalSinceNow > timeOut) {     //缓存未超时

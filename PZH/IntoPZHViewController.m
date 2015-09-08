@@ -22,10 +22,13 @@
 @implementation IntoPZHViewController
 @synthesize videoForPZHBtn,picForPZHBtn,cityOverview,economyOverview,naturalOverview,titleLabel;
 
-#define INTERVALX UISCREENWIDTH/18
-#define INTERVALY UISCREENHEIGHT/35
-#define MAINBTNWIDTH UISCREENWIDTH*1/3
-#define MAINBTNHEIGHT UISCREENWIDTH/4
+#define INTERVALX (UISCREENWIDTH*2/25)
+#define INTERVALY (INTERVALX*2/3.)
+#define FONT 14
+#define TYPE1BTNWIDTH ((UISCREENWIDTH - INTERVALX*2.5)/2)
+#define TYPE1BTNHEIGHT (UISCREENHEIGHT/7)
+#define TYPE2BTNWIDTH (UISCREENWIDTH - INTERVALX*2)
+#define TYPE2BTNHEIGHT TYPE1BTNHEIGHT
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
@@ -41,153 +44,145 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
         
-        UIImageView * splitLineImgView1 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView1.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT+INTERVALY*1.5, UISCREENWIDTH, 1);
-        [self.view addSubview:splitLineImgView1];
-        UIImageView * splitLineImgView2 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView2.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*2+INTERVALY*2.5, UISCREENWIDTH, 1);
-        [self.view addSubview:splitLineImgView2];
-        UIImageView * splitLineImgView3 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView3.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*3+INTERVALY*3.5, UISCREENWIDTH, 1);
-        [self.view addSubview:splitLineImgView3];
-
+        UIImageView * backgroundImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+        backgroundImageView.image = [UIImage imageNamed:@"bjgy"];
+        [self.view addSubview:backgroundImageView];
+        
+        UIImageView * logoImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTH*4/9,UISCREENWIDTH*4/9/400*60 )];
+        logoImageView.center = CGPointMake(self.view.center.x, UISCREENHEIGHT - NAVIGATIONHIGHT*2/3);
+        logoImageView.image = [UIImage imageNamed:@"bg_wenzi"];
+        [self.view addSubview:logoImageView];
+        
         //市情概况
         self.cityOverview = [[NSMutableArray alloc]initWithObjects:@"市情概况", nil];
         
         UIButton * cityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        cityBtn.frame = CGRectMake(0,NAVIGATIONHIGHT,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY*1.5);
+        cityBtn.frame = CGRectMake(INTERVALX,INTERVALY + NAVIGATIONHIGHT,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);;
         [cityBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
         cityBtn.tag = 1;
-        [cityBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [cityBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
+        [cityBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
-        UILabel * cityOverviewLabel = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
+        UILabel * cityOverviewLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
+        cityOverviewLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
         cityOverviewLabel.text = @"市情概况";
-        cityOverviewLabel.font = [UIFont systemFontOfSize:12];
-        cityOverviewLabel.textAlignment = NSTextAlignmentLeft;
+        cityOverviewLabel.textColor = [UIColor whiteColor];
+        cityOverviewLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        cityOverviewLabel.textAlignment = NSTextAlignmentCenter;
+        
+        UIImageView * cityOverviewImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sqgk"]];
+        cityOverviewImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        cityOverviewImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - cityOverviewLabel.frame.size.height/3);
+        
         [cityBtn addSubview:cityOverviewLabel];
-        
-        UIImageView * cityOverviewImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sqgk.png"]];
-        cityOverviewImgView.frame = CGRectMake(INTERVALX,INTERVALY,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * cityOverviewLabelImg = [UIImage imageNamed:@"sq.png"];
-        UIImageView * cityOverviewLabelImgView = [[UIImageView alloc]initWithImage:cityOverviewLabelImg];
-        cityOverviewLabelImgView.frame = CGRectMake(0, 0, cityOverviewLabelImg.size.width/3.3, cityOverviewLabelImg.size.height/3.3);
-        cityOverviewLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
-        
-        [cityOverviewImgView addSubview:cityOverviewLabelImgView];
         [cityBtn addSubview:cityOverviewImgView];
         [self.view addSubview:cityBtn];
         
         //自然概况
         self.naturalOverview = [[NSMutableArray alloc]initWithObjects:@"地理位置",@"行政区划",@"自然资源",@"自然概貌",@"建置人口",@"历史沿革", nil];
         UIButton * naturalBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        naturalBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*1.5+MAINBTNHEIGHT,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
+        naturalBtn.frame = CGRectMake(INTERVALX*1.5 + TYPE1BTNWIDTH,INTERVALY + NAVIGATIONHIGHT,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);
         [naturalBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
         naturalBtn.tag = 2;
-        [naturalBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
-
-        UILabel * naturalOverviewLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        naturalOverviewLabel1.text = @"地理位置   行政区划   自然资源";
-        naturalOverviewLabel1.font = [UIFont systemFontOfSize:12];
-        naturalOverviewLabel1.textAlignment = NSTextAlignmentLeft;
-        [naturalBtn addSubview:naturalOverviewLabel1];
-        UILabel * naturalOverviewLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2+naturalOverviewLabel1.frame.size.height, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        naturalOverviewLabel2.text = @"自然概貌   建置人口   历史沿革";
-        naturalOverviewLabel2.font = [UIFont systemFontOfSize:12];
-        naturalOverviewLabel2.textAlignment = NSTextAlignmentLeft;
-        [naturalBtn addSubview:naturalOverviewLabel2];
         
-        UIImageView * naturalOverviewImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zrgk.png"]];
-        naturalOverviewImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);;
-        UIImage * naturalOverviewLabelImg = [UIImage imageNamed:@"zr.png"];
-        UIImageView * naturalOverviewLabelImgView = [[UIImageView alloc]initWithImage:naturalOverviewLabelImg];
-        naturalOverviewLabelImgView.frame = CGRectMake(0, 0, naturalOverviewLabelImg.size.width/3.3, naturalOverviewLabelImg.size.height/3.3);
-        naturalOverviewLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
+        [naturalBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
+        [naturalBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        
+        UILabel * naturalOverviewLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
+        naturalOverviewLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
+        naturalOverviewLabel.text = @"自然概况";
+        naturalOverviewLabel.textColor = [UIColor whiteColor];
+        naturalOverviewLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        naturalOverviewLabel.textAlignment = NSTextAlignmentCenter;
+        
+        UIImageView * naturalOverviewImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zrgk"]];
+        naturalOverviewImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        naturalOverviewImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - naturalOverviewLabel.frame.size.height/3);
 
-        [naturalOverviewImgView addSubview:naturalOverviewLabelImgView];
+        [naturalBtn addSubview:naturalOverviewLabel];
         [naturalBtn addSubview:naturalOverviewImgView];
         [self.view addSubview:naturalBtn];
         
         //国民经济
         self.economyOverview = [[NSMutableArray alloc]initWithObjects:@"经济综述",@"农业",@"收入与消费",@"房地产业",@"工业",@"金融保险业",@"运输邮电",@"建筑业",@"固定资产投资",@"财政税收", nil];
         UIButton * economyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        economyBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*2.5+MAINBTNHEIGHT*2,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
+        economyBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*2+TYPE2BTNHEIGHT,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [economyBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
         economyBtn.tag = 3;
-        [economyBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [economyBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
+        [economyBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         
-        UILabel * economyOverviewLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        economyOverviewLabel1.text = @"经济综述   农业       收入与消费";
-        economyOverviewLabel1.font = [UIFont systemFontOfSize:12];
-        economyOverviewLabel1.textAlignment = NSTextAlignmentLeft;
-        economyOverviewLabel1.backgroundColor = [UIColor clearColor];
-        [economyBtn addSubview:economyOverviewLabel1];
-        UILabel * economyOverviewLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2+economyOverviewLabel1.frame.size.height, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        economyOverviewLabel2.text = @"房地产业   工业       金融保险业";
-        economyOverviewLabel2.font = [UIFont systemFontOfSize:12];
-        economyOverviewLabel2.textAlignment = NSTextAlignmentLeft;
-        [economyBtn addSubview:economyOverviewLabel2];
-        UILabel * economyOverviewLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7, INTERVALY/2+economyOverviewLabel1.frame.size.height*2, UISCREENWIDTH*4/7,MAINBTNHEIGHT/4)];
-        economyOverviewLabel3.text = @"运输邮电   建筑业   固定资产投资";
-        economyOverviewLabel3.font = [UIFont systemFontOfSize:12];
-        economyOverviewLabel3.textAlignment = NSTextAlignmentLeft;
-        [economyBtn addSubview:economyOverviewLabel3];
-        UILabel * economyOverviewLabel4 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2+economyOverviewLabel1.frame.size.height*3, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        economyOverviewLabel4.text = @"财政税收";
-        economyOverviewLabel4.font = [UIFont systemFontOfSize:12];
-        economyOverviewLabel4.textAlignment = NSTextAlignmentLeft;
-        [economyBtn addSubview:economyOverviewLabel4];
+        UILabel * economyOverviewLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
+        economyOverviewLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
+        economyOverviewLabel.text = @"国民经济";
+        economyOverviewLabel.textColor = [UIColor whiteColor];
+        economyOverviewLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        economyOverviewLabel.textAlignment = NSTextAlignmentCenter;
+        economyOverviewLabel.backgroundColor = [UIColor clearColor];
+        [economyBtn addSubview:economyOverviewLabel];
         
         UIImageView * economyOverviewImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gmjj.png"]];
-        economyOverviewImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * economyOverviewLabelImg = [UIImage imageNamed:@"gm.png"];
-        UIImageView * economyOverviewLabelImgView = [[UIImageView alloc]initWithImage:economyOverviewLabelImg];
-        economyOverviewLabelImgView.frame = CGRectMake(0, 0, economyOverviewLabelImg.size.width/3.3, economyOverviewLabelImg.size.height/3.3);
-        economyOverviewLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
-        
-        [economyOverviewImgView addSubview:economyOverviewLabelImgView];
+        economyOverviewImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        economyOverviewImgView.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT/2 - naturalOverviewLabel.frame.size.height/3);
+
+        [economyBtn addSubview:economyOverviewLabel];
         [economyBtn addSubview:economyOverviewImgView];
         [self.view addSubview:economyBtn];
         
         //图看攀枝花
         self.picForPZHBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         //self.picForPZHBtn.backgroundColor = [UIColor lightGrayColor];
-        self.picForPZHBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*4+MAINBTNHEIGHT*3,MAINBTNWIDTH+INTERVALX,MAINBTNHEIGHT+INTERVALY/2);
+        self.picForPZHBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*3+TYPE2BTNHEIGHT*2,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [self.picForPZHBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
         self.picForPZHBtn.tag = 4;
-        [self.picForPZHBtn setBackgroundImage:[UIImage imageNamed:@"tkpzh.png"] forState:UIControlStateNormal];
-        [self.picForPZHBtn setBackgroundImage:[UIImage imageNamed:@"tkpzh_1.png"] forState:UIControlStateHighlighted];
-
-//        UIImageView * picForPZHBtnImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"tkpzh.png"]];
-//        picForPZHBtnImgView.frame = self.picForPZHBtn.bounds;
-        UIImage * picForPZHBtnLabelImg = [UIImage imageNamed:@"tk.png"];
-        UIImageView * picForPZHBtnLabelImgView = [[UIImageView alloc]initWithImage:picForPZHBtnLabelImg];
-        picForPZHBtnLabelImgView.frame = CGRectMake(0, 0, picForPZHBtnLabelImg.size.width/3.3, picForPZHBtnLabelImg.size.height/3.3);
-        picForPZHBtnLabelImgView.center = CGPointMake(self.picForPZHBtn.frame.size.width*2/3,self.picForPZHBtn.frame.size.height*3/4);
         
-        [self.picForPZHBtn addSubview:picForPZHBtnLabelImgView];
-        //[self.picForPZHBtn addSubview:picForPZHBtnImgView];
+        [self.picForPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
+        [self.picForPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
+        
+        UILabel * picForPZHLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
+        picForPZHLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
+        picForPZHLabel.text = @"图看攀枝花";
+        picForPZHLabel.textColor = [UIColor whiteColor];
+        picForPZHLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        picForPZHLabel.textAlignment = NSTextAlignmentCenter;
+        picForPZHLabel.backgroundColor = [UIColor clearColor];
+        [self.picForPZHBtn addSubview:picForPZHLabel];
+        
+        UIImageView * picForPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"tkpzh"]];
+        picForPZHImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        picForPZHImgView.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT/2 - picForPZHLabel.frame.size.height/3);
+        
+        [self.picForPZHBtn addSubview:picForPZHLabel];
+        [self.picForPZHBtn addSubview:picForPZHImgView];
+        [self.view addSubview:self.picForPZHBtn];
+        
         
         //视频攀枝花
         self.videoForPZHBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         //self.videoForPZHBtn.backgroundColor = [UIColor lightGrayColor];
-        self.videoForPZHBtn.frame = CGRectMake(INTERVALX*4+MAINBTNWIDTH,NAVIGATIONHIGHT+INTERVALY*4+MAINBTNHEIGHT*3,MAINBTNWIDTH+INTERVALX,MAINBTNHEIGHT+INTERVALY/2);
+        self.videoForPZHBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*4+TYPE2BTNHEIGHT*3,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [self.videoForPZHBtn addTarget:self action:@selector(jumpPageForIntoPZH:) forControlEvents:UIControlEventTouchUpInside];
         self.videoForPZHBtn.tag = 5;
-        [self.videoForPZHBtn setBackgroundImage:[UIImage imageNamed:@"sppzh.png"] forState:UIControlStateNormal];
-        [self.videoForPZHBtn setBackgroundImage:[UIImage imageNamed:@"sppzh_1.png"] forState:UIControlStateHighlighted];
-//        UIImageView * videoForPZHBtnImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sppzh.png"]];
-//        videoForPZHBtnImgView.frame = self.videoForPZHBtn.bounds;
-        UIImage * videoForPZHBtnLabelImg = [UIImage imageNamed:@"sp.png"];
-        UIImageView * videoForPZHBtnLabelImgView = [[UIImageView alloc]initWithImage:videoForPZHBtnLabelImg];
-        videoForPZHBtnLabelImgView.frame = CGRectMake(0, 0, videoForPZHBtnLabelImg.size.width/3.3, videoForPZHBtnLabelImg.size.height/3.3);
-        videoForPZHBtnLabelImgView.center = CGPointMake(self.picForPZHBtn.frame.size.width*2/3,self.picForPZHBtn.frame.size.height*3/4);
+        [self.videoForPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
+        [self.videoForPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         
-        //[videoForPZHBtnImgView addSubview:videoForPZHBtnLabelImgView];
-        [self.videoForPZHBtn addSubview:videoForPZHBtnLabelImgView];
+        UILabel * videoForPZHLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
+        videoForPZHLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
+        videoForPZHLabel.text = @"视频攀枝花";
+        videoForPZHLabel.textColor = [UIColor whiteColor];
+        videoForPZHLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        videoForPZHLabel.textAlignment = NSTextAlignmentCenter;
+        videoForPZHLabel.backgroundColor = [UIColor clearColor];
+        [self.videoForPZHBtn addSubview:videoForPZHLabel];
         
-        [self.view addSubview:self.picForPZHBtn];
+        UIImageView * videoForPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sppzh"]];
+        videoForPZHImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        videoForPZHImgView.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT/2 - picForPZHLabel.frame.size.height/3);
+        
+        [self.videoForPZHBtn addSubview:videoForPZHLabel];
+        [self.videoForPZHBtn addSubview:videoForPZHImgView];
         [self.view addSubview:self.videoForPZHBtn];
-    }
+        }
     return self;
 }
 

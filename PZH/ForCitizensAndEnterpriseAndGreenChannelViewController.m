@@ -31,6 +31,16 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+        UIImageView * backgroundImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+        backgroundImageView.image = [UIImage imageNamed:@"bjgy"];
+        [self.view addSubview:backgroundImageView];
+        
+        UIImageView * logoImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTH*4/9,UISCREENWIDTH*4/9/400*60 )];
+        logoImageView.center = CGPointMake(self.view.center.x, UISCREENHEIGHT - NAVIGATIONHIGHT*2/3);
+        logoImageView.image = [UIImage imageNamed:@"bg_wenzi"];
+        [self.view addSubview:logoImageView];
+        
         titleNameArray = titleArray;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
