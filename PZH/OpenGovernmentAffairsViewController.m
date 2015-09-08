@@ -16,8 +16,13 @@
 @end
 
 @implementation OpenGovernmentAffairsViewController
-#define INTERVALX UISCREENWIDTH/18
-#define INTERVALY UISCREENHEIGHT/35
+#define INTERVALX (UISCREENWIDTH*2/25)
+#define INTERVALY (INTERVALX*2/3.)
+#define FONT 14
+#define TYPE1BTNWIDTH ((UISCREENWIDTH - INTERVALX*2.5)/2)
+#define TYPE1BTNHEIGHT (UISCREENHEIGHT/7)
+#define TYPE2BTNWIDTH (UISCREENWIDTH - INTERVALX*2)
+#define TYPE2BTNHEIGHT TYPE1BTNHEIGHT
 #define MAINBTNWIDTH UISCREENWIDTH*1/3
 #define MAINBTNHEIGHT UISCREENWIDTH/4
 @synthesize countyNewsArray,leadersActivitiesArray,dynamicOfDepartmentArray,workConferenceArray,announcementOfPublicArray;
@@ -28,10 +33,7 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
-        UIScrollView * scrView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-        scrView.contentSize =  CGSizeMake( UISCREENWIDTH, NAVIGATIONHIGHT+MAINBTNHEIGHT*5+INTERVALY*6);
-        scrView.backgroundColor = [UIColor whiteColor];
-        [self.view addSubview:scrView];
+        
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         UIImageView * backgroundImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
         backgroundImageView.image = [UIImage imageNamed:@"bjgy"];
@@ -49,160 +51,133 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = self.titleLabel;
         
-        UIImageView * splitLineImgView1 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView1.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT+INTERVALY*1.5, UISCREENWIDTH, 1);
-        [scrView addSubview:splitLineImgView1];
-        UIImageView * splitLineImgView2 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView2.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*2+INTERVALY*2.5, UISCREENWIDTH, 1);
-        [scrView addSubview:splitLineImgView2];
-        UIImageView * splitLineImgView3 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView3.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*3+INTERVALY*3.5, UISCREENWIDTH, 1);
-        [scrView addSubview:splitLineImgView3];
-        UIImageView * splitLineImgView4 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView4.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*4+INTERVALY*4.5, UISCREENWIDTH, 1);
-        [scrView addSubview:splitLineImgView4];
-        UIImageView * splitLineImgView5 = [[UIImageView alloc]initWithImage:[UIImage  imageNamed:@"xian.png"]];
-        splitLineImgView5.frame = CGRectMake(0,NAVIGATIONHIGHT+MAINBTNHEIGHT*5+INTERVALY*5.5, UISCREENWIDTH, 1);
-        //[scrView addSubview:splitLineImgView5];
-        
         //公告公示
         self.announcementOfPublicArray = [[NSMutableArray alloc]initWithObjects:@"公告公示", nil];
         
         UIButton * announcementOfPublicBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        announcementOfPublicBtn.frame = CGRectMake(0,NAVIGATIONHIGHT,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY*1.5);
+        announcementOfPublicBtn.frame = CGRectMake(INTERVALX,INTERVALY + NAVIGATIONHIGHT,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);;
         [announcementOfPublicBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         announcementOfPublicBtn.tag = 1;
-        [announcementOfPublicBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [announcementOfPublicBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
+        [announcementOfPublicBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
-        UILabel * announcementOfPublicLabel = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
+        UILabel * announcementOfPublicLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
+        announcementOfPublicLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
         announcementOfPublicLabel.text = @"公告公示";
-        announcementOfPublicLabel.font = [UIFont systemFontOfSize:12];
-        announcementOfPublicLabel.textAlignment = NSTextAlignmentLeft;
+        announcementOfPublicLabel.textColor = [UIColor whiteColor];
+        announcementOfPublicLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        announcementOfPublicLabel.textAlignment = NSTextAlignmentCenter;
+        
+        UIImageView * announcementOfPublicImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gggs"]];
+        announcementOfPublicImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        announcementOfPublicImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - announcementOfPublicLabel.frame.size.height/3);
+        
         [announcementOfPublicBtn addSubview:announcementOfPublicLabel];
-        
-        UIImageView * announcementOfPublicImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gggs.png"]];
-        announcementOfPublicImgView.frame = CGRectMake(INTERVALX,INTERVALY,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * announcementOfPublicLabelImg = [UIImage imageNamed:@"zi_1.png"];
-        UIImageView * announcementOfPublicLabelImgView = [[UIImageView alloc]initWithImage:announcementOfPublicLabelImg];
-        announcementOfPublicLabelImgView.frame = CGRectMake(0, 0, announcementOfPublicLabelImg.size.width/3.3, announcementOfPublicLabelImg.size.height/3.3);
-        announcementOfPublicLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
-        
-        [announcementOfPublicImgView addSubview:announcementOfPublicLabelImgView];
         [announcementOfPublicBtn addSubview:announcementOfPublicImgView];
-        [scrView addSubview:announcementOfPublicBtn];
+        [self.view addSubview:announcementOfPublicBtn];
         
         //领导活动
         self.leadersActivitiesArray = [[NSMutableArray alloc]initWithObjects:@"讲话",@"活动",@"会议",@"调研",@"其他", nil];
+        
         UIButton * leadersActivitiesBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        leadersActivitiesBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*1.5+MAINBTNHEIGHT,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
+        leadersActivitiesBtn.frame = CGRectMake(INTERVALX*1.5 + TYPE1BTNWIDTH,INTERVALY + NAVIGATIONHIGHT,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);
         [leadersActivitiesBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         leadersActivitiesBtn.tag = 2;
-        [leadersActivitiesBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
         
-        UILabel * leadersActivitiesLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        leadersActivitiesLabel1.text = @"讲话   活动   会议";
-        leadersActivitiesLabel1.font = [UIFont systemFontOfSize:12];
-        leadersActivitiesLabel1.textAlignment = NSTextAlignmentLeft;
-        [leadersActivitiesBtn addSubview:leadersActivitiesLabel1];
-        UILabel * leadersActivitiesLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2+leadersActivitiesLabel1.frame.size.height, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        leadersActivitiesLabel2.text = @"调研   其他";
-        leadersActivitiesLabel2.font = [UIFont systemFontOfSize:12];
-        leadersActivitiesLabel2.textAlignment = NSTextAlignmentLeft;
-        [leadersActivitiesBtn addSubview:leadersActivitiesLabel2];
+        [leadersActivitiesBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
+        [leadersActivitiesBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
-        UIImageView * leadersActivitiesImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ldhd.png"]];
-        leadersActivitiesImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);;
-        UIImage * leadersActivitiesLabelImg = [UIImage imageNamed:@"zi_2.png"];
-        UIImageView * leadersActivitiesLabelImgView = [[UIImageView alloc]initWithImage:leadersActivitiesLabelImg];
-        leadersActivitiesLabelImgView.frame = CGRectMake(0, 0, leadersActivitiesLabelImg.size.width/3.3, leadersActivitiesLabelImg.size.height/3.3);
-        leadersActivitiesLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
+        UILabel * leadersActivitiesLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
+        leadersActivitiesLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
+        leadersActivitiesLabel.text = @"领导活动";
+        leadersActivitiesLabel.textColor = [UIColor whiteColor];
+        leadersActivitiesLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        leadersActivitiesLabel.textAlignment = NSTextAlignmentCenter;
         
-        [leadersActivitiesImgView addSubview:leadersActivitiesLabelImgView];
+        UIImageView * leadersActivitiesImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ldhd"]];
+        leadersActivitiesImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        leadersActivitiesImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - leadersActivitiesLabel.frame.size.height/3);
+        
+        [leadersActivitiesBtn addSubview:leadersActivitiesLabel];
         [leadersActivitiesBtn addSubview:leadersActivitiesImgView];
-        [scrView addSubview:leadersActivitiesBtn];
+        [self.view addSubview:leadersActivitiesBtn];
         
         //工作会议
         self.workConferenceArray = [[NSMutableArray alloc]initWithObjects:@"市委会议",@"政府会议",@"人大会议",@"政协会议", nil];
+        
         UIButton * workConferenceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        workConferenceBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*2.5+MAINBTNHEIGHT*2,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
+        workConferenceBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*2+TYPE2BTNHEIGHT,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [workConferenceBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         workConferenceBtn.tag = 3;
-        [workConferenceBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        [workConferenceBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
+        [workConferenceBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         
-        UILabel * workConferenceLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        workConferenceLabel1.text = @"市委会议   政府会议    人大会议";
-        workConferenceLabel1.font = [UIFont systemFontOfSize:12];
-        workConferenceLabel1.textAlignment = NSTextAlignmentLeft;
-        workConferenceLabel1.backgroundColor = [UIColor clearColor];
-        [workConferenceBtn addSubview:workConferenceLabel1];
-        UILabel * workConferenceLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2+workConferenceLabel1.frame.size.height, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
-        workConferenceLabel2.text = @"政协会议";
-        workConferenceLabel2.font = [UIFont systemFontOfSize:12];
-        workConferenceLabel2.textAlignment = NSTextAlignmentLeft;
-        [workConferenceBtn addSubview:workConferenceLabel2];
+        UILabel * workConferenceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
+        workConferenceLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
+        workConferenceLabel.text = @"工作会议";
+        workConferenceLabel.textColor = [UIColor whiteColor];
+        workConferenceLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        workConferenceLabel.textAlignment = NSTextAlignmentCenter;
+        workConferenceLabel.backgroundColor = [UIColor clearColor];
+        [workConferenceBtn addSubview:workConferenceLabel];
         
-        UIImageView * workConferenceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gzhy.png"]];
-        workConferenceImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * workConferenceLabelImg = [UIImage imageNamed:@"zi_3.png"];
-        UIImageView * workConferenceLabelImgView = [[UIImageView alloc]initWithImage:workConferenceLabelImg];
-        workConferenceLabelImgView.frame = CGRectMake(0, 0, workConferenceLabelImg.size.width/3.3, workConferenceLabelImg.size.height/3.3);
-        workConferenceLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
+        UIImageView * workConferenceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"gzhy"]];
+        workConferenceImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        workConferenceImgView.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT/2 - workConferenceLabel.frame.size.height/3);
         
-        [workConferenceImgView addSubview:workConferenceLabelImgView];
+        [workConferenceBtn addSubview:workConferenceLabel];
         [workConferenceBtn addSubview:workConferenceImgView];
-        [scrView addSubview:workConferenceBtn];
+        [self.view addSubview:workConferenceBtn];
         
         //部门动态
         self.dynamicOfDepartmentArray = [[NSMutableArray alloc]initWithObjects:@"部门动态", nil];
+        
         UIButton * dynamicOfdepartmentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        dynamicOfdepartmentBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*3.5+MAINBTNHEIGHT*3,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
+        dynamicOfdepartmentBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*3+TYPE2BTNHEIGHT*2,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [dynamicOfdepartmentBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
-        dynamicOfdepartmentBtn.tag = 4;
-        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        dynamicOfdepartmentBtn.tag = 1;
+        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
+        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
-        UILabel * dynamicOfdepartmentLabel = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
+        UILabel * dynamicOfdepartmentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
+        dynamicOfdepartmentLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
         dynamicOfdepartmentLabel.text = @"部门动态";
-        dynamicOfdepartmentLabel.font = [UIFont systemFontOfSize:12];
-        dynamicOfdepartmentLabel.textAlignment = NSTextAlignmentLeft;
-        dynamicOfdepartmentLabel.backgroundColor = [UIColor clearColor];
+        dynamicOfdepartmentLabel.textColor = [UIColor whiteColor];
+        dynamicOfdepartmentLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        dynamicOfdepartmentLabel.textAlignment = NSTextAlignmentCenter;
+        
+        UIImageView * dynamicOfdepartmentImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bmdt"]];
+        dynamicOfdepartmentImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        dynamicOfdepartmentImgView.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT/2 - workConferenceLabel.frame.size.height/3);
+        
         [dynamicOfdepartmentBtn addSubview:dynamicOfdepartmentLabel];
-        
-        UIImageView * dynamicOfdepartmentImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bmdt.png"]];
-        dynamicOfdepartmentImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * dynamicOfdepartmentLabelImg = [UIImage imageNamed:@"zi_4.png"];
-        UIImageView * dynamicOfdepartmentLabelImgView = [[UIImageView alloc]initWithImage:dynamicOfdepartmentLabelImg];
-        dynamicOfdepartmentLabelImgView.frame = CGRectMake(0, 0, dynamicOfdepartmentLabelImg.size.width/3.3, dynamicOfdepartmentLabelImg.size.height/3.3);
-        dynamicOfdepartmentLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
-        
-        [dynamicOfdepartmentImgView addSubview:dynamicOfdepartmentLabelImgView];
         [dynamicOfdepartmentBtn addSubview:dynamicOfdepartmentImgView];
-        [scrView addSubview:dynamicOfdepartmentBtn];
+        [self.view addSubview:dynamicOfdepartmentBtn];
         
         //区县快讯
         self.countyNewsArray = [[NSMutableArray alloc]initWithObjects:@"区县快讯", nil];
+        
         UIButton * countyNewsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        countyNewsBtn.frame = CGRectMake(0,NAVIGATIONHIGHT+INTERVALY*4.5+MAINBTNHEIGHT*4,UISCREENWIDTH,MAINBTNHEIGHT+INTERVALY);
+        countyNewsBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*4+TYPE2BTNHEIGHT*3,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [countyNewsBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
-        countyNewsBtn.tag = 5;
-        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"dj_1.png"] forState:UIControlStateHighlighted];
+        countyNewsBtn.tag = 1;
+        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
+        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
-        UILabel * countyNewsLabel = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH*3/7,INTERVALY/2, UISCREENWIDTH*4/7, MAINBTNHEIGHT/4)];
+        UILabel * countyNewsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
+        countyNewsLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
         countyNewsLabel.text = @"区县快讯";
-        countyNewsLabel.font = [UIFont systemFontOfSize:12];
-        countyNewsLabel.textAlignment = NSTextAlignmentLeft;
-        countyNewsLabel.backgroundColor = [UIColor clearColor];
+        countyNewsLabel.textColor = [UIColor whiteColor];
+        countyNewsLabel.font = [UIFont boldSystemFontOfSize:FONT];
+        countyNewsLabel.textAlignment = NSTextAlignmentCenter;
+        
+        UIImageView * countyNewsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"qxkx"]];
+        countyNewsImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*2/3, TYPE1BTNHEIGHT*2/3);
+        countyNewsImgView.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT/2 - workConferenceLabel.frame.size.height/3);
+        
         [countyNewsBtn addSubview:countyNewsLabel];
-        
-        UIImageView * countyNewsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"qxkx.png"]];
-        countyNewsImgView.frame = CGRectMake(INTERVALX,INTERVALY/2,MAINBTNWIDTH,MAINBTNHEIGHT);
-        UIImage * countyNewsLabelImg = [UIImage imageNamed:@"zi_5.png"];
-        UIImageView * countyNewsLabelImgView = [[UIImageView alloc]initWithImage:countyNewsLabelImg];
-        countyNewsLabelImgView.frame = CGRectMake(0, 0, countyNewsLabelImg.size.width/3.3, countyNewsLabelImg.size.height/3.3);
-        countyNewsLabelImgView.center = CGPointMake(MAINBTNWIDTH*2/3,MAINBTNHEIGHT*3/4);
-        
-        [countyNewsImgView addSubview:countyNewsLabelImgView];
         [countyNewsBtn addSubview:countyNewsImgView];
-        [scrView addSubview:countyNewsBtn];
+        [self.view addSubview:countyNewsBtn];
     }
     return self;
 }
