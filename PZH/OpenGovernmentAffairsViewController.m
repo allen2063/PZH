@@ -23,8 +23,7 @@
 #define TYPE1BTNHEIGHT (UISCREENHEIGHT/7)
 #define TYPE2BTNWIDTH (UISCREENWIDTH - INTERVALX*2)
 #define TYPE2BTNHEIGHT TYPE1BTNHEIGHT
-#define MAINBTNWIDTH UISCREENWIDTH*1/3
-#define MAINBTNHEIGHT UISCREENWIDTH/4
+
 @synthesize countyNewsArray,leadersActivitiesArray,dynamicOfDepartmentArray,workConferenceArray,announcementOfPublicArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
@@ -136,8 +135,8 @@
         dynamicOfdepartmentBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*3+TYPE2BTNHEIGHT*2,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [dynamicOfdepartmentBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         dynamicOfdepartmentBtn.tag = 1;
-        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
-        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
+        [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         
         UILabel * dynamicOfdepartmentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
         dynamicOfdepartmentLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);
@@ -161,8 +160,8 @@
         countyNewsBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*4+TYPE2BTNHEIGHT*3,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [countyNewsBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
         countyNewsBtn.tag = 1;
-        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
-        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
+        [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         
         UILabel * countyNewsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE2BTNWIDTH, TYPE2BTNHEIGHT/3)];
         countyNewsLabel.center = CGPointMake(TYPE2BTNWIDTH/2, TYPE2BTNHEIGHT*6/7);

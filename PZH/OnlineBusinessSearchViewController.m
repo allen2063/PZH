@@ -24,12 +24,8 @@
     if (self) {
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.frame = [[UIScreen mainScreen] bounds];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(OnLineSelectResult:) name:@"OnLineSelectResult" object:nil];
         self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
-//        UIScrollView * scrView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-//        scrView.contentSize =  CGSizeMake( UISCREENWIDTH, UISCREENHEIGHT);
-//        scrView.backgroundColor = [UIColor whiteColor];
-//        [self.view addSubview:scrView];
+
         appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -52,7 +48,6 @@
         
         UILabel * IDNumber = [[UILabel alloc]initWithFrame:CGRectMake(UISCREENWIDTH/13, 200, UISCREENWIDTH/3, 30)];
         IDNumber.text = @"按身份证号:";
-        //[self.view addSubview:IDNumber];
         
         acceptedNumberTextField = [[UITextField alloc]initWithFrame:CGRectMake(UISCREENWIDTH/3+25, 160, UISCREENWIDTH/2, 30)];
         acceptedNumberTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -74,7 +69,6 @@
         IDNumberTextField.returnKeyType =UIReturnKeyDone;
         IDNumberTextField.keyboardAppearance=UIKeyboardAppearanceDefault;
         IDNumberTextField.delegate = self;
-        //[self.view addSubview:IDNumberTextField];
 
         UIButton * searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         searchBtn.frame = CGRectMake(0, 0, UISCREENWIDTH/3, 40);

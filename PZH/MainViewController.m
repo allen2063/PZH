@@ -59,8 +59,8 @@
         self.intoPZHBtn.frame = CGRectMake(INTERVALX,UISCREENHEIGHT/3.8,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);
         [self.intoPZHBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.intoPZHBtn.tag = 1;
-        [self.intoPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
-        [self.intoPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        [self.intoPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_bj"] forState:UIControlStateNormal];
+        [self.intoPZHBtn setBackgroundImage:[UIImage imageNamed:@"tb_bjdj"] forState:UIControlStateHighlighted];
 
         UILabel * intoPZHLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
         intoPZHLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
@@ -69,7 +69,7 @@
         intoPZHLabel.font = [UIFont boldSystemFontOfSize:FONT];
         intoPZHLabel.textAlignment = NSTextAlignmentCenter;
         
-        UIImageView * intoPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zjpzh.png"]];
+        UIImageView * intoPZHImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zjpzh"]];
         intoPZHImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         intoPZHImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
 
@@ -82,8 +82,8 @@
         self.openGovernmentAffairsBtn.frame = CGRectMake(INTERVALX*1.5 + TYPE1BTNWIDTH,UISCREENHEIGHT/3.8,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);
         [self.openGovernmentAffairsBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.openGovernmentAffairsBtn.tag = 2;
-        [self.openGovernmentAffairsBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
-        [self.openGovernmentAffairsBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        [self.openGovernmentAffairsBtn setBackgroundImage:[UIImage imageNamed:@"tb_bj"] forState:UIControlStateNormal];
+        [self.openGovernmentAffairsBtn setBackgroundImage:[UIImage imageNamed:@"tb_bjdj"] forState:UIControlStateHighlighted];
         
         UILabel * openGovernmentAffairsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
         openGovernmentAffairsLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
@@ -92,7 +92,7 @@
         openGovernmentAffairsLabel.font = [UIFont boldSystemFontOfSize:FONT];
         openGovernmentAffairsLabel.textAlignment = NSTextAlignmentCenter;
         
-        UIImageView * openGovernmentAffairsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zwgk.png"]];
+        UIImageView * openGovernmentAffairsImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"zwgk"]];
         openGovernmentAffairsImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         openGovernmentAffairsImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
         
@@ -105,8 +105,8 @@
         self.onlineBusinessBtn.frame = CGRectMake(INTERVALX,UISCREENHEIGHT/3.8 + INTERVALY + TYPE1BTNHEIGHT,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);
         [self.onlineBusinessBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.onlineBusinessBtn.tag = 3;
-        [self.onlineBusinessBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
-        [self.onlineBusinessBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        [self.onlineBusinessBtn setBackgroundImage:[UIImage imageNamed:@"tb_bj"] forState:UIControlStateNormal];
+        [self.onlineBusinessBtn setBackgroundImage:[UIImage imageNamed:@"tb_bjdj"] forState:UIControlStateHighlighted];
         
         UILabel * onlineBusinessLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
         onlineBusinessLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
@@ -115,7 +115,7 @@
         onlineBusinessLabel.font = [UIFont boldSystemFontOfSize:FONT];
         onlineBusinessLabel.textAlignment = NSTextAlignmentCenter;
         
-        UIImageView * onlineBusinessImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"wsbs.png"]];
+        UIImageView * onlineBusinessImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"wsbs"]];
         onlineBusinessImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         onlineBusinessImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
         
@@ -128,8 +128,8 @@
         self.publicServiceBtn.frame = CGRectMake(INTERVALX*1.5 + TYPE1BTNWIDTH,UISCREENHEIGHT/3.8 + INTERVALY + TYPE1BTNHEIGHT,TYPE1BTNWIDTH,TYPE1BTNHEIGHT);
         [self.publicServiceBtn addTarget:self action:@selector(jumpPageForMainView:) forControlEvents:UIControlEventTouchUpInside];
         self.publicServiceBtn.tag = 4;
-        [self.publicServiceBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
-        [self.publicServiceBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
+        [self.publicServiceBtn setBackgroundImage:[UIImage imageNamed:@"tb_bj"] forState:UIControlStateNormal];
+        [self.publicServiceBtn setBackgroundImage:[UIImage imageNamed:@"tb_bjdj"] forState:UIControlStateHighlighted];
         
         UILabel * publicServiceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0, TYPE1BTNWIDTH, TYPE1BTNHEIGHT/3)];
         publicServiceLabel.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT*6/7);
@@ -138,7 +138,7 @@
         publicServiceLabel.font = [UIFont boldSystemFontOfSize:FONT];
         publicServiceLabel.textAlignment = NSTextAlignmentCenter;
         
-        UIImageView * publicServiceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ggfw.png"]];
+        UIImageView * publicServiceImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ggfw"]];
         publicServiceImgView.frame = CGRectMake(0,0, TYPE1BTNHEIGHT*1/2, TYPE1BTNHEIGHT*1/2);
         publicServiceImgView.center = CGPointMake(TYPE1BTNWIDTH/2, TYPE1BTNHEIGHT/2 - intoPZHLabel.frame.size.height/3);
         
