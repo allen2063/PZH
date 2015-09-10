@@ -171,7 +171,7 @@
     self.publicServiceViewController = [PublicServiceViewController alloc];
     UINavigationController * navCon = [UINavigationController alloc];
 
-    NSMutableArray * picArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"jyu",@"sb",@"jy",@"yl",@"zf",@"jt",@"hysy",@"gysye",@"zjbl.png",@"qykb",@"jynsh",@"zzrz",nil];
+    NSMutableArray * picArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"jyu",@"sb",@"jy",@"yl",@"zf",@"jt",@"hysy",@"gysye",@"zjblg",@"qykb",@"jynsh",@"zzrz",nil];
     NSMutableArray * titleArrForPulicService = [[NSMutableArray alloc]initWithObjects:@"教育",@"社保",@"就业",@"医疗",@"住房",@"交通", @"婚育收养",@"公用事业",@"证件办理",@"企业开办",@"经营纳税",@"资质认证",nil];
     switch (btn.tag) {
         case 1:

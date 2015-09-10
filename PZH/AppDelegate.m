@@ -39,7 +39,6 @@
 //    AppDelegate * appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    [appDelegate.conAPI getTopNews];
 //    [appDelegate.conAPI getMainPagePic];
-    
     [self.window makeKeyAndVisible];
     return YES;
 }

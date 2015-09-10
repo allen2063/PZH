@@ -12,6 +12,8 @@
 	<dict>
 		<key>1F79ED4CE81D54B5DD71C0EC84F6EAE2CAF85EBE</key>
 		<string>https://github.com/allen2063/PZH.git</string>
+		<key>237149AC8E6199D3E905933D31F03B0AA4107A19</key>
+		<string>https://github.com/allen2063/PostalManageSystem.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>PZH.xcodeproj/project.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>1F79ED4CE81D54B5DD71C0EC84F6EAE2CAF85EBE</key>
 		<string>../..</string>
+		<key>237149AC8E6199D3E905933D31F03B0AA4107A19</key>
+		<string>../../../PostalManageSystem</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/allen2063/PZH.git</string>
@@ -28,6 +32,14 @@
 	<string>1F79ED4CE81D54B5DD71C0EC84F6EAE2CAF85EBE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>237149AC8E6199D3E905933D31F03B0AA4107A19</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PostalManageSystem</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
