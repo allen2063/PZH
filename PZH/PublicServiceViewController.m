@@ -65,7 +65,10 @@
     int leftInPage = picArray.count % 3;                    //最后剩几个
     self.automaticallyAdjustsScrollViewInsets = NO;         //  解决视图偏移  默认YES  这样控制器可以自动调整  设置为NO后即可自己调整
     UIScrollView * scrView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTH,UISCREENHEIGHT - NAVIGATIONHIGHT*1.4)];
-    //scrView.contentSize =  CGSizeMake( UISCREENWIDTH, NAVIGATIONHIGHT+BLOCKHEIGHT*(rowInPage+ (leftInPage == 0 ? 0 : 1))+INTERVALY*(rowInPage+ (leftInPage == 0 ? 0 : 1)+1));
+    scrView.contentSize =  CGSizeMake( UISCREENWIDTH, NAVIGATIONHIGHT+BLOCKHEIGHT*(rowInPage+ (leftInPage == 0 ? 0 : 1))+INTERVALY*(rowInPage+ (leftInPage == 0 ? 0 : 1)));
+//    if (scrView.contentSize.height - scrView.frame.size.height < BLOCKHEIGHT) {
+//        scrView.contentSize.height
+//    }
     scrView.backgroundColor = [UIColor clearColor];
     [scrView setShowsVerticalScrollIndicator:NO];
     scrView.bounces = NO;
