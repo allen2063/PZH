@@ -108,13 +108,13 @@
         picBufferDicNeedUpadate = YES;
         NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
         UIImage* image = [[UIImage alloc] initWithData:imageData];
-        UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
+        UIImageView * imgView = [[UIImageView alloc]initWithImage:image];
         NSDate * loadDate=[NSDate date];
         //图片转化为二级制然后缓存
         NSData * imgData = [PicForPZHViewController picToStringWithImage:image];
         dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",imgData,@"imgView",url,@"url",loadDate,@"loadDate", nil];
         //dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
-        if ([ImgView isKindOfClass:[UIImageView class]] && [ImgView respondsToSelector:@selector(setFrame:)])  //判断可能返回的图片是否受损
+        if ([imgView isKindOfClass:[UIImageView class]] && [imgView respondsToSelector:@selector(setFrame:)])  //判断可能返回的图片是否受损
         {
             [self.picBufferDic setObject:dic forKey:url];
         }
