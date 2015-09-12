@@ -134,7 +134,7 @@
         UIButton * dynamicOfdepartmentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         dynamicOfdepartmentBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*3+TYPE2BTNHEIGHT*2,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [dynamicOfdepartmentBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
-        dynamicOfdepartmentBtn.tag = 1;
+        dynamicOfdepartmentBtn.tag = 4;
         [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
         [dynamicOfdepartmentBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         
@@ -159,7 +159,7 @@
         UIButton * countyNewsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         countyNewsBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*4+TYPE2BTNHEIGHT*3,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [countyNewsBtn addTarget:self action:@selector(jumpPageForOpenGovernmentAffairs:) forControlEvents:UIControlEventTouchUpInside];
-        countyNewsBtn.tag = 1;
+        countyNewsBtn.tag = 5;
         [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
         [countyNewsBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         

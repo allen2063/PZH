@@ -128,7 +128,7 @@
         UIButton * hotWorkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         hotWorkBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*3+TYPE2BTNHEIGHT*2,TYPE2BTNWIDTH,TYPE2BTNHEIGHT);
         [hotWorkBtn addTarget:self action:@selector(jumpPageForAnnouncementOfWork:) forControlEvents:UIControlEventTouchUpInside];
-        hotWorkBtn.tag = 1;
+        hotWorkBtn.tag = 4;
         [hotWorkBtn setBackgroundImage:[UIImage imageNamed:@"tb_2"] forState:UIControlStateNormal];
         [hotWorkBtn setBackgroundImage:[UIImage imageNamed:@"tb_2dj"] forState:UIControlStateHighlighted];
         

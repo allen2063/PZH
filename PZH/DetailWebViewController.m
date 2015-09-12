@@ -237,15 +237,15 @@
     //    for (TFHppleElement * element in elements) {
     //        NSLog(@"%@",element.raw);
     //    }
-    
+    NSLog(@" 加标签后:%@",htmlString);
     return  htmlString;
 }
 
 
 - (void)addLabelForType:(int)type{
     //政务公开等详情图上的标签
-    self.overheadInformationSumImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bg.png"]];
     [self.overheadInformationSumImgView removeFromSuperview];
+    self.overheadInformationSumImgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bg.png"]];
     [self.view addSubview:self.overheadInformationSumImgView];
     if(type == 6){
         self.overheadInformationSumImgView.frame = CGRectMake(0,NAVIGATIONHIGHT + HYSegmentedControl_Height, UISCREENWIDTH, OVERHEADINFORMATIONCELLLABELHEIGHT*5);

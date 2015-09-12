@@ -65,8 +65,23 @@
 }
 
 -(void)jumpPageForVideoPZH:(UIButton *)btn{
-    [appDelegate playStreamFromURL:[NSURL URLWithString:self.urlString]];
+//    [appDelegate playStreamFromURL:[NSURL URLWithString:self.urlString]];
+    [self playStreamFromURL:[NSURL URLWithString:self.urlString]];
 }
+
+- (void)playStreamFromURL:(NSURL *)url
+{
+    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:appDelegate.superVideoPlayer];
+    navCon.modalPresentationStyle = UIModalPresentationFullScreen;
+//    [self.window.rootViewController presentViewController:navCon animated:YES completion:nil];
+    
+    [self presentViewController:navCon animated:YES completion:nil];
+    
+    //[self.videoPlayer playMediaFromURL:url];
+    [appDelegate.superVideoPlayer playMediaFromURL:url];
+    NSLog(@"nrl:%@",url);
+}
+
 
 - (void)segTouchedForVideo:(NSNotification *)note{
     //获取seg标题

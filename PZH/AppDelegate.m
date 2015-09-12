@@ -49,6 +49,8 @@
     navCon.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.window.rootViewController presentViewController:navCon animated:YES completion:nil];
     
+//    [self presentViewController:navCon animated:YES completion:nil];
+
     //[self.videoPlayer playMediaFromURL:url];
     [self.superVideoPlayer playMediaFromURL:url];
     NSLog(@"nrl:%@",url);

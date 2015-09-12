@@ -108,13 +108,13 @@
         picBufferDicNeedUpadate = YES;
         NSData* imageData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
         UIImage* image = [[UIImage alloc] initWithData:imageData];
-        UIImageView * imgView = [[UIImageView alloc]initWithImage:image];
+        UIImageView * ImgView = [[UIImageView alloc]initWithImage:image];
         NSDate * loadDate=[NSDate date];
         //图片转化为二级制然后缓存
         NSData * imgData = [PicForPZHViewController picToStringWithImage:image];
         dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",imgData,@"imgView",url,@"url",loadDate,@"loadDate", nil];
         //dic = [[NSDictionary alloc]initWithObjectsAndKeys:[tempArraysss objectAtIndex:0],@"title",ImgView,@"imgView",image,@"img",url,@"url",loadDate,@"loadDate", nil];
-        if ([imgView isKindOfClass:[UIImageView class]] && [imgView respondsToSelector:@selector(setFrame:)])  //判断可能返回的图片是否受损
+        if ([ImgView isKindOfClass:[UIImageView class]] && [ImgView respondsToSelector:@selector(setFrame:)])  //判断可能返回的图片是否受损
         {
             [self.picBufferDic setObject:dic forKey:url];
         }
@@ -294,8 +294,9 @@
     testLabel.font = [UIFont systemFontOfSize:13];
     testLabel.textAlignment = NSTextAlignmentCenter;
     //(self.dataList.count == NUMBEROFPICFORPAGE)&&
- 
-    NSLog(@"data:%@",[[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] class]);
+    //
+    //NSLog(@"data:%@",[[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] class]);
+    NSLog(@"");
     if ([[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[NSData class]])  //由于网络缘故  很可能返回的图片已经受损
     {
         UIImage * img = [PicForPZHViewController stringToPicWithImage:[[self.dataList objectAtIndex:indexPath.row]objectForKey:@"imgView"]];

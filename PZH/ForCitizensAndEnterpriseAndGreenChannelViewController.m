@@ -42,7 +42,7 @@
         [self.view addSubview:backgroundImageView];
         
         UIImageView * logoImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, UISCREENWIDTH*4/9,UISCREENWIDTH*4/9/400*60 )];
-        logoImageView.center = CGPointMake(self.view.center.x, UISCREENHEIGHT - NAVIGATIONHIGHT);
+        logoImageView.center = CGPointMake(self.view.center.x, UISCREENHEIGHT - NAVIGATIONHIGHT*2/3);
         logoImageView.image = [UIImage imageNamed:@"bg_wenzi"];
         [self.view addSubview:logoImageView];
         
@@ -235,7 +235,7 @@
         UIButton * firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         firstBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*(rowInPage+1)+BLOCKHEIGHT*rowInPage,(UISCREENWIDTH -3*INTERVALX)/2,BLOCKHEIGHT);
         [firstBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
-        firstBtn.tag = rowInPage*line + 1;
+        firstBtn.tag = rowInPage*2 ;
         [firstBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
         [firstBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
@@ -258,7 +258,7 @@
         UIButton * secondBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         secondBtn.frame = CGRectMake(INTERVALX*2+firstBtn.frame.size.width,NAVIGATIONHIGHT+INTERVALY*(rowInPage+1)+BLOCKHEIGHT*rowInPage,(UISCREENWIDTH -3*INTERVALX)/2,BLOCKHEIGHT);
         [secondBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
-        secondBtn.tag = rowInPage*line + 2;
+        secondBtn.tag = rowInPage*2+1;
         [secondBtn setBackgroundImage:[UIImage imageNamed:@"tb_1"] forState:UIControlStateNormal];
         [secondBtn setBackgroundImage:[UIImage imageNamed:@"tb_1dj"] forState:UIControlStateHighlighted];
         
@@ -283,7 +283,7 @@
 }
 
 -(void)jumpPageForCitizens:(UIButton *)btn{
-    appDelegate.sonTitle = [titleNameArray objectAtIndex:(btn.tag-1)];
+    appDelegate.sonTitle = [titleNameArray objectAtIndex:(btn.tag)];
     DetailCustomCellViewController * detailCellViewController = [[DetailCustomCellViewController alloc]init];
     [self.navigationController pushViewController:detailCellViewController animated:YES];
     

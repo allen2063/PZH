@@ -73,13 +73,13 @@
         UIButton * searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         searchBtn.frame = CGRectMake(0, 0, UISCREENWIDTH/3, 40);
         searchBtn.center = CGPointMake(UISCREENWIDTH/2, UISCREENHEIGHT/2-UISCREENHEIGHT/40);
-        searchBtn.backgroundColor = UIColorFromRGBValue(0xf24300);
+        searchBtn.backgroundColor = UIColorFromRGBValue(0x268eeb);
         //绘制圆角矩形按钮和边线
         [searchBtn.layer setMasksToBounds:YES];
         [searchBtn.layer setCornerRadius:10.0]; //设置矩形四个圆角半径
         [searchBtn.layer setBorderWidth:1.0];   //边框宽度
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGColorRef colorref = CGColorCreate(colorSpace,(CGFloat[]){ 242/255.0, 67/255.0, 0, 1 });
+        CGColorRef colorref = CGColorCreate(colorSpace,(CGFloat[]){ 32/255.0, 142/255.0, 235/255.0, 1 });
         [searchBtn.layer setBorderColor:colorref];//边框颜色
         [searchBtn setTitle:@"确定" forState:UIControlStateNormal] ;
         [searchBtn setTitleColor:[UIColor whiteColor]forState:UIControlStateNormal];
@@ -115,6 +115,10 @@
     self.seg = [[HYSegmentedControl alloc] initWithOriginY:0 Titles:self.segArray delegate:self] ;
     self.seg.frame = CGRectMake(0, NAVIGATIONHIGHT, self.view.frame.size.width, HYSegmentedControl_Height);
     [self.view addSubview:self.seg];
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
