@@ -353,13 +353,17 @@
     NSLog(@"!!!!!!!!!!!!%@",error);
     //alerts = [[UIAlertView alloc] initWithTitle:@"错误" message:[error localizedDescription]  delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 
-    if (alerts.visible != YES) {
-        alerts = [alerts initWithTitle:@"错误" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-         [alerts show];
-    }
+//    if (alerts.visible != YES) {
+//        alerts = [alerts initWithTitle:@"错误" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//         [alerts show];
+//    }
    
     NSDictionary * d = [[NSDictionary alloc]initWithObjectsAndKeys:error,@"error" ,nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:d];
+    if ([[error localizedDescription] rangeOfString:@"timed out"].length != 0) {
+        NSDictionary * dic = [[NSDictionary alloc]initWithObjectsAndKeys:[error localizedDescription],@"timeOut", nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"timeOut" object:self userInfo:dic];
+    }
 }
 
 
@@ -372,12 +376,12 @@
         threadInfo =[[[timer userInfo]objectForKey:@"threadInfo"] intValue];
     }
     if(!isback &&(threadInfo == requestCount)){  //时间到后未返回或者当前的线程标识不是设置计时器的线程标识 也就是说只有状态为未返回并且当前进程就是设置计时器的进程时成立
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"fault" object:self userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"timeOut" object:self userInfo:nil];
         //alerts = [[UIAlertView alloc]initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        if (alerts.visible != YES) {
-            alerts = [alerts initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [alerts show];
-        }
+//        if (alerts.visible != YES) {
+//            alerts = [alerts initWithTitle:@"网络请求超时" message:@"请检查您的网络！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//            [alerts show];
+//        }
     }
 }
 

@@ -18,7 +18,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(timeOut:) name:@"timeOut" object:nil];
+
     [[UINavigationBar appearance] setBarTintColor:UIColorFromRGBValue(0x268eeb)];  //0xf24300
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];    //导航栏按钮颜色
@@ -41,6 +42,21 @@
 //    [appDelegate.conAPI getMainPagePic];
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+//超时处理
+- (void)timeOut:(NSNotification *)note{
+    NSDictionary * dic = [note userInfo];
+    [GMDCircleLoader hideFromView:self.window animated:YES];
+    UIAlertView * alerts = [[UIAlertView alloc]init];
+    if (alerts.visible != YES) {
+        NSString * str = @"请检查您的网络！";
+        if (dic != nil) {
+            str = [dic objectForKey:@"timeOut"];
+        }
+        alerts = [alerts initWithTitle:@"网络请求超时" message:str delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alerts show];
+    }
 }
 
 - (void)playStreamFromURL:(NSURL *)url
