@@ -207,6 +207,23 @@
         }
     }
     
+    if ([htmlString rangeOfString:@"<IMG"].length>0) {
+        NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        int countOfArray = 0;
+        int index = 0;
+        NSString * insertString =@" width=\"100%\" height=\"auto\" ";
+        while ([tempString rangeOfString:@"<IMG"].length) {
+            [tempArray addObject:[NSString stringWithFormat:@"%d",
+                                  (int)([tempString rangeOfString:@"<IMG"].location+[tempString rangeOfString:@"<IMG"].length)]];
+            tempString = [tempString substringFromIndex:[tempString rangeOfString:@"<IMG"].location+[tempString rangeOfString:@"<IMG"].length];
+            index = index + [[tempArray objectAtIndex:countOfArray]intValue];
+            [htmlString insertString:insertString atIndex:index];
+            index = index + (int)[insertString length];
+            countOfArray++;
+        }
+    }
+    
     if ([htmlString rangeOfString:@"jpg\""].length>0) {
         NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
         NSMutableArray * tempArray = [[NSMutableArray alloc]init];
@@ -221,8 +238,23 @@
             [htmlString insertString:insertString atIndex:index];
             index = index + (int)[insertString length];
             countOfArray++;
-            //            NSLog(@"tempString:%@  length:%d",tempString,[tempString length]);
-            //            NSLog(@"htmlString auto %@   length:%d",htmlString,[htmlString length]);
+        }
+    }
+    
+    if ([htmlString rangeOfString:@"JPG\""].length>0) {
+        NSString * tempString = [NSString stringWithFormat:@"%@",htmlString];
+        NSMutableArray * tempArray = [[NSMutableArray alloc]init];
+        int countOfArray = 0;
+        int index = 0;
+        NSString * insertString =@" width=\"100%\" height=\"auto\" ";
+        while ([tempString rangeOfString:@"JPG\""].length) {
+            [tempArray addObject:[NSString stringWithFormat:@"%d",
+                                  (int)([tempString rangeOfString:@"JPG\""].location+[tempString rangeOfString:@"JPG\""].length)]];
+            tempString = [tempString substringFromIndex:[tempString rangeOfString:@"JPG\""].location+[tempString rangeOfString:@"JPG\""].length];
+            index = index + [[tempArray objectAtIndex:countOfArray]intValue];
+            [htmlString insertString:insertString atIndex:index];
+            index = index + (int)[insertString length];
+            countOfArray++;
         }
     }
     
