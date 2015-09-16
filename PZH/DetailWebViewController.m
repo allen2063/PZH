@@ -204,8 +204,6 @@
             [htmlString insertString:insertString atIndex:index];
             index = index + (int)[insertString length];
             countOfArray++;
-            //            NSLog(@"tempString:%@  length:%d",tempString,[tempString length]);
-            //            NSLog(@"htmlString auto %@   length:%d",htmlString,[htmlString length]);
         }
     }
     

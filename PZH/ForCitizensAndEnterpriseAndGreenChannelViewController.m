@@ -81,7 +81,7 @@
         UIButton * firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         firstBtn.frame = CGRectMake(INTERVALX,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
         [firstBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
-        firstBtn.tag = i*3+1;
+        firstBtn.tag = i*3;
         [firstBtn setBackgroundImage:[UIImage imageNamed:@"tb_3"] forState:UIControlStateNormal];
         [firstBtn setBackgroundImage:[UIImage imageNamed:@"tb_3dj"] forState:UIControlStateHighlighted];
         
@@ -104,7 +104,7 @@
         UIButton * secondBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         secondBtn.frame = CGRectMake(INTERVALX*2+BLOCKWIDTH,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
         [secondBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
-        secondBtn.tag = i*3+2;
+        secondBtn.tag = i*3+1;
         [secondBtn setBackgroundImage:[UIImage imageNamed:@"tb_3"] forState:UIControlStateNormal];
         [secondBtn setBackgroundImage:[UIImage imageNamed:@"tb_3dj"] forState:UIControlStateHighlighted];
         
@@ -127,7 +127,7 @@
         UIButton * thirdBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         thirdBtn.frame = CGRectMake(INTERVALX*3+BLOCKWIDTH*2,NAVIGATIONHIGHT+INTERVALY*(i+1)+BLOCKHEIGHT*i,BLOCKWIDTH,BLOCKHEIGHT);
         [thirdBtn addTarget:self action:@selector(jumpPageForCitizens:) forControlEvents:UIControlEventTouchUpInside];
-        thirdBtn.tag = i*3+3;
+        thirdBtn.tag = i*3+2;
         [thirdBtn setBackgroundImage:[UIImage imageNamed:@"tb_3"] forState:UIControlStateNormal];
         [thirdBtn setBackgroundImage:[UIImage imageNamed:@"tb_3dj"] forState:UIControlStateHighlighted];
         

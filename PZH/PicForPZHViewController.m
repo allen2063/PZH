@@ -330,7 +330,20 @@
     backgroundView.alpha = 0;
     [self.view addSubview:backgroundView];
     
+    if([[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[NSString class]]){            //初始化
+        UIAlertView * alerts = [[UIAlertView alloc]initWithTitle:nil message:@"图片加载中，请稍等！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alerts show];
+        return;
+    }
+
+    else if (![[[self.dataList objectAtIndex:indexPath.row] objectForKey:@"imgView"] isKindOfClass:[NSData class]]){
+        UIAlertView * alerts = [[UIAlertView alloc]initWithTitle:nil message:@"图片加载失败，请重新加载！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alerts show];
+        return;
+    }
+    
     UIImage * selectedImg = [PicForPZHViewController stringToPicWithImage:[[self.dataList objectAtIndex:indexPath.row]objectForKey:@"imgView"]];
+    
     float imgRatio = selectedImg.size.height/selectedImg.size.width ;
     NSLog(@"imgRatio:%@",NSStringFromCGSize(selectedImg.size));
     float screeRatio = self.view.frame.size.height/self.view.frame.size.width;
@@ -358,12 +371,14 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.4];
     backgroundView.alpha = 0.4;
+//#warning 图片加在失败时会崩溃
     if (imgRatio>screeRatio) {
         //长为最大值  则高度固定    宽的起始点浮动（frame.x）
         bigImgView.frame = CGRectMake((self.view.frame.size.width-bigImgSize.width)/2  , self.view.frame.size.height*1/20+32, bigImgSize.width, bigImgSize.height);
     }
     else{
         //宽为最大值  则宽度固定    长的高度点浮动（frame.y）
+        
         bigImgView.frame = CGRectMake(self.view.frame.size.width*1/20, (self.view.frame.size.height-bigImgSize.height)/2 +32, bigImgSize.width, bigImgSize.height);
     }
     [UIView commitAnimations];
