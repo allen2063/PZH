@@ -39,7 +39,7 @@
     alerts = [[UIAlertView alloc]init];
     isback =NO;
     requestCount = 0;
-    timeout = 20;
+    timeout = 30;
     matchingElementForMenuContent = @"GetMenuContentResult";
     matchingElementForPZHPic = @"GetYXPZH_ContentResult";
     matchingElementForPZHVideo = @"GetSPPZH_ContentResult";
