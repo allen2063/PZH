@@ -1411,7 +1411,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREFIX_HEADER = /Users/ZengYifei/Project/PZH/PZH/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/PZH/PrefixHeader.pch";
 				INFOPLIST_FILE = PZH/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1434,7 +1434,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREFIX_HEADER = /Users/ZengYifei/Project/PZH/PZH/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/PZH/PrefixHeader.pch";
 				INFOPLIST_FILE = PZH/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
